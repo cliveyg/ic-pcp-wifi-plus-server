@@ -67,7 +67,7 @@ Positives:
 Negatives:
 * Harder to grasp easily than more traditional Restful APIs.
 
-### Instructions
+### HowTo
 
 #### Building the binary
 I am building the golang binary on my Apple Silicon MacBook Air and the target is a RaspberryPi.  The go build settings I am using are:
