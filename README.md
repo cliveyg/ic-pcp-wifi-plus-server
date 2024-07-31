@@ -69,12 +69,12 @@ Negatives:
 * Less supported than JSON
 
 ### Assumptions
-* RaspberryPi 4 8Gb Ram
+* Only tested on RaspberryPi 4 8Gb Ram
 * OS and other pcp partition on 32Gb SD card split into two equal partitions.
 * Only tested with piCorePlayer version 9.2.0
 * ARM binary built with Golang version 1.21.0
 * Binary built on M2 MacBook Air running macOS version 14.5 (23F79)
-* Music for LMS and UserData stored on separate USB card.
+* Music for LMS and UserData stored on separate 64Gb USB pen drive.
 
 ### HowTo
 
