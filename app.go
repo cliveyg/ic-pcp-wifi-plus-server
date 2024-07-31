@@ -11,11 +11,11 @@ type App struct {
 	Router *mux.Router
 }
 
-func (a *App) Initialize(host, user, password, dbname string) {
+func (a *App) Initialize() {
 
 	a.Router = mux.NewRouter()
 	a.initializeRoutes()
-	
+
 }
 
 func (a *App) Run(addr string) {
