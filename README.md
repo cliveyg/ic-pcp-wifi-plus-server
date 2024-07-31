@@ -65,12 +65,21 @@ Positives:
 * gRPC good with Golang
 
 Negatives:
-* Harder to grasp easily than more traditional Restful APIs.
+* Harder to grasp than more traditional Restful APIs.
+* Less supported than JSON
+
+### Assumptions
+* RaspberryPi 4 8Gb Ram
+* OS and other pcp partition on 32Gb SD card split into two equal partitions.
+* Only tested with piCorePlayer version 9.2.0
+* ARM binary built with Golang version 1.21.0
+* Binary built on M2 MacBook Air running macOS version 14.5 (23F79)
+* Music for LMS and UserData stored on separate USB card.
 
 ### HowTo
 
 #### Building the binary
-I am building the golang binary on my Apple Silicon MacBook Air and the target is a RaspberryPi.  The go build settings I am using are:
+I am building the Golang binary on my M2 MacBook Air and the target is a RaspberryPi.  The go build settings I am using are:
 
 ```go
 GOARCH=arm64
