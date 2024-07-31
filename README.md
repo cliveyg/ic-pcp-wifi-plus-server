@@ -40,8 +40,6 @@ Positives:
 Negatives:
 * Changes to pcp could break the backend.
 
-TODO: Need to decide whether to use RPC/Websockets or JSON for communication between backend and frontend.
-
 ### Frontend
 
 React single page application utilising Material UI.
@@ -54,8 +52,25 @@ Positives:
 Negatives:
 * Performance?
 
-### Building the binary
-As the target is a RaspberryPi the go build settings I am using are:
+### Communication Protocol
+
+**gRPC & Protobuf** 
+
+Use a combination of gRPC and Protocol Buffers.
+
+Positives:
+* Faster than JSON and HTTP1.1
+* More lightweight and robust than JSON/HTTP1.1
+* Uses HTTP2 as communication protocol
+* gRPC good with Golang
+
+Negatives:
+* Harder to grasp easily than more traditional Restful APIs.
+
+### Instructions
+
+#### Building the binary
+I am building the golang binary on my Apple Silicon MacBook Air and the target is a RaspberryPi.  The go build settings I am using are:
 
 ```go
 GOARCH=arm64
