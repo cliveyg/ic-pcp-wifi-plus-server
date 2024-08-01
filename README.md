@@ -93,3 +93,11 @@ CGO_ENABLED=0 GOOS=$GOOS GOARCH=$GOARCH go build -a -ldflags '-w' -o wifiplus
 ```
 
 I am using these flags to avoid dynamically linked libs in the binary.
+
+### Installing protoc
+
+On the Mac I use homebrew to install the protobuf compiler using:
+
+```
+brew install protobuf
+```
