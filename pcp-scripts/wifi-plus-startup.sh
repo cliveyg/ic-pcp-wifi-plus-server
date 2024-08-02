@@ -15,7 +15,7 @@ if sudo cp /mnt/UserData/wifi-settings/wifiplus /var/www/wifiplus; then
   echo "Successfully copied wifi-plus binary to webroot"
   echo "Attempting to start binary..."
 
-  if sudo ./var/www/wifi-plus; then
+  if sudo ./var/www/wifiplus; then
     echo "Binary started successfully.\nListening on port 8020..."
     echo "Testing connection..."
       if curl -s -o /dev/null -w "%{http_code}" http://pcp.local:8020/status; then
