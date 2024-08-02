@@ -9,10 +9,21 @@ import (
 
 // ----------------------------------------------------------------------------
 
-func (a *App) getStatus(w http.ResponseWriter, _ *http.Request) {
+func (a *App) getSystemStatus(w http.ResponseWriter, _ *http.Request) {
 
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
-	mess := `{"message": "System running..."}`
+
+	args := []string{"wp_status", "200"}
+	rc, err := a.ExecCmd("sudo /var/www/cgi-bin/wifi-plus.sh", args)
+	if err != nil {
+		mess := `{"error": "` + err.Error() + `"}`
+		if _, err := io.WriteString(w, mess); err != nil {
+			log.Fatal(err)
+		}
+		return
+	}
+
+	mess := `{"message": "System running...", "return_code": "` + rc + `"}`
 	if _, err := io.WriteString(w, mess); err != nil {
 		log.Fatal(err)
 	}
