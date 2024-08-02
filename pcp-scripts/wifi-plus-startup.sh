@@ -5,14 +5,13 @@ echo "Starting copy-to-www..."
 echo "Copying go binary and script files to web folders..."
 if sudo cp /mnt/UserData/wifi-settings/wifi-plus.sh /var/www/cgi-bin/wifi-plus.sh; then
   echo "Successfully copied wifi-plus shell file to cgi-bin"
-  exit 0
 else
   echo "Unable to copy shell file to cgi-bin."
   echo "Exiting..."
   exit 1
 fi
 
-if sudo cp /mnt/UserData/wifi-settings/wifi-plus /var/www/wifi-plus; then
+if sudo cp /mnt/UserData/wifi-settings/wifiplus /var/www/wifiplus; then
   echo "Successfully copied wifi-plus binary to webroot"
   echo "Attempting to start binary..."
 

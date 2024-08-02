@@ -16,6 +16,6 @@
 !go.sum
 !.github/workflows/unit-tests.yml
 !pcp-scripts
-!pcp-scripts/copy-to-www.sh
+!pcp-scripts/wifi-plus-startup.sh
 !pcp-scripts/test.sh
 !pcp-scripts/wifi-plus.sh
