@@ -14,7 +14,7 @@ func (a *App) getSystemStatus(w http.ResponseWriter, _ *http.Request) {
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 
 	args := []string{"wp_status", "200"}
-	rc, err := a.ExecCmd("sudo /var/www/cgi-bin/wifi-plus.sh", args)
+	rc, err := a.ExecCmd("sudo cgi-bin/wifi-plus.sh", args)
 	if err != nil {
 		mess := `{"error": "` + err.Error() + `"}`
 		if _, err := io.WriteString(w, mess); err != nil {
