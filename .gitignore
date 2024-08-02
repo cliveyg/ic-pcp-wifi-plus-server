@@ -1,7 +1,7 @@
 # Ignore everything in the root
 /*
 /.env
-/icpcpwifi
+/wifiplus
 # Un-ignore these files - it's bit of a clonky way to do it but it's more secure
 !.gitignore
 !app.go
@@ -15,4 +15,7 @@
 !go.mod
 !go.sum
 !.github/workflows/unit-tests.yml
-!.github/workflows/post-merge-deployment.yml
+!pcp-scripts
+!pcp-scripts/copy-to-www.sh
+!pcp-scripts/test.sh
+!pcp-scripts/wifi-plus.sh
