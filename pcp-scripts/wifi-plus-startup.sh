@@ -20,11 +20,13 @@ if sudo cp /mnt/UserData/wifi-settings/wifiplus /var/www/wifiplus &&
   echo "$(sudo /var/www/wifiplus > /dev/null 2>&1 &)"
   echo "Binary started successfully.\nListening on port 8020..."
   echo "Testing connection..."
-  if curl -s -o /dev/null -w "%{http_code}" http://pcp.local:8020/status; then
+  rc = curl -s -o /dev/null -w "%{http_code}" http://pcp.local:8020/status
+  if [rc -eq 200]; then
     echo " API up and running."
     exit 0
   else
-    echo "Unable to connect to API"
+    echo "Unable to connect to API successfully."
+    echo "Status code is [$rc]"
     echo "Exiting..."
   fi
 
