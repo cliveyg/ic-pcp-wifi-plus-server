@@ -13,6 +13,7 @@ type App struct {
 
 func (a *App) Initialize() {
 
+	log.Info("In Initialize")
 	a.Router = mux.NewRouter()
 	a.initializeRoutes()
 
