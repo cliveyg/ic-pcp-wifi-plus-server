@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 # --------------------------------------------------------------- #
 # wifi-plus.sh - called by the wifi-plus binary to interface with #
