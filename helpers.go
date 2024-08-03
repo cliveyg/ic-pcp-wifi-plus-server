@@ -11,8 +11,10 @@ func (a *App) ExecCmd(command string, args []string) (string, error) {
 
 	stdout, err := exec.Command(command, args...).Output()
 	if err != nil {
+		log.Info("Something went wrong %s", err)
 		return "", err
 	}
+	log.Info("Something went right %s", string(stdout))
 	return string(stdout), nil
 
 }

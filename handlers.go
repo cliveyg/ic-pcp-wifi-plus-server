@@ -4,6 +4,7 @@ import (
 	log "github.com/sirupsen/logrus"
 	"io"
 	"net/http"
+	"os/exec"
 	"strings"
 )
 
@@ -11,26 +12,21 @@ import (
 
 func (a *App) getSystemStatus(w http.ResponseWriter, _ *http.Request) {
 
+	log.Info("In getSystemStatus")
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 
-	// args := []string{"wp_status", "200"}
-	var args []string
-	rc, err := a.ExecCmd("sudo /var/www/cgi-bin/wifi-plus.cgi", args)
+	rc, err := exec.Command("sh", "-c", "cd cgi-bin && sudo ./wifi-plus.cgi wp_status 200").Output()
 	if err != nil {
-		pwd, _ := a.ExecCmd("pwd", nil)
-		ll, _ := a.ExecCmd("ll /var/www/cgi-bin/wifi-plus.sh", nil)
-		log.Printf("PWD is %s", pwd)
-		log.Printf("ll is %s", ll)
-		mess := `{"errror": "` + err.Error() + `", "pwd": "` + pwd + `", "ll": "` + ll + `"}`
+		log.Info("Error is %s", err)
+		mess := `{"error": "` + err.Error() + `", "rc": "` + strings.TrimSpace(string(rc)) + `"}`
 		w.WriteHeader(500)
 		if _, err := io.WriteString(w, mess); err != nil {
-			//log.Fatal(pwd)
 			log.Fatal(err)
 		}
 		return
 	}
 
-	mess := `{"message": "System running...", "return_code": "` + string(rc) + `"}`
+	mess := `{"message": "System running...", "return_code": "` + strings.TrimSpace(string(rc)) + `"}`
 	if _, err := io.WriteString(w, mess); err != nil {
 		log.Fatal(err)
 	}
@@ -39,6 +35,7 @@ func (a *App) getSystemStatus(w http.ResponseWriter, _ *http.Request) {
 
 func (a *App) getWifiStatus(w http.ResponseWriter, _ *http.Request) {
 
+	log.Info("In getWifiStatus")
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 	var message string
 	args := []string{"wlan0", "status"}
@@ -79,7 +76,7 @@ func (a *App) getWifiSSID(w http.ResponseWriter, _ *http.Request) {
 		w.WriteHeader(404)
 		message = `{, "message": "No SSID found" }`
 	} else {
-		message = `{ "SSID": "` + SSID + `" }`
+		message = `{ "SSID": "` + strings.TrimSpace(SSID) + `" }`
 	}
 	if _, err := io.WriteString(w, message); err != nil {
 		log.Fatal(err)
