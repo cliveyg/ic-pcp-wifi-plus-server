@@ -13,7 +13,7 @@ else
   exit 1
 fi
 
-sudo chown root:root /mnt/UserData/industrialcool-pcp-wifi-plus/wifiplus
+# sudo chown root:root /mnt/UserData/industrialcool-pcp-wifi-plus/wifiplus
 if sudo cp /mnt/UserData/industrialcool-pcp-wifi-plus/wifiplus /var/www/wifiplus &&
    sudo cp /mnt/UserData/industrialcool-pcp-wifi-plus/.env /var/www/.env; then
 
