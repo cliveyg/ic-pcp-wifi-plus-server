@@ -3,9 +3,9 @@
 echo "-----------------------------------------------------------------------"
 echo "Starting wifi-plus-startup..."
 echo "Copying go binary and script files to web folders..."
-sudo chown root:root /mnt/UserData/wifi-settings/wifi-plus.sh
-sudo chmod 777 /mnt/UserData/wifi-settings/wifi-plus.sh
-if sudo cp /mnt/UserData/wifi-settings/wifi-plus.sh /var/www/cgi-bin/wifi-plus.sh; then
+sudo chown root:root /mnt/UserData/industrialcool-pcp-wifi-plus/pcp-scripts/wifi-plus.sh
+sudo chmod 777 /mnt/UserData/industrialcool-pcp-wifi-plus/pcp-scripts/wifi-plus.sh
+if sudo cp /mnt/UserData/industrialcool-pcp-wifi-plus/pcp-scripts/wifi-plus.sh /var/www/cgi-bin/wifi-plus.sh; then
   echo "Successfully copied wifi-plus shell file to cgi-bin"
 else
   echo "Unable to copy shell file to cgi-bin."
@@ -13,9 +13,9 @@ else
   exit 1
 fi
 
-sudo chown root:root /mnt/UserData/wifi-settings/wifiplus
-if sudo cp /mnt/UserData/wifi-settings/wifiplus /var/www/wifiplus &&
-   sudo cp /mnt/UserData/wifi-settings/.env /var/www/.env; then
+sudo chown root:root /mnt/UserData/industrialcool-pcp-wifi-plus/wifiplus
+if sudo cp /mnt/UserData/industrialcool-pcp-wifi-plus/wifiplus /var/www/wifiplus &&
+   sudo cp /mnt/UserData/industrialcool-pcp-wifi-plus/.env /var/www/.env; then
 
   echo "Successfully copied wifi-plus binary to webroot"
   echo "Attempting to start binary..."
