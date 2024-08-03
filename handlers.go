@@ -4,7 +4,6 @@ import (
 	"io"
 	"log"
 	"net/http"
-	"os/exec"
 	"strings"
 )
 
@@ -15,8 +14,7 @@ func (a *App) getSystemStatus(w http.ResponseWriter, _ *http.Request) {
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 
 	args := []string{"wp_status", "200"}
-	//rc, err := a.ExecCmd("sudo cgi-bin/wifi-plus.sh", args)
-	rc, err := exec.Command("sudo /var/www/cgi-bin/wifi-plus.sh", args...).Output()
+	rc, err := a.ExecCmd("sudo /var/www/cgi-bin/wifi-plus.sh", args)
 	if err != nil {
 		mess := `{"error": "` + err.Error() + `"}`
 		w.WriteHeader(500)
@@ -72,6 +70,7 @@ func (a *App) getWifiSSID(w http.ResponseWriter, _ *http.Request) {
 		return
 	}
 	if SSID == "" {
+		w.WriteHeader(404)
 		message = `{, "message": "No SSID found" }`
 	} else {
 		message = `{ "SSID": "` + SSID + `" }`
