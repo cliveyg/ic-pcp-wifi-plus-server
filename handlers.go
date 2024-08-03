@@ -1,8 +1,8 @@
 package main
 
 import (
+	log "github.com/sirupsen/logrus"
 	"io"
-	"log"
 	"net/http"
 	"strings"
 )
@@ -16,9 +16,14 @@ func (a *App) getSystemStatus(w http.ResponseWriter, _ *http.Request) {
 	args := []string{"wp_status", "200"}
 	rc, err := a.ExecCmd("sudo /var/www/cgi-bin/wifi-plus.sh", args)
 	if err != nil {
-		mess := `{"error": "` + err.Error() + `"}`
+		pwd, _ := a.ExecCmd("pwd", nil)
+		ll, _ := a.ExecCmd("ll /var/www/cgi-bin/wifi-plus.sh", nil)
+		log.Printf("PWD is %s", pwd)
+		log.Printf("ll is %s", ll)
+		mess := `{"errror": "` + err.Error() + `", "pwd": "` + pwd + `", "ll": "` + ll + `"}`
 		w.WriteHeader(500)
 		if _, err := io.WriteString(w, mess); err != nil {
+			//log.Fatal(pwd)
 			log.Fatal(err)
 		}
 		return
