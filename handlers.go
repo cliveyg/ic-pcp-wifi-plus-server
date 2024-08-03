@@ -13,8 +13,9 @@ func (a *App) getSystemStatus(w http.ResponseWriter, _ *http.Request) {
 
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 
-	args := []string{"wp_status", "200"}
-	rc, err := a.ExecCmd("sudo /var/www/cgi-bin/wifi-plus.sh", args)
+	// args := []string{"wp_status", "200"}
+	var args []string
+	rc, err := a.ExecCmd("sudo /var/www/cgi-bin/wifi-plus.cgi", args)
 	if err != nil {
 		pwd, _ := a.ExecCmd("pwd", nil)
 		ll, _ := a.ExecCmd("ll /var/www/cgi-bin/wifi-plus.sh", nil)
