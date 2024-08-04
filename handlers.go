@@ -41,10 +41,18 @@ func (a *App) getPiCoreDetails(w http.ResponseWriter, _ *http.Request) {
 
 }
 
+func (a *App) RebootSystem(_ http.ResponseWriter, _ *http.Request) {
+	log.Debug("In RebootSystem")
+	_, err := exec.Command("sh", "-c", "sudo pcp rb").Output()
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+
 func (a *App) getSystemStatus(w http.ResponseWriter, _ *http.Request) {
 
 	log.Debug("In getSystemStatus")
-	rc, err := exec.Command("sh", "-c", "cd cgi-bin && sudo ./wifi-plus.sh wp_status 200").Output()
+	rc, err := exec.Command("sh", "-c", "cd cgi-bin && ./wifi-plus.sh wp_status 200").Output()
 	if err != nil {
 		log.Fatal(err)
 	}
