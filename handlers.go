@@ -13,11 +13,11 @@ func (a *App) testTings(w http.ResponseWriter, _ *http.Request) {
 
 	log.Debug("In testTings")
 	rc, err := exec.Command("sh", "-c", "cd cgi-bin && sudo ./wifi-plus.sh wp_test").Output()
-	wifiPlusResp := WifiPlusResponse{
+	pr := WifiPlusResponse{
 		Cmd:     "testTings",
 		SC:      200,
 		Message: strings.TrimSpace(string(rc))}
-	wifiPlusResp.FormatResponse(w, err)
+	pr.FormatResponse(w, err)
 
 }
 
