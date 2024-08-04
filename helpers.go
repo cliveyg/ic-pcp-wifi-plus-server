@@ -21,19 +21,31 @@ func (a *App) ExecCmd(command string, args []string) (string, error) {
 
 }
 
-func (a *App) FormatResponse(w http.ResponseWriter, rc string, err error) {
+func (a *App) FormatResponse(w http.ResponseWriter, cmd string, sc int, message string, data string, err error) {
+
+	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 	if err != nil {
 		log.Error("Error is %s", err)
-		mess := `{"error": "` + err.Error() + `", "rc": "` + rc + `"}`
-		w.WriteHeader(500)
-		if _, err := io.WriteString(w, mess); err != nil {
+		sc = 500
+		jsonStr := "{ \"command\": \"" + cmd + "\", " +
+			"\"status_code\": " + string(rune(sc)) + "," +
+			"\"message\": \"error\"," +
+			"\"data\": {" + err.Error() + "} }"
+
+		w.WriteHeader(sc)
+		if _, err := io.WriteString(w, jsonStr); err != nil {
 			log.Fatal(err)
 		}
 		return
 	}
 
-	mess := `{"message": "` + rc + `"}`
-	if _, err := io.WriteString(w, mess); err != nil {
+	jsonStr := "{ \"command\": \"" + cmd + "\", " +
+		"\"status_code\": " + string(rune(sc)) + "," +
+		"\"message\": \"" + message + "\"," +
+		"\"data\": {" + data + "} }"
+
+	w.WriteHeader(sc)
+	if _, err := io.WriteString(w, jsonStr); err != nil {
 		log.Fatal(err)
 	}
 
