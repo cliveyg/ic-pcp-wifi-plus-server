@@ -51,17 +51,23 @@ if sudo cp /mnt/UserData/industrialcool-pcp-wifi-plus/wifiplus /var/www/wifiplus
   echo "Attempting to start binary..."
 
   cd /var/www/ && nohup ./wifiplus > /dev/null 2>&1 &
-
-  printf "Binary started successfully.\nListening in background on port 8020...\n"
-  echo "Testing connection..."
-  sleep 3
-  rc=$(curl -s -o /dev/null -w "%{http_code}" http://"$ICHOST":8020/status)
-  if [ "$rc" = "200" ]; then
-    echo "[$rc OK] API up and running."
-    exit 0
+  wifiplus_pid=0
+  wifiplus_pid=$(pidof wifiplus)
+  if [ "$wifiplus_pid" ] && [ "$wifiplus_pid" -ne 0 ]; then
+    printf "Binary started successfully.\nProcess [\"$wifiplus_pid\"] listening in background on port [\"$PORT\"]...\n"
+    echo "Testing connection..."
+    sleep 3
+    rc=$(curl -s -o /dev/null -w "%{http_code}" http://"$ICHOST":8020/status)
+    if [ "$rc" = "200" ]; then
+      echo "[$rc OK] API up and running :)"
+      exit 0
+    else
+      echo "Unable to connect to API successfully."
+      echo "Status code is [$rc]"
+      echo "Exiting..."
+    fi
   else
-    echo "Unable to connect to API successfully."
-    echo "Status code is [$rc]"
+    echo "No PID found for binary. Looks like it failed to start :("
     echo "Exiting..."
   fi
 
