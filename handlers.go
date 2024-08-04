@@ -4,6 +4,7 @@ import (
 	log "github.com/sirupsen/logrus"
 	"net/http"
 	"os/exec"
+	"strconv"
 	"strings"
 )
 
@@ -48,6 +49,10 @@ func (a *App) getSystemStatus(w http.ResponseWriter, _ *http.Request) {
 		log.Fatal(err)
 	}
 	log.Debug(rc)
+	rcInt, err := strconv.Atoi(string(rc))
+	if err != nil {
+		log.Fatal(err)
+	}
 	/*
 		buf := bytes.NewBuffer(rc)
 		rcInt, er2 := binary.ReadVarint(buf)
@@ -59,7 +64,7 @@ func (a *App) getSystemStatus(w http.ResponseWriter, _ *http.Request) {
 	*/
 	pr := WifiPlusResponse{
 		Cmd:        "getSystemStatus",
-		StatusCode: 200,
+		StatusCode: rcInt,
 		Message:    "System running"}
 	pr.FormatResponse(w, err)
 
