@@ -13,7 +13,19 @@ func (a *App) testTings(w http.ResponseWriter, _ *http.Request) {
 
 	log.Debug("In testTings")
 	rc, err := exec.Command("sh", "-c", "cd cgi-bin && sudo ./wifi-plus.sh wp_test").Output()
-	a.FormatResponse(w, "testTings", 200, strings.TrimSpace(string(rc)), "", err)
+	pr := WifiPlusResponse{
+		Cmd:     "testTings",
+		SC:      200,
+		Message: strings.TrimSpace(string(rc))}
+	pr.FormatResponse(w, err)
+
+}
+
+func (a *App) getPiCoreDetails(w http.ResponseWriter, _ *http.Request) {
+
+	log.Debug("In getPiCoreDetails")
+	retData, err := exec.Command("sh", "-c", "cd cgi-bin && sudo ./wifi-plus.sh wp_picore_details").Output()
+	a.FormatResponse(w, "getPiCoreDetails", 200, "piCore details", string(retData), err)
 
 }
 

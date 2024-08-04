@@ -14,6 +14,10 @@ arg2=$3
 arg3=$4
 arg4=$5
 
+wp_picore_details() {
+  pcp_picore_version
+}
+
 wp_status() {
   echo $arg1
 }
@@ -23,9 +27,13 @@ wp_test() {
   echo "Able to call pcp functions"
 }
 
+
 # ---------------------- main program ---------------------- #
 
 case $subroutine in
+  wp_picore_details)
+    wp_picore_details
+  ;;
   wp_status)
     wp_status
   ;;
