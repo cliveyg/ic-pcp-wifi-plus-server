@@ -6,6 +6,7 @@ import (
 	"os/exec"
 	"strconv"
 	"strings"
+	"time"
 )
 
 // ----------------------------------------------------------------------------
@@ -41,8 +42,14 @@ func (a *App) getPiCoreDetails(w http.ResponseWriter, _ *http.Request) {
 
 }
 
-func (a *App) RebootSystem(_ http.ResponseWriter, _ *http.Request) {
+func (a *App) RebootSystem(w http.ResponseWriter, _ *http.Request) {
 	log.Debug("In RebootSystem")
+	pr := WifiPlusResponse{
+		Cmd:        "RebootSystem",
+		StatusCode: 202,
+		Message:    "System rebooting"}
+	pr.FormatResponse(w, nil)
+	time.Sleep(2 * time.Second)
 	_, err := exec.Command("sh", "-c", "sudo pcp rb").Output()
 	if err != nil {
 		log.Fatal(err)
