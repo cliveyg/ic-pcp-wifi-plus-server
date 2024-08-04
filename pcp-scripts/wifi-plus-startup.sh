@@ -5,7 +5,7 @@ echo "Starting wifi-plus-startup..."
 echo "Copying go binary and script files to web folders..."
 sudo chmod 777 /mnt/UserData/industrialcool-pcp-wifi-plus/pcp-scripts/wifi-plus.sh
 if sudo cp /mnt/UserData/industrialcool-pcp-wifi-plus/pcp-scripts/wifi-plus.sh /var/www/cgi-bin/wifi-plus.sh; then
-  if sudo ln -s /var/www/cgi-bin/wifi-plus.sh /var/www/cgi-bin/wifi-plus.sh; then
+  if sudo ln -s /var/www/cgi-bin/wifi-plus.sh /var/www/wifi-plus.sh; then
     echo "Successfully copied wifi-plus shell file to cgi-bin and created softlink"
   else
     echo "Copied wifi-plus shell file to cgi-bin but failed to creat softlink to file"
