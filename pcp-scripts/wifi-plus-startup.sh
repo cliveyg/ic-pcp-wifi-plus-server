@@ -18,7 +18,7 @@ if sudo cp /mnt/UserData/industrialcool-pcp-wifi-plus/wifiplus /var/www/wifiplus
   echo "Successfully copied wifi-plus binary to webroot"
   echo "Attempting to start binary..."
 
-  nohup sudo /var/www/wifiplus > /dev/null 2>&1 &
+  nohup sudo ./wifiplus > /dev/null 2>&1 &
   printf "Binary started successfully.\nListening on port 8020...\n"
   #echo "Testing connection..."
   #sleep 5
