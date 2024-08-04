@@ -14,14 +14,16 @@ import (
 func (a *App) testTings(w http.ResponseWriter, _ *http.Request) {
 
 	log.Debug("In testTings")
-	rc, err := exec.Command("sh", "-c", "cd cgi-bin && sudo ./wifi-plus.sh wp_test").Output()
+	rc, err := exec.Command("sh", "-c", "wpa_cli status").Output()
 	if err != nil {
 		log.Fatal(err)
 	}
+
 	pr := WifiPlusResponse{
 		Cmd:        "testTings",
 		StatusCode: 200,
-		Message:    strings.TrimSpace(string(rc))}
+		Message:    "wpa_cli test",
+		Data:       strings.TrimSpace(string(rc))}
 	pr.FormatResponse(w, err)
 
 }
