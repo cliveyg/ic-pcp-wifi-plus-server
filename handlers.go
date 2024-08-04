@@ -15,20 +15,24 @@ func (a *App) testTings(w http.ResponseWriter, _ *http.Request) {
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 
 	rc, err := exec.Command("sh", "-c", "cd cgi-bin && sudo ./wifi-plus.sh wp_test").Output()
-	if err != nil {
-		log.Error("Error is %s", err)
-		mess := `{"error": "` + err.Error() + `", "rc": "` + strings.TrimSpace(string(rc)) + `"}`
-		w.WriteHeader(500)
+
+	a.FormatResponse(w, strings.TrimSpace(string(rc)), err)
+	/*
+		if err != nil {
+			log.Error("Error is %s", err)
+			mess := `{"error": "` + err.Error() + `", "rc": "` + strings.TrimSpace(string(rc)) + `"}`
+			w.WriteHeader(500)
+			if _, err := io.WriteString(w, mess); err != nil {
+				log.Fatal(err)
+			}
+			return
+		}
+
+		mess := `{"message": "` + strings.TrimSpace(string(rc)) + `"}`
 		if _, err := io.WriteString(w, mess); err != nil {
 			log.Fatal(err)
 		}
-		return
-	}
-
-	mess := `{"message": "` + string(rc) + `"}`
-	if _, err := io.WriteString(w, mess); err != nil {
-		log.Fatal(err)
-	}
+	*/
 }
 
 func (a *App) getSystemStatus(w http.ResponseWriter, _ *http.Request) {
