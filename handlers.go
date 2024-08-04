@@ -10,14 +10,35 @@ import (
 
 // ----------------------------------------------------------------------------
 
+func (a *App) testTings(w http.ResponseWriter, _ *http.Request) {
+
+	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+
+	rc, err := exec.Command("sh", "-c", "cd cgi-bin && sudo ./wifi-plus.sh wp_test").Output()
+	if err != nil {
+		log.Error("Error is %s", err)
+		mess := `{"error": "` + err.Error() + `", "rc": "` + strings.TrimSpace(string(rc)) + `"}`
+		w.WriteHeader(500)
+		if _, err := io.WriteString(w, mess); err != nil {
+			log.Fatal(err)
+		}
+		return
+	}
+
+	mess := `{"message": "` + string(rc) + `"}`
+	if _, err := io.WriteString(w, mess); err != nil {
+		log.Fatal(err)
+	}
+}
+
 func (a *App) getSystemStatus(w http.ResponseWriter, _ *http.Request) {
 
-	log.Info("In getSystemStatus")
+	log.Debug("In getSystemStatus")
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 
 	rc, err := exec.Command("sh", "-c", "cd cgi-bin && sudo ./wifi-plus.sh wp_status 200").Output()
 	if err != nil {
-		log.Info("Error is %s", err)
+		log.Error("Error is %s", err)
 		mess := `{"error": "` + err.Error() + `", "rc": "` + strings.TrimSpace(string(rc)) + `"}`
 		w.WriteHeader(500)
 		if _, err := io.WriteString(w, mess); err != nil {
@@ -35,7 +56,7 @@ func (a *App) getSystemStatus(w http.ResponseWriter, _ *http.Request) {
 
 func (a *App) getWifiStatus(w http.ResponseWriter, _ *http.Request) {
 
-	log.Info("In getWifiStatus")
+	log.Debug("In getWifiStatus")
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 	var message string
 	args := []string{"wlan0", "status"}
