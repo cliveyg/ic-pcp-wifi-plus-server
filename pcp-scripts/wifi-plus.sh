@@ -19,10 +19,10 @@ wp_picore_details() {
   pcpv=$(pcp_picoreplayer_version)
   sqv=$(pcp_squeezelite_version)
   lv=$(pcp_linux_release)
-  printf "\"picore_version\": \"%s\", " \
-         "\"picoreplayer_version\": \"%s\", " \
-         "\"squeezelite_version\": \"%s\", " \
-         "\"linux_release\": \"%s\"" $pv $pcpv $sqv $lv
+  printf "\"picore_version\": \"%s\", " $pv
+  printf "\"picoreplayer_version\": \"%s\", " $pcpv
+  printf "\"squeezelite_version\": \"%s\", " $sqv
+  printf "\"linux_release\": \"%s\"" $lv
 }
 
 wp_status() {
