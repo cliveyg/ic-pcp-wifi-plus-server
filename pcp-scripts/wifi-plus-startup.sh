@@ -3,17 +3,19 @@
 echo "-----------------------------------------------------------------------"
 echo "Starting wifi-plus-startup..."
 echo "Copying go binary and script files to web folders..."
-# sudo chown root:root /mnt/UserData/industrialcool-pcp-wifi-plus/pcp-scripts/wifi-plus.sh
 sudo chmod 777 /mnt/UserData/industrialcool-pcp-wifi-plus/pcp-scripts/wifi-plus.sh
 if sudo cp /mnt/UserData/industrialcool-pcp-wifi-plus/pcp-scripts/wifi-plus.sh /var/www/cgi-bin/wifi-plus.sh; then
-  echo "Successfully copied wifi-plus shell file to cgi-bin"
+  if sudo ln -s /var/www/cgi-bin/wifi-plus.sh /var/www/cgi-bin/wifi-plus.sh; then
+    echo "Successfully copied wifi-plus shell file to cgi-bin and created softlink"
+  else
+    echo "Copied wifi-plus shell file to cgi-bin but failed to creat softlink to file"
+  fi
 else
   echo "Unable to copy shell file to cgi-bin."
   echo "Exiting..."
   exit 1
 fi
 
-# sudo chown root:root /mnt/UserData/industrialcool-pcp-wifi-plus/wifiplus
 if sudo cp /mnt/UserData/industrialcool-pcp-wifi-plus/wifiplus /var/www/wifiplus &&
    sudo cp /mnt/UserData/industrialcool-pcp-wifi-plus/.env /var/www/.env; then
 
