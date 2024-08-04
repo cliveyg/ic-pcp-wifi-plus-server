@@ -2,7 +2,7 @@
 
 # getting env files from .env
 set -a
-source .env
+source ../.env
 set +a
 
 echo "-----------------------------------------------------------------------"
