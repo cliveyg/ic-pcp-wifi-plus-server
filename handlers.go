@@ -1,6 +1,8 @@
 package main
 
 import (
+	"bytes"
+	"encoding/binary"
 	log "github.com/sirupsen/logrus"
 	"net/http"
 	"os/exec"
@@ -13,6 +15,9 @@ func (a *App) testTings(w http.ResponseWriter, _ *http.Request) {
 
 	log.Debug("In testTings")
 	rc, err := exec.Command("sh", "-c", "cd cgi-bin && sudo ./wifi-plus.sh wp_test").Output()
+	if err != nil {
+		log.Fatal(err)
+	}
 	pr := WifiPlusResponse{
 		Cmd:        "testTings",
 		StatusCode: 200,
@@ -25,6 +30,9 @@ func (a *App) getPiCoreDetails(w http.ResponseWriter, _ *http.Request) {
 
 	log.Debug("In getPiCoreDetails")
 	retData, err := exec.Command("sh", "-c", "cd cgi-bin && sudo ./wifi-plus.sh wp_picore_details").Output()
+	if err != nil {
+		log.Fatal(err)
+	}
 	pr := WifiPlusResponse{
 		Cmd:        "getPiCoreDetails",
 		StatusCode: 200,
@@ -38,11 +46,18 @@ func (a *App) getSystemStatus(w http.ResponseWriter, _ *http.Request) {
 
 	log.Debug("In getSystemStatus")
 	rc, err := exec.Command("sh", "-c", "cd cgi-bin && sudo ./wifi-plus.sh wp_status 200").Output()
-
+	if err != nil {
+		log.Fatal(err)
+	}
+	buf := bytes.NewBuffer(rc)
+	rcInt, er2 := binary.ReadVarint(buf)
+	if er2 != nil {
+		log.Fatal(err)
+	}
 	pr := WifiPlusResponse{
 		Cmd:        "getSystemStatus",
-		StatusCode: 200,
-		Message:    strings.TrimSpace(string(rc))}
+		StatusCode: int(rcInt),
+		Message:    "System running"}
 	pr.FormatResponse(w, err)
 
 }
