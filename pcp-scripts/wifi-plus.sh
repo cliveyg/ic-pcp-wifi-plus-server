@@ -15,10 +15,10 @@ arg1=$2
 #arg4=$5
 
 wp_picore_details() {
-  pv=pcp_picore_version
-  pcpv=pcp_picoreplayer_version
-  sqv=pcp_squeezelite_version
-  lv=pcp_linux_release
+  pv=$(pcp_picore_version)
+  pcpv=$(pcp_picoreplayer_version)
+  sqv=$(pcp_squeezelite_version)
+  lv=$(pcp_linux_release)
   printf "\"picore_version\": \"%s\", " \
          "\"picoreplayer_version\": \"%s\", " \
          "\"squeezelite_version\": \"%s\", " \
