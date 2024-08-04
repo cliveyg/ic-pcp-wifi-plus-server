@@ -14,9 +14,9 @@ func (a *App) testTings(w http.ResponseWriter, _ *http.Request) {
 	log.Debug("In testTings")
 	rc, err := exec.Command("sh", "-c", "cd cgi-bin && sudo ./wifi-plus.sh wp_test").Output()
 	pr := WifiPlusResponse{
-		Cmd:     "testTings",
-		SC:      200,
-		Message: strings.TrimSpace(string(rc))}
+		Cmd:        "testTings",
+		StatusCode: 200,
+		Message:    strings.TrimSpace(string(rc))}
 	pr.FormatResponse(w, err)
 
 }
@@ -25,7 +25,12 @@ func (a *App) getPiCoreDetails(w http.ResponseWriter, _ *http.Request) {
 
 	log.Debug("In getPiCoreDetails")
 	retData, err := exec.Command("sh", "-c", "cd cgi-bin && sudo ./wifi-plus.sh wp_picore_details").Output()
-	a.FormatResponse(w, "getPiCoreDetails", 200, "piCore details", string(retData), err)
+	pr := WifiPlusResponse{
+		Cmd:        "getPiCoreDetails",
+		StatusCode: 200,
+		Message:    "piCore details",
+		Data:       string(retData)}
+	pr.FormatResponse(w, err)
 
 }
 
@@ -34,48 +39,45 @@ func (a *App) getSystemStatus(w http.ResponseWriter, _ *http.Request) {
 	log.Debug("In getSystemStatus")
 	rc, err := exec.Command("sh", "-c", "cd cgi-bin && sudo ./wifi-plus.sh wp_status 200").Output()
 
-	a.FormatResponse(w, "getSystemStatus", 200, strings.TrimSpace(string(rc)), "", err)
+	pr := WifiPlusResponse{
+		Cmd:        "getSystemStatus",
+		StatusCode: 200,
+		Message:    strings.TrimSpace(string(rc))}
+	pr.FormatResponse(w, err)
 
 }
 
 func (a *App) getWifiStatus(w http.ResponseWriter, _ *http.Request) {
 
 	log.Debug("In getWifiStatus")
-	var message string
 	args := []string{"wlan0", "status"}
-	var sc int
 	rc, err := a.ExecCmd("/usr/local/etc/init.d/wifi", args)
+	pr := WifiPlusResponse{Cmd: "getWifiStatus"}
+
 	if strings.Contains(rc, "wpa_supplicant running") {
-		message = "wpa_supplicant running"
-		sc = 200
+		pr.Message = "wpa_supplicant running"
+		pr.StatusCode = 200
 	} else {
-		message = "wpa_supplicant not running"
-		sc = 404
+		pr.Message = "wpa_supplicant not running"
+		pr.StatusCode = 404
 	}
-
-	a.FormatResponse(w, "getWifiStatus", sc, message, "", err)
-
+	pr.FormatResponse(w, err)
 }
 
 func (a *App) getWifiSSID(w http.ResponseWriter, _ *http.Request) {
 
 	log.Debug("In getWifiSSID")
-	var message string
 	args := []string{"-r"}
 	SSID, err := a.ExecCmd("iwgetid", args)
-	var sc int
-	data := ""
+	pr := WifiPlusResponse{Cmd: "getWifiSSID"}
 
 	if SSID == "" {
-		sc = 404
-		message = "No SSID found"
+		pr.StatusCode = 404
+		pr.Message = "No SSID found"
 	} else {
-		sc = 200
-		//message = `{ "SSID": "` + strings.TrimSpace(SSID) + `" }`
-		message = "SSID found"
-		data = `"SSID": "` + strings.TrimSpace(SSID) + `"`
+		pr.StatusCode = 200
+		pr.Message = "SSID found"
+		pr.Data = `"SSID": "` + SSID + `"`
 	}
-
-	a.FormatResponse(w, "getWifiSSID", sc, message, data, err)
-
+	pr.FormatResponse(w, err)
 }
