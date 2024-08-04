@@ -14,15 +14,13 @@ arg1=$2
 #arg3=$4
 #arg4=$5
 
+# ---------------------- subroutines ---------------------- #
+
 wp_picore_details() {
-  pv=$(pcp_picore_version)
-  pcpv=$(pcp_picoreplayer_version)
-  sqv=$(pcp_squeezelite_version)
-  lv=$(pcp_linux_release)
-  printf "\"picore_version\": \"%s\", " $pv
-  printf "\"picoreplayer_version\": \"%s\", " $pcpv
-  printf "\"squeezelite_version\": \"%s\", " $sqv
-  printf "\"linux_release\": \"%s\"" $lv
+  printf "\"picore_version\": \"%s\", " $(pcp_picore_version)
+  printf "\"picoreplayer_version\": \"%s\", " $(pcp_picoreplayer_version)
+  printf "\"squeezelite_version\": \"%s\", " $(pcp_squeezelite_version)
+  printf "\"linux_release\": \"%s\"" $(pcp_linux_release)
 }
 
 wp_status() {
