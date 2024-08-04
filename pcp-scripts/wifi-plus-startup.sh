@@ -25,8 +25,9 @@ if sudo cp /mnt/UserData/industrialcool-pcp-wifi-plus/wifiplus /var/www/wifiplus
   wifiplus_pid=0
   wifiplus_pid=$(pidof wifiplus)
   if [ "$wifiplus_pid" ] && [ "$wifiplus_pid" -ne 0 ]; then
+      echo "'wifiplus' process [$wifiplus_pid] found!"
     if kill -9 "$wifiplus_pid"; then
-      echo "Running 'wifiplus' process [\"$wifiplus_pid\"] terminated"
+      echo "Process [$wifiplus_pid] terminated"
     else
       echo "'wifiplus' process could not be terminated!"
       echo "Exiting..."
