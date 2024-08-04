@@ -23,7 +23,7 @@ wp_picore_details() {
 }
 
 wp_status() {
-  echo "$arg1"
+  return $(($arg1))
 }
 
 wp_test() {
