@@ -17,8 +17,8 @@ func main() {
 		log.Fatal(err)
 	}
 	log.SetOutput(file)
-	log.Info("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
-	log.Info("WOOOP!")
+
+	log.Debug("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
 
 	a := App{}
 	a.Initialize()
