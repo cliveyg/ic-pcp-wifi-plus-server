@@ -1,15 +1,12 @@
 # Ignore everything in the root
 /*
 /.env
-/wifiplus
 # Un-ignore these files - it's bit of a clonky way to do it but it's more secure
 !.gitignore
 !.env_example
 !app.go
 !wifiplus.go
-!bouncer.go
 !handlers.go
-!misc.go
 !routes.go
 !helpers.go
 !api_test.go
