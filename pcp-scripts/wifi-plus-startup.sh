@@ -9,6 +9,7 @@ if sudo cp /mnt/UserData/industrialcool-pcp-wifi-plus/pcp-scripts/wifi-plus.sh /
     echo "Successfully copied wifi-plus shell file to cgi-bin and created softlink"
   else
     echo "Copied wifi-plus shell file to cgi-bin but failed to creat softlink to file"
+    exit 1
   fi
 else
   echo "Unable to copy shell file to cgi-bin."
