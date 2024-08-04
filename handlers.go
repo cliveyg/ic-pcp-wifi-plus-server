@@ -15,7 +15,7 @@ func (a *App) getSystemStatus(w http.ResponseWriter, _ *http.Request) {
 	log.Info("In getSystemStatus")
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 
-	rc, err := exec.Command("sh", "-c", "cd cgi-bin && sudo ./wifi-plus.cgi wp_status 200").Output()
+	rc, err := exec.Command("sh", "-c", "cd cgi-bin && sudo ./wifi-plus.sh wp_status 200").Output()
 	if err != nil {
 		log.Info("Error is %s", err)
 		mess := `{"error": "` + err.Error() + `", "rc": "` + strings.TrimSpace(string(rc)) + `"}`

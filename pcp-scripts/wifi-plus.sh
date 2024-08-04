@@ -10,19 +10,19 @@
 
 subroutine=$1
 arg1=$2
-arg2=$3
-arg3=$4
-arg4=$5
-
-case "subroutine" in
-	wp_status)
-	  wp_status
-	;;
-	*)
-	  echo "404"
-	;;
-esac
+# arg2=$3
+# arg3=$4
+# arg4=$5
 
 wp_status() {
-  echo "$arg1"
+  echo $arg1
 }
+
+case $subroutine in
+  wp_status)
+    wp_status
+  ;;
+  *)
+    echo "$subroutine"
+  ;;
+esac
