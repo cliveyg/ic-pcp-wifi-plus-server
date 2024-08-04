@@ -6,6 +6,7 @@
 !.env_example
 !app.go
 !wifiplus.go
+!models.go
 !handlers.go
 !routes.go
 !helpers.go
