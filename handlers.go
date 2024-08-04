@@ -47,11 +47,13 @@ func (a *App) getSystemStatus(w http.ResponseWriter, _ *http.Request) {
 	log.Debug("In getSystemStatus")
 	rc, err := exec.Command("sh", "-c", "cd cgi-bin && sudo ./wifi-plus.sh wp_status 200").Output()
 	if err != nil {
+		log.Info("MEEP1")
 		log.Fatal(err)
 	}
 	buf := bytes.NewBuffer(rc)
 	rcInt, er2 := binary.ReadVarint(buf)
 	if er2 != nil {
+		log.Info("MEEP2")
 		log.Fatal(err)
 	}
 	pr := WifiPlusResponse{
