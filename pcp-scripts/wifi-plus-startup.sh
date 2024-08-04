@@ -57,7 +57,7 @@ if sudo cp /mnt/UserData/industrialcool-pcp-wifi-plus/wifiplus /var/www/wifiplus
     printf "Binary started successfully.\nProcess [\"$wifiplus_pid\"] listening in background on port [\"$PORT\"]...\n"
     echo "Testing connection..."
     sleep 3
-    rc=$(curl -s -o /dev/null -w "%{http_code}" http://"$ICHOST":8020/status)
+    rc=$(curl -s -o /dev/null -w "%{http_code}" http://"$ICHOST""$PORT"/status)
     if [ "$rc" = "200" ]; then
       echo "[$rc OK] API up and running :)"
       exit 0
