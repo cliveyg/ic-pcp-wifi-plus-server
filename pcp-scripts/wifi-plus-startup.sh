@@ -6,13 +6,13 @@ source ../.env
 set +a
 
 echo "-----------------------------------------------------------------------"
-echo "Starting wifi-plus-startup..."
+echo "Starting wifi-plus-startup script..."
 echo "Copying go binary and script files to web folders..."
 sudo chmod 777 /mnt/UserData/industrialcool-pcp-wifi-plus/pcp-scripts/wifi-plus.sh
 if sudo cp /mnt/UserData/industrialcool-pcp-wifi-plus/pcp-scripts/wifi-plus.sh /var/www/cgi-bin/wifi-plus.sh; then
   echo "Successfully copied wifi-plus shell script to cgi-bin"
 else
-  echo "Unable to copy shell file to cgi-bin."
+  echo "Unable to copy shell file to cgi-bin"
   echo "Exiting..."
   exit 1
 fi
@@ -33,7 +33,7 @@ if sudo cp /mnt/UserData/industrialcool-pcp-wifi-plus/wifiplus /var/www/wifiplus
       exit 1
     fi
   else
-    echo "No 'wifiplus' process found."
+    echo "No 'wifiplus' process found"
   fi
 
   echo "Creating logfile in [$LOGFILE]..."
@@ -54,7 +54,7 @@ if sudo cp /mnt/UserData/industrialcool-pcp-wifi-plus/wifiplus /var/www/wifiplus
   wifiplus_pid=0
   wifiplus_pid=$(pidof wifiplus)
   if [ "$wifiplus_pid" ] && [ "$wifiplus_pid" -ne 0 ]; then
-    printf "Binary started successfully.\nProcess [\"$wifiplus_pid\"] listening in background on port [\"$PORT\"]...\n"
+    printf "Binary started successfully.\nProcess [$wifiplus_pid] listening in background on port [$PORT]...\n"
     echo "Testing connection..."
     sleep 3
     rc=$(curl -s -o /dev/null -w "%{http_code}" http://"$ICHOST""$PORT"/status)
@@ -62,7 +62,7 @@ if sudo cp /mnt/UserData/industrialcool-pcp-wifi-plus/wifiplus /var/www/wifiplus
       echo "[$rc OK] API up and running :)"
       exit 0
     else
-      echo "Unable to connect to API successfully."
+      echo "Unable to connect to API successfully"
       echo "Status code is [$rc]"
       echo "Exiting..."
     fi
@@ -72,7 +72,7 @@ if sudo cp /mnt/UserData/industrialcool-pcp-wifi-plus/wifiplus /var/www/wifiplus
   fi
 
 else
-  echo "Unable to copy binary to webroot."
+  echo "Unable to copy binary to webroot"
   echo "Exiting..."
 fi
 
