@@ -26,7 +26,7 @@ wp_picore_details() {
 }
 
 wp_status() {
-  echo "$arg1"
+  echo $arg1
 }
 
 wp_test() {
