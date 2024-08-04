@@ -48,20 +48,11 @@ func (a *App) getSystemStatus(w http.ResponseWriter, _ *http.Request) {
 	if err != nil {
 		log.Fatal(err)
 	}
-	log.Debug(rc)
-	rcInt, err := strconv.Atoi(string(rc))
+	rcInt, err := strconv.Atoi(strings.TrimSpace(string(rc)))
 	if err != nil {
 		log.Fatal(err)
 	}
-	/*
-		buf := bytes.NewBuffer(rc)
-		rcInt, er2 := binary.ReadVarint(buf)
-		if er2 != nil {
-			log.Info("MEEP2")
-			log.Fatal(err)
-		}
 
-	*/
 	pr := WifiPlusResponse{
 		Cmd:        "getSystemStatus",
 		StatusCode: rcInt,
