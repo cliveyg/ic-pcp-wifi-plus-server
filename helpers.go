@@ -28,7 +28,6 @@ func (a *App) FormatResponse(w http.ResponseWriter, cmd string, sc int, message 
 		log.Error("Error is %s", err)
 		sc = 500
 		jsonStr := "{ \"command\": \"" + cmd + "\", " +
-			"\"status_code\": " + string(rune(sc)) + "," +
 			"\"message\": \"error\"," +
 			"\"data\": {" + err.Error() + "} }"
 
@@ -40,7 +39,6 @@ func (a *App) FormatResponse(w http.ResponseWriter, cmd string, sc int, message 
 	}
 
 	jsonStr := "{ \"command\": \"" + cmd + "\", " +
-		"\"status_code\": " + string(rune(sc)) + "," +
 		"\"message\": \"" + message + "\"," +
 		"\"data\": {" + data + "} }"
 
