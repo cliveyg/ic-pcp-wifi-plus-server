@@ -20,34 +20,21 @@ arg3=$4
 
 # ---------------------- subroutines ---------------------- #
 
-wp_general_hup() {
-  #echo "--=-=-= arg 1 =-=-=--"
-  #echo $arg1
-  #echo "--=-=-= arg 2 =-=-=--"
-  #echo $arg2
-  echo "--=-=-= arg 3 =-=-=--"
-  echo $arg3
+wp_wifi_restart_hup() {
 
-  #echo $arg1 | base64 --decode
-  echo ""
-  #echo $arg2 | base64 --decode
-  #echo ""
-  #sc3=echo $arg3 | base64 --decode
-  echo ""
+  #"/usr/local/etc/init.d/wifi wlan0 stop;"
+  #"sleep 3; /usr/local/etc/init.d/wifi wlan0 start;"
+  #"sleep 10; /mnt/UserData/industrialcool-pcp-wifi-plus/pcp-scripts/wifi-plus-startup.sh;"
+
+  #echo $arg3 | base64 --decode
+
   #nohup $(echo $arg3 | base64 --decode) > /var/log/wifiplus.log 2>&1 &
   #nohup $(echo $arg2 | base64 --decode) > /var/log/wifiplus.log 2>&1 &
   #nohup $(echo $arg1 | base64 --decode) > /var/log/wifiplus.log 2>&1 &
   #echo $(sleep 10; /mnt/UserData/industrialcool-pcp-wifi-plus/pcp-scripts/wifi-plus-startup.sh;)
-  $(echo $arg3 | base64 --decode) > /var/log/wifiplus.log 2>&1
-  #for i in $(seq 2 4);
-  #do
-  #  if [ "$DBUG" -eq 1 ]; then
-  #    nohup $(echo -n "$i" | base64 --decode) > /var/log/wifiplus.log 2>&1 &
-  #  else
-  #    nohup $(echo -n "$i" | base64 --decode) > /dev/null 2>&1 &
-  #  fi
-  #done
-  #echo "nohupped"
+
+  nohup $(sleep 10; /mnt/UserData/industrialcool-pcp-wifi-plus/pcp-scripts/wifi-plus-startup.sh;) > /var/log/wifiplus.log 2>&1 &
+
 }
 
 wp_picore_details() {

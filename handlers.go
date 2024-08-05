@@ -1,7 +1,6 @@
 package main
 
 import (
-	"encoding/base64"
 	"encoding/json"
 	"fmt"
 	"github.com/gorilla/mux"
@@ -20,28 +19,9 @@ func (a *App) testTings(w http.ResponseWriter, _ *http.Request) {
 	log.Debug("-----------------------------")
 	log.Debug("In testTings")
 
-	/*
-		pr := WifiPlusResponse{
-			Cmd:        "testTings",
-			Action:     "run nohupped commands",
-			StatusCode: 202,
-			Message:    "unknowable",
-		}
-		pr.FormatResponse(w, nil)
-
-	*/
-
-	time.Sleep(time.Second * 3)
-	cmds := []string{
-		"/usr/local/etc/init.d/wifi wlan0 stop;",
-		"sleep 3; /usr/local/etc/init.d/wifi wlan0 start;",
-		"sleep 10; /mnt/UserData/industrialcool-pcp-wifi-plus/pcp-scripts/wifi-plus-startup.sh;",
-	}
-	str1 := base64.StdEncoding.EncodeToString([]byte(cmds[0]))
-	str2 := base64.StdEncoding.EncodeToString([]byte(cmds[1]))
-	str3 := base64.StdEncoding.EncodeToString([]byte(cmds[2]))
-	fullCmd := fmt.Sprintf("cd cgi-bin && ./wifi-plus.sh wp_general_hup %s %s %s", str1, str2, str3)
+	fullCmd := fmt.Sprintf("cd cgi-bin && ./wifi-plus.sh wp_wifi_restart_hup")
 	log.WithFields(log.Fields{"fullCmd": fullCmd}).Debug("Full command!")
+
 	rc, err := exec.Command("sh", "-c", fullCmd).Output()
 	if err != nil {
 		log.Fatal(err)
