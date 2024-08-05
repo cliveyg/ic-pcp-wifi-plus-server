@@ -29,8 +29,11 @@ wp_general_hup() {
   echo $arg3
 
   echo $arg1 | base64 --decode
+  echo ""
   echo $arg2 | base64 --decode
+  echo ""
   echo $arg3 | base64 --decode
+  echo ""
   #nohup $(echo -n $arg1 | base64 --decode) > /var/log/wifiplus.log 2>&1 &
   #nohup $(echo -n $arg2 | base64 --decode) > /var/log/wifiplus.log 2>&1 &
   #nohup $(echo -n $arg3 | base64 --decode) > /var/log/wifiplus.log 2>&1 &
