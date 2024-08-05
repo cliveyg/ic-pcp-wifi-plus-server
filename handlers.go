@@ -20,13 +20,16 @@ func (a *App) testTings(w http.ResponseWriter, _ *http.Request) {
 	log.Debug("-----------------------------")
 	log.Debug("In testTings")
 
-	pr := WifiPlusResponse{
-		Cmd:        "testTings",
-		Action:     "run nohupped commands",
-		StatusCode: 202,
-		Message:    "unknowable",
-	}
-	pr.FormatResponse(w, nil)
+	/*
+		pr := WifiPlusResponse{
+			Cmd:        "testTings",
+			Action:     "run nohupped commands",
+			StatusCode: 202,
+			Message:    "unknowable",
+		}
+		pr.FormatResponse(w, nil)
+
+	*/
 
 	time.Sleep(time.Second * 3)
 	cmds := []string{
@@ -39,20 +42,19 @@ func (a *App) testTings(w http.ResponseWriter, _ *http.Request) {
 	str3 := base64.StdEncoding.EncodeToString([]byte(cmds[2]))
 	fullCmd := fmt.Sprintf("cd cgi-bin && ./wifi-plus.sh wp_general_hup %s %s %s", str1, str2, str3)
 	log.WithFields(log.Fields{"fullCmd": fullCmd}).Debug("Full command!")
-	_, err := exec.Command("sh", "-c", fullCmd).Output()
+	rc, err := exec.Command("sh", "-c", fullCmd).Output()
 	if err != nil {
 		log.Fatal(err)
 	}
-	/*
-		pr := WifiPlusResponse{
-			Cmd:        "testTings",
-			Action:     "run nohupped commands",
-			StatusCode: 200,
-			Message:    "yarp",
-			Data:       string(rc)}
-		pr.FormatResponse(w, err)
 
-	*/
+	pr := WifiPlusResponse{
+		Cmd:        "testTings",
+		Action:     "run nohupped commands",
+		StatusCode: 200,
+		Message:    "yarp",
+		Data:       string(rc)}
+	pr.FormatResponse(w, err)
+
 }
 
 func (a *App) systemAction(w http.ResponseWriter, r *http.Request) {
