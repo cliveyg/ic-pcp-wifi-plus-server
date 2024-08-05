@@ -17,6 +17,7 @@ import (
 
 func (a *App) testTings(w http.ResponseWriter, _ *http.Request) {
 
+	log.Debug("-----------------------------")
 	log.Debug("In testTings")
 	pr := WifiPlusResponse{
 		Cmd:        "testTings",
@@ -42,6 +43,7 @@ func (a *App) testTings(w http.ResponseWriter, _ *http.Request) {
 
 func (a *App) systemAction(w http.ResponseWriter, r *http.Request) {
 
+	log.Debug("-----------------------------")
 	log.Debug("In systemAction")
 	vars := mux.Vars(r)
 	sysAction := vars["action"]
@@ -98,6 +100,7 @@ func (a *App) systemAction(w http.ResponseWriter, r *http.Request) {
 
 func (a *App) wifiAction(w http.ResponseWriter, r *http.Request) {
 
+	log.Debug("-----------------------------")
 	log.Debug("In wifiAction")
 	vars := mux.Vars(r)
 	wifiAction := vars["action"]
@@ -156,6 +159,7 @@ func (a *App) wifiAction(w http.ResponseWriter, r *http.Request) {
 
 func (a *App) getWPACliStatus(w http.ResponseWriter, _ *http.Request) {
 
+	log.Debug("-----------------------------")
 	log.Debug("In getWPACliStatus")
 	rc, err := exec.Command("sh", "-c", "wpa_cli status").Output()
 	if err != nil {
