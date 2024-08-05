@@ -40,8 +40,8 @@ func (a *App) testTings(w http.ResponseWriter, _ *http.Request) {
 			wpaData.SSID = kv[1]
 		case "key_mgmt":
 			wpaData.KeyMgmt = kv[1]
-		case "mac_address":
-			wpaData.MACAddress = kv[1]
+		case "address":
+			wpaData.Address = kv[1]
 		case "uuid":
 			wpaData.UUID = kv[1]
 		default:
