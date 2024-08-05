@@ -19,7 +19,7 @@ func (a *App) testTings(w http.ResponseWriter, _ *http.Request) {
 	log.Debug("In testTings")
 	pr := WifiPlusResponse{
 		Cmd:        "testTings",
-		Action:     "run hupped commands",
+		Action:     "run nohupped commands",
 		StatusCode: 202,
 		Message:    "unknowable",
 	}
