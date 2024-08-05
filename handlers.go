@@ -68,6 +68,7 @@ func (a *App) getWPACliStatus(w http.ResponseWriter, _ *http.Request) {
 		log.Fatal(err)
 	}
 	lines := strings.Split(strings.TrimSpace(string(rc)), "\n")
+	// remove first line
 	lines = append(lines[:0], lines[1:]...)
 
 	wpaData := WPACliResponse{}
@@ -76,9 +77,9 @@ func (a *App) getWPACliStatus(w http.ResponseWriter, _ *http.Request) {
 	jsonData, _ := json.Marshal(wpaData)
 
 	pr := WifiPlusResponse{
-		Cmd:        "testTings",
+		Cmd:        "getWPACliStatus",
 		StatusCode: 200,
-		Message:    "wpa_cli test",
+		Message:    "wpa_cli status",
 		Data:       string(jsonData)}
 	pr.FormatResponse(w, err)
 

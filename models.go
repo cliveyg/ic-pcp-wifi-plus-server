@@ -15,7 +15,7 @@ type WPACliResponse struct {
 	SSID      string `json:"ssid"`
 	IPAddress string `json:"ip_address"`
 	KeyMgmt   string `json:"key_mgmt"`
-	Address   string `json:"mac_address"`
+	Address   string `json:"address"`
 	UUID      string `json:"uuid"`
 }
 
