@@ -2,14 +2,13 @@ package main
 
 import (
 	"encoding/json"
+	"fmt"
 	"github.com/gorilla/mux"
 	log "github.com/sirupsen/logrus"
 	"net/http"
-	"os"
 	"os/exec"
 	"strconv"
 	"strings"
-	"sync"
 	"time"
 )
 
@@ -18,35 +17,25 @@ import (
 func (a *App) testTings(w http.ResponseWriter, _ *http.Request) {
 
 	log.Debug("In testTings")
+	pr := WifiPlusResponse{
+		Cmd:        "testTings",
+		Action:     "run hupped commands",
+		StatusCode: 202,
+		Message:    "unknowable",
+	}
+	pr.FormatResponse(w, nil)
+	time.Sleep(time.Second * 2)
 	cmds := []string{
 		"/usr/local/etc/init.d/wifi wlan0 stop",
 		"sleep 3 && /usr/local/etc/init.d/wifi wlan0 start",
-		"sleep 8 && sudo -u tc /mnt/UserData/industrialcool-pcp-wifi-plus/pcp-scripts/wifi-plus-startup.sh",
-		"sleep 12 && /usr/local/etc/init.d/wifi wlan0 status",
+		"sleep 10 && sudo -u tc /mnt/UserData/industrialcool-pcp-wifi-plus/pcp-scripts/wifi-plus-startup.sh",
 	}
-	var wg sync.WaitGroup
-	for _, c := range cmds {
-		wg.Add(1)
-		go func(c string) {
-			defer wg.Done()
-			runCmd(c)
-		}(c)
-	}
-	wg.Wait()
 
-	log.Info("We get here after waitgroup")
-	_, err := http.Get("http://" + os.Getenv("ICHOST") + os.Getenv("PORT") + "/wifi/status")
+	fullCmd := fmt.Sprintf("cd cgi-bin && ./wifi-plus.sh wp_general_hup %s %s %s", cmds[0], cmds[1], cmds[2])
+	_, err := exec.Command("sh", "-c", fullCmd).Output()
 	if err != nil {
 		log.Fatal(err)
 	}
-	pr := WifiPlusResponse{
-		Cmd:        "testTings",
-		Action:     "restart wifi",
-		StatusCode: 200,
-		Message:    "success",
-	}
-	pr.FormatResponse(w, nil)
-
 }
 
 func (a *App) systemAction(w http.ResponseWriter, r *http.Request) {
