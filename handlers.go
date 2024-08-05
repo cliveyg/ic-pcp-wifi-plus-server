@@ -34,12 +34,11 @@ func (a *App) testTings(w http.ResponseWriter, _ *http.Request) {
 	}
 	wg.Wait()
 
+	log.Info("We get here after waitgroup")
 	_, err := http.Get("http://" + os.Getenv("ICHOST") + os.Getenv("PORT") + "/wifi/status")
 	if err != nil {
 		log.Fatal(err)
 	}
-
-	// only get here if wlan0 running okay
 	pr := WifiPlusResponse{
 		Cmd:        "testTings",
 		Action:     "restart wifi",
