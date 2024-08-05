@@ -25,16 +25,16 @@ wp_general_hup() {
   #echo $arg1
   #echo "--=-=-= arg 2 =-=-=--"
   #echo $arg2
-  #echo "--=-=-= arg 3 =-=-=--"
-  #echo $arg3
+  echo "--=-=-= arg 3 =-=-=--"
+  echo $arg3
 
   #echo $arg1 | base64 --decode
-  #echo ""
+  echo ""
   #echo $arg2 | base64 --decode
   #echo ""
-  #echo $arg3 | base64 --decode
-  #echo ""
-  nohup $(echo $arg3 | base64 --decode) > /var/log/wifiplus.log 2>&1 &
+  echo $arg3 | base64 --decode
+  echo ""
+  #nohup $(echo $arg3 | base64 --decode) > /var/log/wifiplus.log 2>&1 &
   #nohup $(echo $arg2 | base64 --decode) > /var/log/wifiplus.log 2>&1 &
   #nohup $(echo $arg1 | base64 --decode) > /var/log/wifiplus.log 2>&1 &
 
