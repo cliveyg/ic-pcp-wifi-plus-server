@@ -22,7 +22,7 @@ arg3=$4
 
 wp_cmd_1() {
   sleep 1
-  pwd /mnt/UserData/industrialcool-pcp-wifi-plus/pcp-scripts/
+  cd /mnt/UserData/industrialcool-pcp-wifi-plus/pcp-scripts/
   ./wifi-plus-startup.sh
 }
 
