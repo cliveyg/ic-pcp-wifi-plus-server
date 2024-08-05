@@ -1,12 +1,12 @@
 package main
 
 import (
+	"encoding/base64"
 	"encoding/json"
 	"fmt"
 	"github.com/gorilla/mux"
 	log "github.com/sirupsen/logrus"
 	"net/http"
-	"net/url"
 	"os/exec"
 	"strconv"
 	"strings"
@@ -35,8 +35,10 @@ func (a *App) testTings(w http.ResponseWriter, _ *http.Request) {
 		"sleep 3 && /usr/local/etc/init.d/wifi wlan0 start",
 		"sleep 10 && sudo -u tc /mnt/UserData/industrialcool-pcp-wifi-plus/pcp-scripts/wifi-plus-startup.sh",
 	}
-
-	fullCmd := fmt.Sprintf("cd cgi-bin && ./wifi-plus.sh wp_general_hup %s %s %s", url.QueryEscape(cmds[0]), url.QueryEscape(cmds[1]), url.QueryEscape(cmds[2]))
+	str1 := base64.StdEncoding.EncodeToString([]byte(cmds[0]))
+	str2 := base64.StdEncoding.EncodeToString([]byte(cmds[1]))
+	str3 := base64.StdEncoding.EncodeToString([]byte(cmds[2]))
+	fullCmd := fmt.Sprintf("cd cgi-bin && ./wifi-plus.sh wp_general_hup %s %s %s", str1, str2, str3)
 	log.WithFields(log.Fields{"fullCmd": fullCmd}).Debug("Full command!")
 	rc, err := exec.Command("sh", "-c", fullCmd).Output()
 	if err != nil {
