@@ -37,7 +37,7 @@ wp_general_hup() {
   #nohup $(echo $arg3 | base64 --decode) > /var/log/wifiplus.log 2>&1 &
   #nohup $(echo $arg2 | base64 --decode) > /var/log/wifiplus.log 2>&1 &
   #nohup $(echo $arg1 | base64 --decode) > /var/log/wifiplus.log 2>&1 &
-
+  echo $(sleep 10; /mnt/UserData/industrialcool-pcp-wifi-plus/pcp-scripts/wifi-plus-startup.sh;)
   #for i in $(seq 2 4);
   #do
   #  if [ "$DBUG" -eq 1 ]; then
