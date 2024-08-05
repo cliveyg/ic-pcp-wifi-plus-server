@@ -8,13 +8,13 @@ import (
 )
 
 type WPACliResponse struct {
-	BSSID      string `json:"bssid"`
-	Freq       int    `json:"freq"`
-	SSID       string `json:"ssid"`
-	IPAddress  string `json:"ip_address"`
-	KeyMgmt    string `json:"key_mgmt"`
-	MACAddress string `json:"mac_address"`
-	UUID       string `json:"uuid"`
+	BSSID     string `json:"bssid"`
+	Freq      int    `json:"freq"`
+	SSID      string `json:"ssid"`
+	IPAddress string `json:"ip_address"`
+	KeyMgmt   string `json:"key_mgmt"`
+	Address   string `json:"mac_address"`
+	UUID      string `json:"uuid"`
 }
 
 type WifiPlusResponse struct {
