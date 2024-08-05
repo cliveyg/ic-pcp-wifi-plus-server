@@ -38,9 +38,17 @@ func (p *WifiPlusResponse) FormatResponse(w http.ResponseWriter, err error) {
 		return
 	}
 
-	jsonStr := "{ \"command\": \"" + p.Cmd + "\", " +
-		"\"message\": \"" + p.Message + "\"," +
-		"\"data\": {" + p.Data + "} }"
+	var jsonStr string
+	// check to avoid double brackets
+	if substr(p.Data, 0, 1) == "{" {
+		jsonStr = "{ \"command\": \"" + p.Cmd + "\", " +
+			"\"message\": \"" + p.Message + "\"," +
+			"\"data\": " + p.Data + " }"
+	} else {
+		jsonStr = "{ \"command\": \"" + p.Cmd + "\", " +
+			"\"message\": \"" + p.Message + "\"," +
+			"\"data\": {" + p.Data + "} }"
+	}
 
 	w.WriteHeader(p.StatusCode)
 	if _, err := io.WriteString(w, jsonStr); err != nil {
