@@ -6,6 +6,7 @@ import (
 	"github.com/gorilla/mux"
 	log "github.com/sirupsen/logrus"
 	"net/http"
+	"net/url"
 	"os/exec"
 	"strconv"
 	"strings"
@@ -31,7 +32,7 @@ func (a *App) testTings(w http.ResponseWriter, _ *http.Request) {
 		"sleep 10 && sudo -u tc /mnt/UserData/industrialcool-pcp-wifi-plus/pcp-scripts/wifi-plus-startup.sh",
 	}
 
-	fullCmd := fmt.Sprintf("cd cgi-bin && ./wifi-plus.sh wp_general_hup %s %s %s", cmds[0], cmds[1], cmds[2])
+	fullCmd := fmt.Sprintf("cd cgi-bin && ./wifi-plus.sh wp_general_hup %s %s %s", url.QueryEscape(cmds[0]), url.QueryEscape(cmds[1]), url.QueryEscape(cmds[2]))
 	log.WithFields(log.Fields{"fullCmd": fullCmd}).Debug("Full command!")
 	_, err := exec.Command("sh", "-c", fullCmd).Output()
 	if err != nil {
