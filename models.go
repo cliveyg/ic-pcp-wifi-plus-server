@@ -61,7 +61,7 @@ func (p *WifiPlusResponse) FormatResponse(w http.ResponseWriter, err error) {
 
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 	if err != nil {
-		log.Error("Error is %s", err)
+		log.WithFields(log.Fields{"err": err}).Debug("Something went bang")
 		p.StatusCode = 500
 		jsonData, _ := json.Marshal(p)
 		w.WriteHeader(p.StatusCode)

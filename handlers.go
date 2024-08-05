@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"github.com/gorilla/mux"
 	log "github.com/sirupsen/logrus"
 	"net/http"
 	"os/exec"
@@ -58,6 +59,62 @@ func (a *App) testTings(w http.ResponseWriter, _ *http.Request) {
 		Data:       string(jsonData)}
 	pr.FormatResponse(w, err)
 
+}
+
+func (a *App) wifiAction(w http.ResponseWriter, r *http.Request) {
+
+	log.Debug("In restartWifi")
+	vars := mux.Vars(r)
+	wifiAction := vars["action"]
+
+	var rc []byte
+	var sr string
+	var err error
+	var args []string
+	pr := WifiPlusResponse{
+		Cmd:     "wifiAction",
+		Message: "Action [" + wifiAction + "]",
+	}
+
+	switch wifiAction {
+	case "restart":
+		// send message before enacting command
+		pr.StatusCode = 202
+		pr.FormatResponse(w, nil)
+		time.Sleep(2 * time.Second)
+		rc, err = exec.Command("sh", "-c", "/usr/local/etc/init.d/wifi wlan0 stop && /usr/local/etc/init.d/wifi wlan0 start").Output()
+		log.Debug(rc)
+		return
+	case "status":
+		args = []string{"wlan0", "status"}
+		sr, err = a.ExecCmd("/usr/local/etc/init.d/wifi", args)
+
+		if strings.Contains(sr, "wpa_supplicant running") {
+			pr.Data = `{ "response": "wpa_supplicant running" }`
+			pr.StatusCode = 200
+		} else {
+			pr.Data = `"response": "wpa_supplicant not running"`
+			pr.StatusCode = 404
+		}
+	case "ssid":
+		args = []string{"-r"}
+		sr, err = a.ExecCmd("iwgetid", args)
+
+		if sr == "" {
+			pr.StatusCode = 404
+			pr.Message = "No SSID found"
+			pr.Data = `"response": "No SSID found" `
+		} else {
+			pr.StatusCode = 200
+			pr.Message = "SSID found"
+			pr.Data = `"response": "SSID found", "SSID": "` + sr + `"`
+		}
+	default:
+		// do nowt
+		pr.StatusCode = 400
+	}
+
+	pr.FormatResponse(w, err)
 }
 
 func (a *App) getWPACliStatus(w http.ResponseWriter, _ *http.Request) {
@@ -135,6 +192,7 @@ func (a *App) getSystemStatus(w http.ResponseWriter, _ *http.Request) {
 
 }
 
+/*
 func (a *App) getWifiStatus(w http.ResponseWriter, _ *http.Request) {
 
 	log.Debug("In getWifiStatus")
@@ -169,3 +227,6 @@ func (a *App) getWifiSSID(w http.ResponseWriter, _ *http.Request) {
 	}
 	pr.FormatResponse(w, err)
 }
+
+
+*/
