@@ -60,6 +60,30 @@ func (a *App) testTings(w http.ResponseWriter, _ *http.Request) {
 
 }
 
+func (a *App) getWPACliStatus(w http.ResponseWriter, _ *http.Request) {
+
+	log.Debug("In getWPACliStatus")
+	rc, err := exec.Command("sh", "-c", "wpa_cli status").Output()
+	if err != nil {
+		log.Fatal(err)
+	}
+	lines := strings.Split(strings.TrimSpace(string(rc)), "\n")
+	lines = append(lines[:0], lines[1:]...)
+
+	wpaData := WPACliResponse{}
+	wpaData.OrganiseData(lines)
+
+	jsonData, _ := json.Marshal(wpaData)
+
+	pr := WifiPlusResponse{
+		Cmd:        "testTings",
+		StatusCode: 200,
+		Message:    "wpa_cli test",
+		Data:       string(jsonData)}
+	pr.FormatResponse(w, err)
+
+}
+
 func (a *App) getPiCoreDetails(w http.ResponseWriter, _ *http.Request) {
 
 	log.Debug("In getPiCoreDetails")
