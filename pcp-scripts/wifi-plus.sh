@@ -21,14 +21,17 @@ arg3=$4
 # ---------------------- subroutines ---------------------- #
 
 wp_general_hup() {
-  echo "--=-=-= arg 1 =-=-=--"
-  echo $arg1
-  echo "--=-=-= arg 2 =-=-=--"
-  echo $arg2
-  echo "--=-=-= arg 3 =-=-=--"
-  echo $arg3
+  #echo "--=-=-= arg 1 =-=-=--"
+  #echo $arg1
+  #echo "--=-=-= arg 2 =-=-=--"
+  #echo $arg2
+  #echo "--=-=-= arg 3 =-=-=--"
+  #echo $arg3
 
-  echo -n $arg3 | base64 --decode
+  #echo -n $arg3 | base64 --decode
+  nohup $(echo -n $arg1 | base64 --decode) > /var/log/wifiplus.log 2>&1 &
+  nohup $(echo -n $arg2 | base64 --decode) > /var/log/wifiplus.log 2>&1 &
+  nohup $(echo -n $arg3 | base64 --decode) > /var/log/wifiplus.log 2>&1 &
 
   #for i in $(seq 2 4);
   #do
