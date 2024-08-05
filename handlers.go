@@ -5,6 +5,7 @@ import (
 	"github.com/gorilla/mux"
 	log "github.com/sirupsen/logrus"
 	"net/http"
+	"os"
 	"os/exec"
 	"strconv"
 	"strings"
@@ -20,7 +21,8 @@ func (a *App) testTings(w http.ResponseWriter, _ *http.Request) {
 	cmds := []string{
 		"/usr/local/etc/init.d/wifi wlan0 stop",
 		"sleep 3 && /usr/local/etc/init.d/wifi wlan0 start",
-		"sleep 6 && /usr/local/etc/init.d/wifi wlan0 status",
+		"sleep 8 && sudo -u tc /mnt/UserData/industrialcool-pcp-wifi-plus/pcp-scripts/wifi-plus-startup.sh",
+		"sleep 12 && /usr/local/etc/init.d/wifi wlan0 status",
 	}
 	var wg sync.WaitGroup
 	for _, c := range cmds {
@@ -32,11 +34,18 @@ func (a *App) testTings(w http.ResponseWriter, _ *http.Request) {
 	}
 	wg.Wait()
 
+	_, err := http.Get("http://" + os.Getenv("ICHOST") + os.Getenv("PORT") + "/wifi/status")
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	// only get here if wlan0 running okay
 	pr := WifiPlusResponse{
 		Cmd:        "testTings",
-		StatusCode: 200,
 		Action:     "restart wifi",
-		Message:    "success"}
+		StatusCode: 200,
+		Message:    "success",
+	}
 	pr.FormatResponse(w, nil)
 
 }
