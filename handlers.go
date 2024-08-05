@@ -22,48 +22,19 @@ func (a *App) testTings(w http.ResponseWriter, _ *http.Request) {
 	}
 	lines := strings.Split(strings.TrimSpace(string(rc)), "\n")
 	lines = append(lines[:0], lines[1:]...)
-	wpaData := WPACliResponse{}
-	for _, line := range lines {
-		kv := strings.Split(line, "=")
-		statusKey := kv[0]
-		switch statusKey {
-		case "bssid":
-			wpaData.BSSID = kv[1]
-		case "freq":
-			frq, err := strconv.Atoi(kv[1])
-			if err != nil {
-				log.Fatal(err)
-			}
-			wpaData.Freq = frq
-		case "ip_address":
-			wpaData.IPAddress = kv[1]
-		case "ssid":
-			wpaData.SSID = kv[1]
-		case "key_mgmt":
-			wpaData.KeyMgmt = kv[1]
-		case "address":
-			wpaData.Address = kv[1]
-		case "uuid":
-			wpaData.UUID = kv[1]
-		default:
-			// do nowt
-		}
-	}
-
-	jsonData, _ := json.Marshal(wpaData)
 
 	pr := WifiPlusResponse{
 		Cmd:        "testTings",
 		StatusCode: 200,
-		Message:    "wpa_cli test",
-		Data:       string(jsonData)}
+		Action:     "Testing stuff",
+		Message:    "testy test"}
 	pr.FormatResponse(w, err)
 
 }
 
 func (a *App) wifiAction(w http.ResponseWriter, r *http.Request) {
 
-	log.Debug("In restartWifi")
+	log.Debug("In wifiAction")
 	vars := mux.Vars(r)
 	wifiAction := vars["action"]
 
@@ -74,8 +45,8 @@ func (a *App) wifiAction(w http.ResponseWriter, r *http.Request) {
 	var err error
 	var args []string
 	pr := WifiPlusResponse{
-		Cmd:     "wifiAction",
-		Message: "Action [" + wifiAction + "]",
+		Cmd:    "wifiAction",
+		Action: wifiAction,
 	}
 
 	switch wifiAction {
@@ -92,10 +63,10 @@ func (a *App) wifiAction(w http.ResponseWriter, r *http.Request) {
 		sr, err = a.ExecCmd("/usr/local/etc/init.d/wifi", args)
 
 		if strings.Contains(sr, "wpa_supplicant running") {
-			pr.Data = `{ "response": "wpa_supplicant running" }`
+			pr.Message = "wpa_supplicant running"
 			pr.StatusCode = 200
 		} else {
-			pr.Data = `"response": "wpa_supplicant not running"`
+			pr.Message = "wpa_supplicant not running"
 			pr.StatusCode = 404
 		}
 	case "ssid":
@@ -104,10 +75,11 @@ func (a *App) wifiAction(w http.ResponseWriter, r *http.Request) {
 
 		if sr == "" {
 			pr.StatusCode = 404
-			pr.Data = `"response": "No SSID found" `
+			pr.Message = "No SSID found"
 		} else {
 			pr.StatusCode = 200
-			pr.Data = `"response": "SSID found", "SSID": "` + sr + `"`
+			pr.Message = "SSID found"
+			pr.Data = `"SSID": "` + sr + `"`
 		}
 	default:
 		// do nowt
