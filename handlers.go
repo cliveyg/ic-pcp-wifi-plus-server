@@ -32,6 +32,62 @@ func (a *App) testTings(w http.ResponseWriter, _ *http.Request) {
 
 }
 
+func (a *App) systemAction(w http.ResponseWriter, r *http.Request) {
+
+	log.Debug("In systemAction")
+	vars := mux.Vars(r)
+	sysAction := vars["action"]
+
+	//TODO: Check input string more thoroughly
+
+	var rc []byte
+	var rcInt int
+	var err error
+	pr := WifiPlusResponse{
+		Cmd:    "sysAction",
+		Action: sysAction,
+	}
+
+	switch sysAction {
+	case "status":
+		rc, err = exec.Command("sh", "-c", "cd cgi-bin && ./wifi-plus.sh wp_status 200").Output()
+		if err != nil {
+			log.Fatal(err)
+		}
+		rcInt, err = strconv.Atoi(strings.TrimSpace(string(rc)))
+		if err != nil {
+			log.Fatal(err)
+		}
+		pr.StatusCode = rcInt
+		pr.Message = "System running"
+	case "picore":
+		rc, err = exec.Command("sh", "-c", "cd cgi-bin && sudo ./wifi-plus.sh wp_picore_details").Output()
+		if err != nil {
+			log.Fatal(err)
+		}
+		pr.StatusCode = 200
+		pr.Message = "piCore details"
+		pr.Data = string(rc)
+	case "reboot":
+		pr.StatusCode = 202
+		pr.Message = "System rebooting"
+		pr.FormatResponse(w, nil)
+		time.Sleep(2 * time.Second)
+		rc, err := exec.Command("sh", "-c", "sudo pcp rb").Output()
+		log.Debug(rc)
+		if err != nil {
+			log.Fatal(err)
+		}
+		return
+	default:
+		// do nowt
+		pr.StatusCode = 400
+		pr.Message = "Action does not exist"
+	}
+
+	pr.FormatResponse(w, err)
+}
+
 func (a *App) wifiAction(w http.ResponseWriter, r *http.Request) {
 
 	log.Debug("In wifiAction")
@@ -84,6 +140,7 @@ func (a *App) wifiAction(w http.ResponseWriter, r *http.Request) {
 	default:
 		// do nowt
 		pr.StatusCode = 400
+		pr.Message = "Action does not exist"
 	}
 
 	pr.FormatResponse(w, err)
@@ -111,59 +168,6 @@ func (a *App) getWPACliStatus(w http.ResponseWriter, _ *http.Request) {
 		StatusCode: 200,
 		Message:    "wpa_cli status",
 		Data:       string(jsonData)}
-	pr.FormatResponse(w, err)
-
-}
-
-func (a *App) getPiCoreDetails(w http.ResponseWriter, _ *http.Request) {
-
-	log.Debug("In getPiCoreDetails")
-	retData, err := exec.Command("sh", "-c", "cd cgi-bin && sudo ./wifi-plus.sh wp_picore_details").Output()
-	if err != nil {
-		log.Fatal(err)
-	}
-	pr := WifiPlusResponse{
-		Cmd:        "getPiCoreDetails",
-		Action:     "wifi-plus.sh",
-		StatusCode: 200,
-		Message:    "piCore details",
-		Data:       string(retData)}
-	pr.FormatResponse(w, err)
-
-}
-
-func (a *App) RebootSystem(w http.ResponseWriter, _ *http.Request) {
-	log.Debug("In RebootSystem")
-	pr := WifiPlusResponse{
-		Cmd:        "RebootSystem",
-		Action:     "pcp rb",
-		StatusCode: 202,
-		Message:    "System rebooting"}
-	pr.FormatResponse(w, nil)
-	time.Sleep(2 * time.Second)
-	_, err := exec.Command("sh", "-c", "sudo pcp rb").Output()
-	if err != nil {
-		log.Fatal(err)
-	}
-}
-
-func (a *App) getSystemStatus(w http.ResponseWriter, _ *http.Request) {
-
-	log.Debug("In getSystemStatus")
-	rc, err := exec.Command("sh", "-c", "cd cgi-bin && ./wifi-plus.sh wp_status 200").Output()
-	if err != nil {
-		log.Fatal(err)
-	}
-	rcInt, err := strconv.Atoi(strings.TrimSpace(string(rc)))
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	pr := WifiPlusResponse{
-		Cmd:        "getSystemStatus",
-		Action:     "wifi-plus.sh",
-		StatusCode: rcInt,
-		Message:    "System running"}
 	pr.FormatResponse(w, err)
 
 }
