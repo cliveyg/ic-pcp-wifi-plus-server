@@ -17,26 +17,26 @@ else
   exit 1
 fi
 
+echo "Checking for any running 'wifiplus' processes..."
+wifiplus_pid=0
+wifiplus_pid=$(pidof wifiplus)
+if [ "$wifiplus_pid" ] && [ "$wifiplus_pid" -ne 0 ]; then
+    echo "'wifiplus' process [$wifiplus_pid] found!"
+  if kill -9 "$wifiplus_pid"; then
+    echo "Process [$wifiplus_pid] terminated"
+  else
+    echo "'wifiplus' process could not be terminated!"
+    echo "Exiting..."
+    exit 1
+  fi
+else
+  echo "No 'wifiplus' process found"
+fi
+
 if sudo cp /mnt/UserData/industrialcool-pcp-wifi-plus/wifiplus /var/www/wifiplus &&
    sudo cp /mnt/UserData/industrialcool-pcp-wifi-plus/.env /var/www/.env; then
 
   echo "Successfully copied wifi-plus binary to webroot"
-  echo "Checking for any running 'wifiplus' processes..."
-  wifiplus_pid=0
-  wifiplus_pid=$(pidof wifiplus)
-  if [ "$wifiplus_pid" ] && [ "$wifiplus_pid" -ne 0 ]; then
-      echo "'wifiplus' process [$wifiplus_pid] found!"
-    if kill -9 "$wifiplus_pid"; then
-      echo "Process [$wifiplus_pid] terminated"
-    else
-      echo "'wifiplus' process could not be terminated!"
-      echo "Exiting..."
-      exit 1
-    fi
-  else
-    echo "No 'wifiplus' process found"
-  fi
-
   echo "Creating logfile in [$LOGFILE]..."
   if [ -f "$LOGFILE" ]; then
     echo "Logfile already exists"
@@ -50,7 +50,6 @@ if sudo cp /mnt/UserData/industrialcool-pcp-wifi-plus/wifiplus /var/www/wifiplus
   fi
 
   echo "Attempting to start binary..."
-
   cd /var/www/ && nohup ./wifiplus > /dev/null 2>&1 &
   wifiplus_pid=0
   wifiplus_pid=$(pidof wifiplus)
