@@ -19,6 +19,13 @@ func (a *App) testTings(w http.ResponseWriter, _ *http.Request) {
 	log.Debug("-----------------------------")
 	log.Debug("In testTings")
 
+	pr := WifiPlusResponse{
+		Cmd:        "testTings",
+		Action:     "ran nohupped commands",
+		StatusCode: 202,
+		Message:    "now we wait..."}
+	pr.FormatResponse(w, nil)
+
 	fullCmd := fmt.Sprintf("cd cgi-bin && ./wifi-plus.sh wp_wifi_restart_hup")
 	log.WithFields(log.Fields{"fullCmd": fullCmd}).Debug("Full command!")
 
@@ -26,13 +33,6 @@ func (a *App) testTings(w http.ResponseWriter, _ *http.Request) {
 	if err != nil {
 		log.Fatal(err)
 	}
-
-	pr := WifiPlusResponse{
-		Cmd:        "testTings",
-		Action:     "ran nohupped commands",
-		StatusCode: 202,
-		Message:    "now we wait..."}
-	pr.FormatResponse(w, err)
 
 }
 
