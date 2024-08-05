@@ -5,6 +5,8 @@ import (
 	log "github.com/sirupsen/logrus"
 	"io"
 	"net/http"
+	"strconv"
+	"strings"
 )
 
 type WPACliResponse struct {
@@ -15,6 +17,37 @@ type WPACliResponse struct {
 	KeyMgmt   string `json:"key_mgmt"`
 	Address   string `json:"mac_address"`
 	UUID      string `json:"uuid"`
+}
+
+func (p *WPACliResponse) OrganiseData(lines []string) {
+
+	for _, line := range lines {
+		kv := strings.Split(line, "=")
+		statusKey := kv[0]
+		switch statusKey {
+		case "bssid":
+			p.BSSID = kv[1]
+		case "freq":
+			frq, err := strconv.Atoi(kv[1])
+			if err != nil {
+				log.Fatal(err)
+			}
+			p.Freq = frq
+		case "ip_address":
+			p.IPAddress = kv[1]
+		case "ssid":
+			p.SSID = kv[1]
+		case "key_mgmt":
+			p.KeyMgmt = kv[1]
+		case "address":
+			p.Address = kv[1]
+		case "uuid":
+			p.UUID = kv[1]
+		default:
+			// do nowt
+		}
+	}
+
 }
 
 type WifiPlusResponse struct {
