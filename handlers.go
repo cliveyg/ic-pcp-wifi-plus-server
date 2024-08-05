@@ -8,6 +8,7 @@ import (
 	"os/exec"
 	"strconv"
 	"strings"
+	"sync"
 	"time"
 )
 
@@ -16,19 +17,27 @@ import (
 func (a *App) testTings(w http.ResponseWriter, _ *http.Request) {
 
 	log.Debug("In testTings")
-	rc, err := exec.Command("sh", "-c", "wpa_cli status").Output()
-	if err != nil {
-		log.Fatal(err)
+	cmds := []string{
+		"/usr/local/etc/init.d/wifi wlan0 stop",
+		"sleep 3 && /usr/local/etc/init.d/wifi wlan0 start",
+		"sleep 6 && /usr/local/etc/init.d/wifi wlan0 status",
 	}
-	lines := strings.Split(strings.TrimSpace(string(rc)), "\n")
-	lines = append(lines[:0], lines[1:]...)
+	var wg sync.WaitGroup
+	for _, c := range cmds {
+		wg.Add(1)
+		go func(c string) {
+			defer wg.Done()
+			runCmd(c)
+		}(c)
+	}
+	wg.Wait()
 
 	pr := WifiPlusResponse{
 		Cmd:        "testTings",
 		StatusCode: 200,
-		Action:     "Testing stuff",
-		Message:    "testy test"}
-	pr.FormatResponse(w, err)
+		Action:     "restart wifi",
+		Message:    "success"}
+	pr.FormatResponse(w, nil)
 
 }
 
