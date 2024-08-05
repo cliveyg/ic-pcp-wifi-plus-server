@@ -32,6 +32,7 @@ func (a *App) testTings(w http.ResponseWriter, _ *http.Request) {
 	}
 
 	fullCmd := fmt.Sprintf("cd cgi-bin && ./wifi-plus.sh wp_general_hup %s %s %s", cmds[0], cmds[1], cmds[2])
+	log.WithFields(log.Fields{"fullCmd": fullCmd}).Debug("Full command!")
 	_, err := exec.Command("sh", "-c", fullCmd).Output()
 	if err != nil {
 		log.Fatal(err)

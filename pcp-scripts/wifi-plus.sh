@@ -18,7 +18,7 @@ arg1=$2
 wp_general_hup() {
   for i in $(seq 2 4);
   do
-    hup $i > /dev/null 2>&1 &
+    hup $i > /var/log/wifiplus.log 2>&1 &
   done
   echo "hupped"
   #cmmnd1=$arg1
