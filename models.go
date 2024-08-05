@@ -7,6 +7,16 @@ import (
 	"net/http"
 )
 
+type WPACliResponse struct {
+	BSSID      string `json:"bssid"`
+	Freq       int    `json:"freq"`
+	SSID       string `json:"ssid"`
+	IPAddress  string `json:"ip_address"`
+	KeyMgmt    string `json:"key_mgmt"`
+	MACAddress string `json:"mac_address"`
+	UUID       string `json:"uuid"`
+}
+
 type WifiPlusResponse struct {
 	Cmd        string `json:"cmd"`
 	StatusCode int
@@ -21,12 +31,6 @@ func (p *WifiPlusResponse) FormatResponse(w http.ResponseWriter, err error) {
 		log.Error("Error is %s", err)
 		p.StatusCode = 500
 		jsonData, _ := json.Marshal(p)
-		/*
-			jsonStr := "{ \"command\": \"" + p.Cmd + "\", " +
-				"\"message\": \"error\"," +
-				"\"data\": {" + err.Error() + "} }"
-		*/
-
 		w.WriteHeader(p.StatusCode)
 		if _, err := io.WriteString(w, string(jsonData)); err != nil {
 			log.Fatal(err)

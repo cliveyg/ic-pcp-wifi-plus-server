@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	log "github.com/sirupsen/logrus"
 	"net/http"
 	"os/exec"
@@ -18,12 +19,43 @@ func (a *App) testTings(w http.ResponseWriter, _ *http.Request) {
 	if err != nil {
 		log.Fatal(err)
 	}
+	lines := strings.Split(strings.TrimSpace(string(rc)), "\n")
+	lines = append(lines[:0], lines[1:]...)
+	wpaData := WPACliResponse{}
+	for _, line := range lines {
+		kv := strings.Split(line, "=")
+		statusKey := kv[0]
+		switch statusKey {
+		case "bssid":
+			wpaData.BSSID = kv[1]
+		case "freq":
+			frq, err := strconv.Atoi(kv[1])
+			if err != nil {
+				log.Fatal(err)
+			}
+			wpaData.Freq = frq
+		case "ip_address":
+			wpaData.IPAddress = kv[1]
+		case "ssid":
+			wpaData.SSID = kv[1]
+		case "key_mgmt":
+			wpaData.KeyMgmt = kv[1]
+		case "mac_address":
+			wpaData.MACAddress = kv[1]
+		case "uuid":
+			wpaData.UUID = kv[1]
+		default:
+			// do nowt
+		}
+	}
+
+	jsonData, _ := json.Marshal(wpaData)
 
 	pr := WifiPlusResponse{
 		Cmd:        "testTings",
 		StatusCode: 200,
 		Message:    "wpa_cli test",
-		Data:       strings.TrimSpace(string(rc))}
+		Data:       string(jsonData)}
 	pr.FormatResponse(w, err)
 
 }
