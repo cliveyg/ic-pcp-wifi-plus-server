@@ -107,6 +107,7 @@ func (a *App) getWPACliStatus(w http.ResponseWriter, _ *http.Request) {
 
 	pr := WifiPlusResponse{
 		Cmd:        "getWPACliStatus",
+		Action:     "wpa_cli",
 		StatusCode: 200,
 		Message:    "wpa_cli status",
 		Data:       string(jsonData)}
@@ -123,6 +124,7 @@ func (a *App) getPiCoreDetails(w http.ResponseWriter, _ *http.Request) {
 	}
 	pr := WifiPlusResponse{
 		Cmd:        "getPiCoreDetails",
+		Action:     "wifi-plus.sh",
 		StatusCode: 200,
 		Message:    "piCore details",
 		Data:       string(retData)}
@@ -134,6 +136,7 @@ func (a *App) RebootSystem(w http.ResponseWriter, _ *http.Request) {
 	log.Debug("In RebootSystem")
 	pr := WifiPlusResponse{
 		Cmd:        "RebootSystem",
+		Action:     "pcp rb",
 		StatusCode: 202,
 		Message:    "System rebooting"}
 	pr.FormatResponse(w, nil)
@@ -158,6 +161,7 @@ func (a *App) getSystemStatus(w http.ResponseWriter, _ *http.Request) {
 
 	pr := WifiPlusResponse{
 		Cmd:        "getSystemStatus",
+		Action:     "wifi-plus.sh",
 		StatusCode: rcInt,
 		Message:    "System running"}
 	pr.FormatResponse(w, err)
