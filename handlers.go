@@ -49,9 +49,9 @@ func (a *App) testTings(w http.ResponseWriter, _ *http.Request) {
 
 	pr := WifiPlusResponse{
 		Cmd:        "testTings",
-		Action:     "run nohupped commands",
+		Action:     "ran nohupped commands",
 		StatusCode: 200,
-		Message:    "yarp",
+		Message:    "now we wait...",
 		Data:       string(rc)}
 	pr.FormatResponse(w, err)
 
