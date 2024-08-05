@@ -21,8 +21,8 @@ arg3=$4
 # ---------------------- subroutines ---------------------- #
 
 wp_cmd_1() {
-  sleep 10
-  cd /mnt/UserData/industrialcool-pcp-wifi-plus/pcp-scripts/ || exit 1
+  sleep 1
+  pwd /mnt/UserData/industrialcool-pcp-wifi-plus/pcp-scripts/
   ./wifi-plus-startup.sh
 }
 
@@ -39,7 +39,7 @@ wp_wifi_restart_hup() {
   #nohup $(echo $arg1 | base64 --decode) > /var/log/wifiplus.log 2>&1 &
   #echo $(sleep 10; /mnt/UserData/industrialcool-pcp-wifi-plus/pcp-scripts/wifi-plus-startup.sh;)
 
-  nohup $(sleep 10; cd /mnt/UserData/industrialcool-pcp-wifi-plus/pcp-scripts/; ./wifi-plus-startup.sh) > /dev/null 2>&1 &
+  nohup wp_cmd_1 > /dev/null 2>&1 &
 }
 
 wp_picore_details() {
