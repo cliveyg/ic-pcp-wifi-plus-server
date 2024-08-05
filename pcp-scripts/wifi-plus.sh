@@ -5,26 +5,29 @@
 #                picoreplayer subroutines.                        #
 # --------------------------------------------------------------- #
 
+# getting env settings from .env
+set -a
+source /mnt/UserData/industrialcool-pcp-wifi-plus/.env
+set +a
+
 . pcp-functions
 . pcp-wifi-functions
 
 subroutine=$1
 arg1=$2
 
-#arg4=$5
-
 # ---------------------- subroutines ---------------------- #
 
 wp_general_hup() {
   for i in $(seq 2 4);
   do
-    nohup $i > /var/log/wifiplus.log 2>&1 &
+    if [ $DBUG -eq 1 ]; then
+      nohup $i > /var/log/wifiplus.log 2>&1 &
+    else
+      nohup $i > /dev/null 2>&1 &
+    fi
   done
   echo "nohupped"
-  #cmmnd1=$arg1
-  #nohup cmmnd1 > /dev/null 2>&1 &
-  #cmmnd2=$arg2
-  #nohup cmmnd2 > /dev/null 2>&1 &
 }
 
 wp_picore_details() {

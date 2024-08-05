@@ -24,7 +24,7 @@ func (a *App) testTings(w http.ResponseWriter, _ *http.Request) {
 		Message:    "unknowable",
 	}
 	pr.FormatResponse(w, nil)
-	time.Sleep(time.Second * 2)
+	time.Sleep(time.Second * 3)
 	cmds := []string{
 		"/usr/local/etc/init.d/wifi wlan0 stop",
 		"sleep 3 && /usr/local/etc/init.d/wifi wlan0 start",

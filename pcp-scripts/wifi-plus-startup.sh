@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# getting env files from .env
+# getting env settings from .env
 set -a
 source /mnt/UserData/industrialcool-pcp-wifi-plus/.env
 set +a
