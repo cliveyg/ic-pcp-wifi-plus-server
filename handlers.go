@@ -33,9 +33,9 @@ func (a *App) testTings(w http.ResponseWriter, _ *http.Request) {
 
 	time.Sleep(time.Second * 3)
 	cmds := []string{
-		"/usr/local/etc/init.d/wifi wlan0 stop",
-		"sleep 3; && /usr/local/etc/init.d/wifi wlan0 start",
-		"sleep 10; && sudo -u tc /mnt/UserData/industrialcool-pcp-wifi-plus/pcp-scripts/wifi-plus-startup.sh",
+		"/usr/local/etc/init.d/wifi wlan0 stop;",
+		"sleep 3; /usr/local/etc/init.d/wifi wlan0 start;",
+		"sleep 10; sudo -u tc /mnt/UserData/industrialcool-pcp-wifi-plus/pcp-scripts/wifi-plus-startup.sh;",
 	}
 	str1 := base64.StdEncoding.EncodeToString([]byte(cmds[0]))
 	str2 := base64.StdEncoding.EncodeToString([]byte(cmds[1]))
