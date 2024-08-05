@@ -26,7 +26,7 @@ func (a *App) testTings(w http.ResponseWriter, _ *http.Request) {
 	if err != nil {
 		log.Fatal(err)
 	}
-
+	time.Sleep(time.Second * 11)
 	pr := WifiPlusResponse{
 		Cmd:        "testTings",
 		Action:     "ran nohupped commands",
