@@ -22,17 +22,16 @@ func (a *App) testTings(w http.ResponseWriter, _ *http.Request) {
 	fullCmd := fmt.Sprintf("cd cgi-bin && ./wifi-plus.sh wp_wifi_restart_hup")
 	log.WithFields(log.Fields{"fullCmd": fullCmd}).Debug("Full command!")
 
-	rc, err := exec.Command("sh", "-c", fullCmd).Output()
+	_, err := exec.Command("sh", "-c", fullCmd).Output()
 	if err != nil {
 		log.Fatal(err)
 	}
-	time.Sleep(time.Second * 11)
+
 	pr := WifiPlusResponse{
 		Cmd:        "testTings",
 		Action:     "ran nohupped commands",
-		StatusCode: 200,
-		Message:    "now we wait...",
-		Data:       string(rc)}
+		StatusCode: 202,
+		Message:    "now we wait..."}
 	pr.FormatResponse(w, err)
 
 }
