@@ -32,12 +32,13 @@ wp_general_hup() {
   echo ""
   #echo $arg2 | base64 --decode
   #echo ""
-  echo $arg3 | base64 --decode
+  #sc3=echo $arg3 | base64 --decode
   echo ""
   #nohup $(echo $arg3 | base64 --decode) > /var/log/wifiplus.log 2>&1 &
   #nohup $(echo $arg2 | base64 --decode) > /var/log/wifiplus.log 2>&1 &
   #nohup $(echo $arg1 | base64 --decode) > /var/log/wifiplus.log 2>&1 &
-  echo $(sleep 10; /mnt/UserData/industrialcool-pcp-wifi-plus/pcp-scripts/wifi-plus-startup.sh;)
+  #echo $(sleep 10; /mnt/UserData/industrialcool-pcp-wifi-plus/pcp-scripts/wifi-plus-startup.sh;)
+  $(echo $arg3 | base64 --decode) > /var/log/wifiplus.log 2>&1
   #for i in $(seq 2 4);
   #do
   #  if [ "$DBUG" -eq 1 ]; then
