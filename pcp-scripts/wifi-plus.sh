@@ -22,9 +22,9 @@ wp_general_hup() {
   for i in $(seq 2 4);
   do
     if [ "$DBUG" -eq 1 ]; then
-      nohup "$i" | base64 --decode > /var/log/wifiplus.log 2>&1 &
+      nohup $(echo -n "$i" | base64 --decode) > /var/log/wifiplus.log 2>&1 &
     else
-      nohup "$i" | base64 --decode > /dev/null 2>&1 &
+      nohup $(echo -n "$i" | base64 --decode) > /dev/null 2>&1 &
     fi
   done
   echo "nohupped"

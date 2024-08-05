@@ -2,7 +2,7 @@
 
 # getting env settings from .env
 set -a
-source /mnt/UserData/industrialcool-pcp-wifi-plus/.env
+. /mnt/UserData/industrialcool-pcp-wifi-plus/.env
 set +a
 
 echo "-----------------------------------------------------------------------"
