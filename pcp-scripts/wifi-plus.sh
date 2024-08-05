@@ -15,19 +15,30 @@ set +a
 
 subroutine=$1
 arg1=$2
+arg2=$3
+arg3=$4
 
 # ---------------------- subroutines ---------------------- #
 
 wp_general_hup() {
-  for i in $(seq 2 4);
-  do
-    if [ "$DBUG" -eq 1 ]; then
-      nohup $(echo -n "$i" | base64 --decode) > /var/log/wifiplus.log 2>&1 &
-    else
-      nohup $(echo -n "$i" | base64 --decode) > /dev/null 2>&1 &
-    fi
-  done
-  echo "nohupped"
+  echo "--=-=-= arg 1 =-=-=--"
+  echo $arg1
+  echo "--=-=-= arg 2 =-=-=--"
+  echo $arg2
+  echo "--=-=-= arg 3 =-=-=--"
+  echo $arg3
+
+  echo -n $arg3 | base64 --decode
+
+  #for i in $(seq 2 4);
+  #do
+  #  if [ "$DBUG" -eq 1 ]; then
+  #    nohup $(echo -n "$i" | base64 --decode) > /var/log/wifiplus.log 2>&1 &
+  #  else
+  #    nohup $(echo -n "$i" | base64 --decode) > /dev/null 2>&1 &
+  #  fi
+  #done
+  #echo "nohupped"
 }
 
 wp_picore_details() {
