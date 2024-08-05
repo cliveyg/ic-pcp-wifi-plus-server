@@ -7,7 +7,7 @@
 
 # getting env settings from .env
 set -a
-source /mnt/UserData/industrialcool-pcp-wifi-plus/.env
+. /mnt/UserData/industrialcool-pcp-wifi-plus/.env
 set +a
 
 . pcp-functions
@@ -21,10 +21,10 @@ arg1=$2
 wp_general_hup() {
   for i in $(seq 2 4);
   do
-    if [ $DBUG -eq 1 ]; then
-      nohup $i > /var/log/wifiplus.log 2>&1 &
+    if [ "$DBUG" -eq 1 ]; then
+      nohup echo -n "$i" | base64 --decode > /var/log/wifiplus.log 2>&1 &
     else
-      nohup $i > /dev/null 2>&1 &
+      nohup echo -n "$i" | base64 --decode > /dev/null 2>&1 &
     fi
   done
   echo "nohupped"
@@ -38,7 +38,7 @@ wp_picore_details() {
 }
 
 wp_status() {
-  echo $arg1
+  echo "$arg1"
 }
 
 wp_test() {
