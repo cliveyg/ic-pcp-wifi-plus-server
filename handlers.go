@@ -33,7 +33,7 @@ func (a *App) testTings(w http.ResponseWriter, _ *http.Request) {
 	*/
 
 	pr.Data = "\"boopy\": \"beep\""
-	pr.FormatResponse(w, nil)
+	pr.ReturnResponse(w, nil)
 }
 
 func (a *App) systemAction(w http.ResponseWriter, r *http.Request) {
@@ -76,7 +76,7 @@ func (a *App) systemAction(w http.ResponseWriter, r *http.Request) {
 	case "reboot":
 		pr.StatusCode = 202
 		pr.Message = "System rebooting"
-		pr.FormatResponse(w, nil)
+		pr.ReturnResponse(w, nil)
 		time.Sleep(2 * time.Second)
 		rc, err := exec.Command("sh", "-c", "sudo pcp rb").Output()
 		log.Debug(rc)
@@ -90,7 +90,7 @@ func (a *App) systemAction(w http.ResponseWriter, r *http.Request) {
 		pr.Message = "Action does not exist"
 	}
 
-	pr.FormatResponse(w, err)
+	pr.ReturnResponse(w, err)
 }
 
 func (a *App) wifiAction(w http.ResponseWriter, r *http.Request) {
@@ -119,20 +119,22 @@ func (a *App) wifiAction(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			log.Fatal(err)
 		}
-		pr.Data = `"script": "wp-stopstart.sh"`
-		pr.FormatResponse(w, nil)
+		pr.Data = `"script called": "wp-wifi-refresh.sh"`
+		pr.ReturnResponse(w, nil)
 		return
 	case "status":
 		args = []string{"wlan0", "status"}
-		sr, err = a.ExecCmd("/usr/local/etc/init.d/wifi", args)
-
-		if strings.Contains(sr, "wpa_supplicant running") {
-			pr.Message = "wpa_supplicant running"
-			pr.StatusCode = 200
-		} else {
-			pr.Message = "wpa_supplicant not running"
-			pr.StatusCode = 404
+		statret, err := a.ExecCmd("/usr/local/etc/init.d/wifi", args)
+		if err != nil {
+			pr.StatusCode = 500
+			pr.Message = "Unable to retrieve WiFi status"
+			pr.ReturnResponse(w, err)
+			return
 		}
+		statuses := strings.Split(statret, "\n")
+		pr.Message = "init.d/wifi wlan0 status"
+		pr.Data = `"wpa_supplicant status": "` + statuses[0] + `", "udhcpc status" : "` + statuses[0] + `"`
+		pr.StatusCode = 200
 	case "ssid":
 		args = []string{"-r"}
 		sr, err = a.ExecCmd("iwgetid", args)
@@ -151,7 +153,7 @@ func (a *App) wifiAction(w http.ResponseWriter, r *http.Request) {
 		pr.Message = "Action does not exist"
 	}
 
-	pr.FormatResponse(w, err)
+	pr.ReturnResponse(w, err)
 
 }
 
@@ -178,6 +180,6 @@ func (a *App) getWPACliStatus(w http.ResponseWriter, _ *http.Request) {
 		StatusCode: 200,
 		Message:    "wpa_cli status",
 		Data:       string(jsonData)}
-	pr.FormatResponse(w, err)
+	pr.ReturnResponse(w, err)
 
 }

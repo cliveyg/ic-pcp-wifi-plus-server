@@ -58,7 +58,7 @@ type WifiPlusResponse struct {
 	Data       string `default0:"" json:"data"`
 }
 
-func (p *WifiPlusResponse) FormatResponse(w http.ResponseWriter, err error) {
+func (p *WifiPlusResponse) ReturnResponse(w http.ResponseWriter, err error) {
 
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 	if err != nil {
