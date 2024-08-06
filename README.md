@@ -70,12 +70,12 @@ Negatives:
 
 **JSON & HTTP**
 
-I was going to use gRPC but as it currently doesn't work in browsers. 
-gRPC needs a proxy to function as a go between HTTP1 and HTTP2 and things running in browsers.
+I was going to use gRPC but as it currently stands browsersdo not support gRPC natively. 
+Browser based gRPC needs a proxy to function as a go between HTTP1 and HTTP2 and apps running in browsers.
 
-As a result of these and the lightweight nature of this API I have decided to use standard JSON and HTTP1.1.
+As a result of this need for a proxy and the lightweight nature of this API I have decided to use standard JSON and HTTP1.1.
 
-I may, time permitting try and use websockets as I've used these with React in the past.
+I may, time permitting, try and use websockets as I've used these with React in the past.
 
 
 ### Assumptions
