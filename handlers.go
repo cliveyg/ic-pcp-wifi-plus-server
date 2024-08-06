@@ -19,7 +19,8 @@ func (a *App) testTings(w http.ResponseWriter, _ *http.Request) {
 	log.Debug("In testTings")
 
 	pr := WifiPlusResponse{
-		Cmd:        "testTings",
+		Method:     "testTings",
+		Cmd:        "whatevs",
 		Action:     "testy testy test",
 		StatusCode: 200,
 		Message:    "tings"}
@@ -49,12 +50,13 @@ func (a *App) systemAction(w http.ResponseWriter, r *http.Request) {
 	var rcInt int
 	var err error
 	pr := WifiPlusResponse{
-		Cmd:    "sysAction",
+		Method: "sysAction",
 		Action: sysAction,
 	}
 
 	switch sysAction {
 	case "status":
+		pr.Cmd = "wifi-plus.sh wp_status 200"
 		rc, err = exec.Command("sh", "-c", "cd cgi-bin && ./wifi-plus.sh wp_status 200").Output()
 		if err != nil {
 			pr.ReturnResponse(w, err)
@@ -65,7 +67,9 @@ func (a *App) systemAction(w http.ResponseWriter, r *http.Request) {
 		}
 		pr.StatusCode = rcInt
 		pr.Message = "System running"
+
 	case "picore":
+		pr.Cmd = "wifi-plus.sh wp_picore_details"
 		rc, err = exec.Command("sh", "-c", "cd cgi-bin && sudo ./wifi-plus.sh wp_picore_details").Output()
 		if err != nil {
 			pr.ReturnResponse(w, err)
@@ -73,9 +77,11 @@ func (a *App) systemAction(w http.ResponseWriter, r *http.Request) {
 		pr.StatusCode = 200
 		pr.Message = "piCore details"
 		pr.Data = string(rc)
+
 	case "reboot":
 		pr.StatusCode = 202
 		pr.Message = "System rebooting"
+		pr.Cmd = "sudo pcp rb"
 		pr.ReturnResponse(w, nil)
 		time.Sleep(2 * time.Second)
 		rc, err := exec.Command("sh", "-c", "sudo pcp rb").Output()
@@ -84,6 +90,7 @@ func (a *App) systemAction(w http.ResponseWriter, r *http.Request) {
 			pr.ReturnResponse(w, err)
 		}
 		return
+
 	default:
 		// do nowt
 		pr.StatusCode = 400
@@ -106,7 +113,7 @@ func (a *App) wifiAction(w http.ResponseWriter, r *http.Request) {
 	var err error
 	var args []string
 	pr := WifiPlusResponse{
-		Cmd:    "wifiAction",
+		Method: "wifiAction",
 		Action: wifiAction,
 	}
 
@@ -114,7 +121,7 @@ func (a *App) wifiAction(w http.ResponseWriter, r *http.Request) {
 	case "restart":
 		pr.StatusCode = 202
 		pr.Message = "Now we wait..."
-
+		pr.Cmd = "nohup ./wp-wifi-refresh.sh"
 		_, err := exec.Command("sh", "-c", "cd /mnt/UserData/industrialcool-pcp-wifi-plus/pcp-scripts; nohup ./wp-wifi-refresh.sh > /dev/null 2>&1 &").Output()
 		if err != nil {
 			pr.ReturnResponse(w, err)
@@ -122,10 +129,11 @@ func (a *App) wifiAction(w http.ResponseWriter, r *http.Request) {
 		pr.Data = `"script called": "wp-wifi-refresh.sh"`
 		pr.ReturnResponse(w, nil)
 		return
+
 	case "scan":
 		pr.StatusCode = 200
 		pr.Message = "Searching for networks..."
-
+		pr.Cmd = "wpa_cli scan wlan0; wpa_cli scan_results"
 		rc, err := exec.Command("sh", "-c", "wpa_cli scan wlan0; wpa_cli scan_results").Output()
 		if err != nil {
 			pr.ReturnResponse(w, err)
@@ -133,24 +141,21 @@ func (a *App) wifiAction(w http.ResponseWriter, r *http.Request) {
 		lines := strings.Split(strings.TrimSpace(string(rc)), "\n")
 		// remove first 4 lines
 		lines = append(lines[:0], lines[4:]...)
-		log.WithFields(log.Fields{"no of lines": len(lines)}).Debug()
-		//for i := 0; i < len(lines); i++ {
-		//	jsonStr = jsonStr + `"line ` + string(i) + `": "` + lines[0] + `",`
-		//}
-		wifiDetails := strings.Split(lines[0], "\t")
-		jsonStr := `"wifi": { "ssid": "` + wifiDetails[4] + `",` +
-			`"bssid": "` + wifiDetails[0] + `",` +
-			`"flags": "` + wifiDetails[3] + `"}`
-		// remove final comma
-		//lnStr := utf8.RuneCountInString(jsonStr)
-		//log.Debug("----=-=-=-----")
-		//log.WithFields(log.Fields{"jsonStr": jsonStr}).Debug()
-		pr.Data = jsonStr
-		//log.Debug("blep")
+		log.WithFields(log.Fields{"no of wifi networks": len(lines)}).Debug()
+
+		jsonStr := "["
+		for i := 0; i < len(lines); i++ {
+			wifiDetails := strings.Split(lines[0], "\t")
+			jsonStr = jsonStr + `{"wifi ` + string(i) + `": { "ssid": "` + wifiDetails[4] + `",` +
+				`"bssid": "` + wifiDetails[0] + `",` +
+				`"flags": "` + wifiDetails[3] + `"}},`
+		}
+		pr.Data = jsonStr + "]"
 		log.WithFields(log.Fields{"pr.Data": pr.Data}).Debug()
-		//log.Debug("----=-=-=-----")
+
 	case "status":
 		args = []string{"wlan0", "status"}
+		pr.Cmd = "/usr/local/etc/init.d/wifi"
 		statret, err := a.ExecCmd("/usr/local/etc/init.d/wifi", args)
 		if err != nil {
 			pr.ReturnResponse(w, err)
@@ -166,6 +171,7 @@ func (a *App) wifiAction(w http.ResponseWriter, r *http.Request) {
 
 	case "ssid":
 		args = []string{"-r"}
+		pr.Cmd = "iwgetid"
 		sr, err = a.ExecCmd("iwgetid", args)
 		if err != nil {
 			pr.ReturnResponse(w, err)
@@ -178,6 +184,7 @@ func (a *App) wifiAction(w http.ResponseWriter, r *http.Request) {
 			pr.Message = "SSID found"
 			pr.Data = `"SSID": "` + sr + `"`
 		}
+
 	default:
 		// do nowt
 		pr.StatusCode = 400
@@ -206,7 +213,7 @@ func (a *App) getWPACliStatus(w http.ResponseWriter, _ *http.Request) {
 	jsonData, _ := json.Marshal(wpaData)
 
 	pr := WifiPlusResponse{
-		Cmd:        "getWPACliStatus",
+		Method:     "getWPACliStatus",
 		Action:     "wpa_cli",
 		StatusCode: 200,
 		Message:    "wpa_cli status",

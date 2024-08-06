@@ -51,8 +51,9 @@ func (p *WPACliResponse) OrganiseData(lines []string) {
 }
 
 type WifiPlusResponse struct {
-	Cmd        string `json:"cmd"`
+	Method     string `json:"method"`
 	Action     string `json:"action"`
+	Cmd        string `default0:"" json:"cmd"`
 	StatusCode int
 	Message    string `json:"message"`
 	Data       string `default0:"" json:"data"`
@@ -76,13 +77,14 @@ func (p *WifiPlusResponse) ReturnResponse(w http.ResponseWriter, err error) {
 
 	var jsonStr string
 	// check to avoid double brackets
-	if substr(p.Data, 0, 1) == "{" {
-		jsonStr = "{ \"command\": \"" + p.Cmd + "\", " +
+	if substr(p.Data, 0, 1) == "{" ||
+		substr(p.Data, 0, 1) == "[" {
+		jsonStr = "{ \"command\": \"" + p.Method + "\", " +
 			"\"action\": \"" + p.Action + "\"," +
 			"\"message\": \"" + p.Message + "\"," +
 			"\"data\": " + p.Data + " }"
 	} else {
-		jsonStr = "{ \"command\": \"" + p.Cmd + "\", " +
+		jsonStr = "{ \"command\": \"" + p.Method + "\", " +
 			"\"action\": \"" + p.Action + "\"," +
 			"\"message\": \"" + p.Message + "\"," +
 			"\"data\": {" + p.Data + "} }"
