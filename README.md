@@ -54,19 +54,29 @@ Negatives:
 
 ### Communication Protocol
 
-**gRPC & Protobuf** 
+~~**gRPC & Protobuf**~~
 
-Use a combination of gRPC and Protocol Buffers.
+~~Use a combination of gRPC and Protocol Buffers.~~
 
-Positives:
-* Faster than JSON and HTTP1.1
-* More lightweight and robust than JSON/HTTP1.1
-* Uses HTTP2 as communication protocol
-* gRPC good with Golang
+~~Positives:~~
+~~* Faster than JSON and HTTP1.1~~
+~~* More lightweight and robust than JSON/HTTP1.1~~
+~~* Uses HTTP2 as communication protocol~~
+~~* gRPC good with Golang~~
 
-Negatives:
-* Harder to grasp than more traditional Restful APIs.
-* Less supported than JSON
+~~Negatives:~~
+~~* Harder to grasp than more traditional Restful APIs.~~
+~~* Less supported than JSON~~
+
+**JSON & HTTP**
+
+I was going to use gRPC but as it currently doesn't work in browsers. 
+gRPC needs a proxy to function as a go between HTTP1 and HTTP2 and things running in browsers.
+
+As a result of these and the lightweight nature of this API I have decided to use standard JSON and HTTP1.1.
+
+I may, time permitting try and use websockets as I've used these with React in the past.
+
 
 ### Assumptions
 * Only tested on RaspberryPi 4 8Gb Ram
@@ -93,11 +103,3 @@ CGO_ENABLED=0 GOOS=$GOOS GOARCH=$GOARCH go build -a -ldflags '-w' -o wifiplus
 ```
 
 I am using these flags to avoid dynamically linked libs in the binary.
-
-### Installing protoc
-
-On the Mac I use homebrew to install the protobuf compiler using:
-
-```
-brew install protobuf
-```
