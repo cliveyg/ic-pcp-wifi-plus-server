@@ -132,19 +132,25 @@ func (a *App) wifiAction(w http.ResponseWriter, r *http.Request) {
 			pr.ReturnResponse(w, err)
 		}
 		lines := strings.Split(strings.TrimSpace(string(rc)), "\n")
-		log.Debug()
 		log.WithFields(log.Fields{"lines": lines}).Debug("lines before")
 		// remove first 4 lines
 		lines = append(lines[:0], lines[4:]...)
 		log.WithFields(log.Fields{"lines": lines}).Debug("lines after")
 
+		log.WithFields(log.Fields{"no of lines": len(lines)}).Debug()
 		jsonStr := ""
-		for i := 0; i < len(lines); i++ {
-			jsonStr = jsonStr + `"line ` + string(rune(i)) + `": "` + lines[0] + `",`
-		}
+		//for i := 0; i < len(lines); i++ {
+		//	jsonStr = jsonStr + `"line ` + string(i) + `": "` + lines[0] + `",`
+		//}
+		jsonStr = `"line": "` + lines[0] + `",`
 		// remove final comma
 		lnStr := utf8.RuneCountInString(jsonStr)
+		log.Debug("----=-=-=-----")
+		log.WithFields(log.Fields{"jsonStr": jsonStr}).Debug()
 		pr.Data = substr(jsonStr, 1, lnStr-1)
+		log.Debug("blep")
+		log.WithFields(log.Fields{"pr.Data": pr.Data}).Debug()
+		log.Debug("----=-=-=-----")
 	case "status":
 		args = []string{"wlan0", "status"}
 		statret, err := a.ExecCmd("/usr/local/etc/init.d/wifi", args)
