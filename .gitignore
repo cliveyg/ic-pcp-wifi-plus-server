@@ -10,8 +10,9 @@
 !handlers.go
 !routes.go
 !helpers.go
-!wifi_methods.go
-!sys_methods.go
+!wifi.go
+!pcpsys.go
+!wap.go
 !api_test.go
 !go.mod
 !go.sum

@@ -66,6 +66,35 @@ func (a *App) systemAction(w http.ResponseWriter, r *http.Request) {
 	pr.ReturnResponse(w, err)
 }
 
+func (a *App) wapAction(w http.ResponseWriter, r *http.Request) {
+
+	log.Debug("-----------------------------")
+	log.Debug("In wapAction")
+	vars := mux.Vars(r)
+	wapAction := vars["action"]
+
+	//TODO: Check input string more thoroughly
+
+	var err error
+	pr := WifiPlusResponse{
+		Method: "wapAction",
+		Action: wapAction,
+	}
+
+	switch wapAction {
+	case "install":
+		a.wapInstall(w, &pr, err)
+	default:
+		// do nowt
+		pr.StatusCode = 400
+		pr.Message = "Action does not exist"
+	}
+
+	log.WithFields(log.Fields{"Full response is ": pr}).Debug()
+	pr.ReturnResponse(w, err)
+
+}
+
 func (a *App) wifiAction(w http.ResponseWriter, r *http.Request) {
 
 	log.Debug("-----------------------------")
