@@ -36,6 +36,10 @@ wp_test() {
   echo "Able to call pcp functions"
 }
 
+wp_wap_install() {
+  echo "{\"progress\": \"$(pcp_install_apmode)\"}"
+}
+
 
 # ---------------------- main program ---------------------- #
 
@@ -48,6 +52,9 @@ case $subroutine in
   ;;
   wp_test)
     wp_test
+  ;;
+  wp_wap_install)
+    wp_wap_install
   ;;
   *)
     echo "$subroutine"
