@@ -75,6 +75,7 @@ func (a *App) systemAction(w http.ResponseWriter, r *http.Request) {
 			pr.ReturnResponse(w, err)
 		}
 		log.WithFields(log.Fields{"picore deets": rc}).Debug()
+		log.WithFields(log.Fields{"picore deets string": string(rc)}).Debug()
 		pr.StatusCode = 200
 		pr.Message = "piCore details"
 		picoreData := PiCoreSystemData{}
