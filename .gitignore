@@ -18,4 +18,5 @@
 !pcp-scripts/wifi-plus-startup.sh
 !pcp-scripts/test.sh
 !pcp-scripts/wifi-plus.sh
+!pcp-scripts/nohup-test.sh
 !wifiplus

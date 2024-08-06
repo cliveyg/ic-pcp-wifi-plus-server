@@ -27,7 +27,7 @@ func (a *App) testTings(w http.ResponseWriter, _ *http.Request) {
 	//fullCmd := fmt.Sprintf("cd cgi-bin && ./wifi-plus.sh wp_nohup_test")
 	//log.WithFields(log.Fields{"fullCmd": fullCmd}).Debug("Full command!")
 
-	rc, err := exec.Command("sh", "-c", "cd cgi-bin && ./wifi-plus.sh wp_nohup_test").Output()
+	rc, err := exec.Command("sh", "-c", "cd /mnt/UserData/industrialcool-pcp-wifi-plus/pcp-scripts; ./nohup-test.sh").Output()
 	if err != nil {
 		log.Fatal(err)
 	}
