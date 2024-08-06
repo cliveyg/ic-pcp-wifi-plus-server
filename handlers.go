@@ -30,7 +30,7 @@ func (a *App) testTings(w http.ResponseWriter, _ *http.Request) {
 
 	*/
 
-	pr.Data = "\"boopy\": \"beep\""
+	pr.Data = `{"boopy": "beep"}`
 	pr.ReturnResponse(w, nil)
 }
 
@@ -59,7 +59,6 @@ func (a *App) systemAction(w http.ResponseWriter, r *http.Request) {
 		return
 	default:
 		// do nowt
-		log.Info("[[[[[[[[[[[[[[[[[[[[[[[[[[[[]]]]]]]]]]]]]]]]]]]]]]]]")
 		pr.StatusCode = 400
 		pr.Message = "Action does not exist"
 	}
@@ -93,7 +92,6 @@ func (a *App) wifiAction(w http.ResponseWriter, r *http.Request) {
 	case "ssid":
 		a.wifiSSID(w, &pr, err)
 	default:
-		log.Info("[[[[[[[[[[[[[[[[[[[[[[[[[[[[]]]]]]]]]]]]]]]]]]]]]]]]")
 		// do nowt
 		pr.StatusCode = 400
 		pr.Message = "Action does not exist"
