@@ -9,6 +9,11 @@ import (
 	"strings"
 )
 
+type WifiStatus struct {
+	WPASupplicantStatus string `json:"wpa_supplicant_status"`
+	UDHCPStatus         string `json:"udhcp_status"`
+}
+
 type WPACliResponse struct {
 	BSSID     string `json:"bssid"`
 	Freq      int    `json:"freq"`
