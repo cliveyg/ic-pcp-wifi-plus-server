@@ -9,7 +9,6 @@ import (
 	"strconv"
 	"strings"
 	"time"
-	"unicode/utf8"
 )
 
 // ----------------------------------------------------------------------------
@@ -132,25 +131,24 @@ func (a *App) wifiAction(w http.ResponseWriter, r *http.Request) {
 			pr.ReturnResponse(w, err)
 		}
 		lines := strings.Split(strings.TrimSpace(string(rc)), "\n")
-		log.WithFields(log.Fields{"lines": lines}).Debug("lines before")
 		// remove first 4 lines
 		lines = append(lines[:0], lines[4:]...)
-		log.WithFields(log.Fields{"lines": lines}).Debug("lines after")
-
 		log.WithFields(log.Fields{"no of lines": len(lines)}).Debug()
-		jsonStr := ""
 		//for i := 0; i < len(lines); i++ {
 		//	jsonStr = jsonStr + `"line ` + string(i) + `": "` + lines[0] + `",`
 		//}
-		jsonStr = `"line": "` + lines[0] + `",`
+		wifiDetails := strings.Split(lines[0], "\t")
+		jsonStr := `"wifi": { "ssid": "` + wifiDetails[4] + `",` +
+			`"bssid": "` + wifiDetails[0] + `",` +
+			`"flags": "` + wifiDetails[3] + `"}`
 		// remove final comma
-		lnStr := utf8.RuneCountInString(jsonStr)
-		log.Debug("----=-=-=-----")
-		log.WithFields(log.Fields{"jsonStr": jsonStr}).Debug()
-		pr.Data = substr(jsonStr, 1, lnStr-1)
-		log.Debug("blep")
+		//lnStr := utf8.RuneCountInString(jsonStr)
+		//log.Debug("----=-=-=-----")
+		//log.WithFields(log.Fields{"jsonStr": jsonStr}).Debug()
+		pr.Data = jsonStr
+		//log.Debug("blep")
 		log.WithFields(log.Fields{"pr.Data": pr.Data}).Debug()
-		log.Debug("----=-=-=-----")
+		//log.Debug("----=-=-=-----")
 	case "status":
 		args = []string{"wlan0", "status"}
 		statret, err := a.ExecCmd("/usr/local/etc/init.d/wifi", args)
