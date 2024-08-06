@@ -69,7 +69,7 @@ func (a *App) systemAction(w http.ResponseWriter, r *http.Request) {
 
 	case "picore":
 
-		a.piCoreDetails(w, &pr, &rc, &err)
+		a.piCoreDetails(w, &pr, rc, err)
 		/*
 			pr.Cmd = "wifi-plus.sh wp_picore_details"
 			rc, err = exec.Command("sh", "-c", "cd cgi-bin && sudo ./wifi-plus.sh wp_picore_details").Output()
