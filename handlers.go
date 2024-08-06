@@ -20,15 +20,15 @@ func (a *App) testTings(w http.ResponseWriter, _ *http.Request) {
 
 	pr := WifiPlusResponse{
 		Cmd:        "testTings",
-		Action:     "ran nohupped commands",
-		StatusCode: 202,
-		Message:    "now we wait..."}
-	//pr.FormatResponse(w, nil)
-
-	_, err := exec.Command("sh", "-c", "cd /mnt/UserData/industrialcool-pcp-wifi-plus/pcp-scripts; nohup ./wp-stopstart-wifi.sh > /dev/null 2>&1 &").Output()
-	if err != nil {
-		log.Fatal(err)
-	}
+		Action:     "testy testy test",
+		StatusCode: 200,
+		Message:    "tings"}
+	/*
+		_, err := exec.Command("sh", "-c", "cd /mnt/UserData/industrialcool-pcp-wifi-plus/pcp-scripts; nohup ./wp-stopstart-wifi.sh > /dev/null 2>&1 &").Output()
+		if err != nil {
+			log.Fatal(err)
+		}
+	*/
 	pr.Data = "\"boop\": \"beep\""
 	pr.FormatResponse(w, nil)
 }
@@ -99,7 +99,6 @@ func (a *App) wifiAction(w http.ResponseWriter, r *http.Request) {
 
 	//TODO: Check input string more thoroughly
 
-	var rc []byte
 	var sr string
 	var err error
 	var args []string
@@ -110,13 +109,16 @@ func (a *App) wifiAction(w http.ResponseWriter, r *http.Request) {
 
 	switch wifiAction {
 	case "restart":
-		// send message before enacting command
-		pr.StatusCode = 202
-		pr.FormatResponse(w, nil)
-		time.Sleep(2 * time.Second)
-		rc, err = exec.Command("sh", "-c", "/usr/local/etc/init.d/wifi wlan0 stop && /usr/local/etc/init.d/wifi wlan0 start").Output()
-		log.Debug(rc)
-		return
+		pr := WifiPlusResponse{
+			StatusCode: 202,
+			Message:    "now we wait...",
+		}
+
+		_, err := exec.Command("sh", "-c", "cd /mnt/UserData/industrialcool-pcp-wifi-plus/pcp-scripts; nohup ./wp-stopstart-wifi.sh > /dev/null 2>&1 &").Output()
+		if err != nil {
+			log.Fatal(err)
+		}
+		pr.Data = "\"script\": \"wp-stopstart.sh\""
 	case "status":
 		args = []string{"wlan0", "status"}
 		sr, err = a.ExecCmd("/usr/local/etc/init.d/wifi", args)
@@ -146,7 +148,11 @@ func (a *App) wifiAction(w http.ResponseWriter, r *http.Request) {
 		pr.Message = "Action does not exist"
 	}
 
-	pr.FormatResponse(w, err)
+	if err != nil {
+		pr.FormatResponse(w, err)
+	} else {
+		pr.FormatResponse(w, nil)
+	}
 }
 
 func (a *App) getWPACliStatus(w http.ResponseWriter, _ *http.Request) {
