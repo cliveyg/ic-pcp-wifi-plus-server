@@ -55,8 +55,8 @@ type WifiPlusResponse struct {
 	Action     string `json:"action"`
 	Cmd        string `default0:"" json:"cmd"`
 	StatusCode int
-	Message    string `json:"message"`
-	Data       string `default0:"" json:"data"`
+	Message    string      `json:"message"`
+	Data       interface{} `default0:"" json:"data"`
 }
 
 func (p *WifiPlusResponse) ReturnResponse(w http.ResponseWriter, err error) {
