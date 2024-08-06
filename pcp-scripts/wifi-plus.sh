@@ -10,8 +10,8 @@ set -a
 . /var/www/.env
 set +a
 
-. pcp-functions
-. pcp-wifi-functions
+. /var/www/cgi-bin/pcp-functions
+. /var/www/cgi-bin/pcp-wifi-functions
 
 subroutine=$1
 arg1=$2
