@@ -21,15 +21,9 @@ func (a *App) testTings(w http.ResponseWriter, _ *http.Request) {
 		Cmd:        "whatevs",
 		Action:     "testy testy test",
 		StatusCode: 200,
-		Message:    "tings"}
+		Message:    "tings",
+	}
 
-	/*
-		_, err := exec.Command("sh", "-c", "cd /mnt/UserData/industrialcool-pcp-wifi-plus/pcp-scripts; nohup ./wifi-plus.sh wp_wifi_restart > /dev/null 2>&1 &").Output()
-		if err != nil {
-			log.Fatal(err)
-		}
-
-	*/
 	r := `{"boopy": "beep"}`
 	var b map[string]interface{}
 	json.Unmarshal([]byte(r), &b)
@@ -53,13 +47,16 @@ func (a *App) systemAction(w http.ResponseWriter, r *http.Request) {
 	}
 
 	switch sysAction {
-	case "status":
-		a.sysStatus(w, &pr, err)
 	case "picore":
 		a.sysPiCoreDetails(w, &pr, err)
 	case "reboot":
 		a.sysReboot(w, &pr)
 		return
+	case "shutdown":
+		a.sysShutdown(w, &pr)
+		return
+	case "status":
+		a.sysStatus(w, &pr, err)
 	default:
 		// do nowt
 		pr.StatusCode = 400
@@ -90,10 +87,10 @@ func (a *App) wifiAction(w http.ResponseWriter, r *http.Request) {
 		return
 	case "scan":
 		a.wifiScan(w, &pr, err)
-	case "status":
-		a.wifiStatus(w, &pr, err)
 	case "ssid":
 		a.wifiSSID(w, &pr, err)
+	case "status":
+		a.wifiStatus(w, &pr, err)
 	default:
 		// do nowt
 		pr.StatusCode = 400
