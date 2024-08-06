@@ -76,7 +76,12 @@ func (a *App) systemAction(w http.ResponseWriter, r *http.Request) {
 		}
 		pr.StatusCode = 200
 		pr.Message = "piCore details"
-		pr.Data = string(rc)
+		picoreData := PiCoreSystemData{}
+		err = json.Unmarshal(rc, &picoreData)
+		if err != nil {
+			pr.ReturnResponse(w, err)
+		}
+		pr.Data = picoreData
 
 	case "reboot":
 		pr.StatusCode = 202
@@ -126,7 +131,6 @@ func (a *App) wifiAction(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			pr.ReturnResponse(w, err)
 		}
-		pr.Data = `"script called": "wp-wifi-refresh.sh"`
 		pr.ReturnResponse(w, nil)
 		return
 
@@ -143,15 +147,15 @@ func (a *App) wifiAction(w http.ResponseWriter, r *http.Request) {
 		lines = append(lines[:0], lines[4:]...)
 		log.WithFields(log.Fields{"no of wifi networks": len(lines)}).Debug()
 
-		jsonStr := "["
+		var netArr []WifiNetwork
 		for i := 0; i < len(lines); i++ {
 			wifiDetails := strings.Split(lines[0], "\t")
-			jsonStr = jsonStr + `{ "ssid": "` + wifiDetails[4] + `",` +
-				`"bssid": "` + wifiDetails[0] + `",` +
-				`"flags": "` + wifiDetails[3] + `"},`
+			wn := WifiNetwork{SSID: wifiDetails[4],
+				BSSID: wifiDetails[0],
+				Flags: wifiDetails[3]}
+			netArr = append(netArr, wn)
 		}
-		pr.Data = jsonStr + "]"
-		log.WithFields(log.Fields{"pr.Data": pr.Data}).Debug()
+		pr.Data = netArr
 
 	case "status":
 		args = []string{"wlan0", "status"}
@@ -161,13 +165,11 @@ func (a *App) wifiAction(w http.ResponseWriter, r *http.Request) {
 			pr.ReturnResponse(w, err)
 		}
 		statuses := strings.Split(statret, "\n")
-		ws := WifiStatus{
+		pr.Message = "init.d/wifi wlan0 status"
+		pr.Data = WifiStatus{
 			WPASupplicantStatus: statuses[0],
 			UDHCPStatus:         statuses[1],
 		}
-		pr.Message = "init.d/wifi wlan0 status"
-		//pr.Data = `"wpa_supplicant status": "` + statuses[0] + `", "udhcpc status" : "` + statuses[0] + `"`
-		pr.Data = ws
 		if strings.Contains(statret, "not running") {
 			pr.StatusCode = 404
 		} else {
@@ -187,7 +189,7 @@ func (a *App) wifiAction(w http.ResponseWriter, r *http.Request) {
 		} else {
 			pr.StatusCode = 200
 			pr.Message = "SSID found"
-			pr.Data = `"SSID": "` + sr + `"`
+			pr.Data = SSID{SSID: sr}
 		}
 
 	default:
@@ -216,14 +218,12 @@ func (a *App) getWPACliStatus(w http.ResponseWriter, _ *http.Request) {
 	wpaData := WPACliResponse{}
 	wpaData.OrganiseData(lines)
 
-	jsonData, _ := json.Marshal(wpaData)
-
 	pr := WifiPlusResponse{
 		Method:     "getWPACliStatus",
 		Action:     "wpa_cli",
 		StatusCode: 200,
 		Message:    "wpa_cli status",
-		Data:       string(jsonData)}
+		Data:       wpaData}
 	pr.ReturnResponse(w, err)
 
 }
