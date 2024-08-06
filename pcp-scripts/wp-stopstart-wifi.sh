@@ -2,7 +2,7 @@
 
 # getting env settings from .env
 set -a
-. /mnt/UserData/industrialcool-pcp-wifi-plus/.env
+. /var/www/.env
 set +a
 
 LOG=/mnt/UserData/industrialcool-pcp-wifi-plus/pcp-scripts/testy.log

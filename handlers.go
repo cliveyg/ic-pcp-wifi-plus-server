@@ -23,17 +23,14 @@ func (a *App) testTings(w http.ResponseWriter, _ *http.Request) {
 		Action:     "ran nohupped commands",
 		StatusCode: 202,
 		Message:    "now we wait..."}
-	pr.FormatResponse(w, nil)
+	//pr.FormatResponse(w, nil)
 
-	//fullCmd := fmt.Sprintf("cd cgi-bin && ./wifi-plus.sh wp_nohup_test")
-	//log.WithFields(log.Fields{"fullCmd": fullCmd}).Debug("Full command!")
-
-	_, err := exec.Command("sh", "-c", "cd /mnt/UserData/industrialcool-pcp-wifi-plus/pcp-scripts; nohup ./nohup-test.sh > /dev/null 2>&1 &").Output()
+	_, err := exec.Command("sh", "-c", "cd /mnt/UserData/industrialcool-pcp-wifi-plus/pcp-scripts; nohup ./wp-stopstart-wifi.sh > /dev/null 2>&1 &").Output()
 	if err != nil {
 		log.Fatal(err)
 	}
-	//pr.Data = string(rc)
-	//pr.FormatResponse(w, nil)
+	pr.Data = "\"boop\": \"beep\""
+	pr.FormatResponse(w, nil)
 }
 
 func (a *App) systemAction(w http.ResponseWriter, r *http.Request) {
