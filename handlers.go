@@ -9,6 +9,7 @@ import (
 	"strconv"
 	"strings"
 	"time"
+	"unicode/utf8"
 )
 
 // ----------------------------------------------------------------------------
@@ -57,18 +58,18 @@ func (a *App) systemAction(w http.ResponseWriter, r *http.Request) {
 	case "status":
 		rc, err = exec.Command("sh", "-c", "cd cgi-bin && ./wifi-plus.sh wp_status 200").Output()
 		if err != nil {
-			log.Fatal(err)
+			pr.ReturnResponse(w, err)
 		}
 		rcInt, err = strconv.Atoi(strings.TrimSpace(string(rc)))
 		if err != nil {
-			log.Fatal(err)
+			pr.ReturnResponse(w, err)
 		}
 		pr.StatusCode = rcInt
 		pr.Message = "System running"
 	case "picore":
 		rc, err = exec.Command("sh", "-c", "cd cgi-bin && sudo ./wifi-plus.sh wp_picore_details").Output()
 		if err != nil {
-			log.Fatal(err)
+			pr.ReturnResponse(w, err)
 		}
 		pr.StatusCode = 200
 		pr.Message = "piCore details"
@@ -81,7 +82,7 @@ func (a *App) systemAction(w http.ResponseWriter, r *http.Request) {
 		rc, err := exec.Command("sh", "-c", "sudo pcp rb").Output()
 		log.Debug(rc)
 		if err != nil {
-			log.Fatal(err)
+			pr.ReturnResponse(w, err)
 		}
 		return
 	default:
@@ -113,23 +114,42 @@ func (a *App) wifiAction(w http.ResponseWriter, r *http.Request) {
 	switch wifiAction {
 	case "restart":
 		pr.StatusCode = 202
-		pr.Message = "now we wait..."
+		pr.Message = "Now we wait..."
 
 		_, err := exec.Command("sh", "-c", "cd /mnt/UserData/industrialcool-pcp-wifi-plus/pcp-scripts; nohup ./wp-wifi-refresh.sh > /dev/null 2>&1 &").Output()
 		if err != nil {
-			log.Fatal(err)
+			pr.ReturnResponse(w, err)
 		}
 		pr.Data = `"script called": "wp-wifi-refresh.sh"`
 		pr.ReturnResponse(w, nil)
 		return
+	case "scan":
+		pr.StatusCode = 200
+		pr.Message = "Searching for networks..."
+
+		rc, err := exec.Command("sh", "-c", "wpa_cli scan wlan0; wpa_cli scan_results").Output()
+		if err != nil {
+			pr.ReturnResponse(w, err)
+		}
+		lines := strings.Split(strings.TrimSpace(string(rc)), "\n")
+		log.Debug()
+		log.WithFields(log.Fields{"lines": lines}).Debug("lines before")
+		// remove first 4 lines
+		lines = append(lines[:0], lines[4:]...)
+		log.WithFields(log.Fields{"lines": lines}).Debug("lines after")
+
+		jsonStr := ""
+		for i := 0; i < len(lines); i++ {
+			jsonStr = jsonStr + `"line ` + string(rune(i)) + `": "` + lines[0] + `",`
+		}
+		// remove final comma
+		lnStr := utf8.RuneCountInString(jsonStr)
+		pr.Data = substr(jsonStr, 1, lnStr-1)
 	case "status":
 		args = []string{"wlan0", "status"}
 		statret, err := a.ExecCmd("/usr/local/etc/init.d/wifi", args)
 		if err != nil {
-			pr.StatusCode = 500
-			pr.Message = "Unable to retrieve WiFi status"
 			pr.ReturnResponse(w, err)
-			return
 		}
 		statuses := strings.Split(statret, "\n")
 		pr.Message = "init.d/wifi wlan0 status"
@@ -143,7 +163,9 @@ func (a *App) wifiAction(w http.ResponseWriter, r *http.Request) {
 	case "ssid":
 		args = []string{"-r"}
 		sr, err = a.ExecCmd("iwgetid", args)
-
+		if err != nil {
+			pr.ReturnResponse(w, err)
+		}
 		if sr == "" {
 			pr.StatusCode = 404
 			pr.Message = "No SSID found"
