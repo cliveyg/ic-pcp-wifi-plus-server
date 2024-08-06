@@ -22,11 +22,17 @@ arg3=$4
 
 wp_cmd_1() {
   sleep 1
-  cd /mnt/UserData/industrialcool-pcp-wifi-plus/pcp-scripts/
+  cd /mnt/UserData/industrialcool-pcp-wifi-plus/pcp-scripts/ || exit 238
   ./wifi-plus-startup.sh
 }
 
-wp_wifi_restart_hup() {
+wp_nohup_test() {
+  nohup "$(sleep 10; touch /mnt/UserData/wifi-plus/tfile3.txt; ll /mnt/UserData/wifi-plus/tfile3.txt)" > /www/log/wifiplus.log 2>&1 &
+  nohup "$(sleep 5; touch /mnt/UserData/wifi-plus/tfile2.txt; ll /mnt/UserData/wifi-plus/tfile2.txt)" > /www/log/wifiplus.log 2>&1 &
+  nohup "$(sleep 1; touch /mnt/UserData/wifi-plus/tfile1.txt; ll /mnt/UserData/wifi-plus/tfile1.txt)" > /www/log/wifiplus.log 2>&1 &
+}
+
+#wp_wifi_restart_hup() {
 
   #"/usr/local/etc/init.d/wifi wlan0 stop;"
   #"sleep 3; /usr/local/etc/init.d/wifi wlan0 start;"
@@ -39,8 +45,8 @@ wp_wifi_restart_hup() {
   #nohup $(echo $arg1 | base64 --decode) > /var/log/wifiplus.log 2>&1 &
   #echo $(sleep 10; /mnt/UserData/industrialcool-pcp-wifi-plus/pcp-scripts/wifi-plus-startup.sh;)
 
-  nohup "$(sleep 1; cd /mnt/UserData/industrialcool-pcp-wifi-plus/pcp-scripts/; ./wifi-plus-startup.sh)" > /www/log/wifiplus.log 2>&1 &
-}
+  #nohup "$(sleep 1; cd /mnt/UserData/industrialcool-pcp-wifi-plus/pcp-scripts/; ./wifi-plus-startup.sh)" > /www/log/wifiplus.log 2>&1 &
+#}
 
 wp_picore_details() {
   printf "\"picore_version\": \"%s\", " $(pcp_picore_version)

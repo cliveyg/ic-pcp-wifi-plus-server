@@ -2,7 +2,6 @@ package main
 
 import (
 	"encoding/json"
-	"fmt"
 	"github.com/gorilla/mux"
 	log "github.com/sirupsen/logrus"
 	"net/http"
@@ -24,16 +23,16 @@ func (a *App) testTings(w http.ResponseWriter, _ *http.Request) {
 		Action:     "ran nohupped commands",
 		StatusCode: 202,
 		Message:    "now we wait..."}
-	pr.FormatResponse(w, nil)
 
-	fullCmd := fmt.Sprintf("cd cgi-bin && ./wifi-plus.sh wp_wifi_restart_hup")
-	log.WithFields(log.Fields{"fullCmd": fullCmd}).Debug("Full command!")
+	//fullCmd := fmt.Sprintf("cd cgi-bin && ./wifi-plus.sh wp_nohup_test")
+	//log.WithFields(log.Fields{"fullCmd": fullCmd}).Debug("Full command!")
 
-	_, err := exec.Command("sh", "-c", "./test.sh").Output()
+	rc, err := exec.Command("sh", "-c", "cd cgi-bin && ./wifi-plus.sh wp_nohup_test").Output()
 	if err != nil {
 		log.Fatal(err)
 	}
-
+	pr.Data = string(rc)
+	pr.FormatResponse(w, nil)
 }
 
 func (a *App) systemAction(w http.ResponseWriter, r *http.Request) {
