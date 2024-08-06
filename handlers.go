@@ -74,9 +74,11 @@ func (a *App) systemAction(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			pr.ReturnResponse(w, err)
 		}
+		log.WithFields(log.Fields{"picore deets": rc}).Debug()
 		pr.StatusCode = 200
 		pr.Message = "piCore details"
 		picoreData := PiCoreSystemData{}
+
 		err = json.Unmarshal(rc, &picoreData)
 		if err != nil {
 			pr.ReturnResponse(w, err)
