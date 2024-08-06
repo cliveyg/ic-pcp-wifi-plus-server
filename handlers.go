@@ -161,8 +161,13 @@ func (a *App) wifiAction(w http.ResponseWriter, r *http.Request) {
 			pr.ReturnResponse(w, err)
 		}
 		statuses := strings.Split(statret, "\n")
+		ws := WifiStatus{
+			WPASupplicantStatus: statuses[0],
+			UDHCPStatus:         statuses[1],
+		}
 		pr.Message = "init.d/wifi wlan0 status"
-		pr.Data = `"wpa_supplicant status": "` + statuses[0] + `", "udhcpc status" : "` + statuses[0] + `"`
+		//pr.Data = `"wpa_supplicant status": "` + statuses[0] + `", "udhcpc status" : "` + statuses[0] + `"`
+		pr.Data = ws
 		if strings.Contains(statret, "not running") {
 			pr.StatusCode = 404
 		} else {
