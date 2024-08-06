@@ -75,10 +75,10 @@ type WifiPlusResponse struct {
 }
 
 type PiCoreSystemData struct {
-	PiCoreVersion       string `json:"pi_core_version"`
-	PiCorePlayerVersion string `json:"pi_core_player_version"`
+	PiCoreVersion       string `json:"picore_version"`
+	PiCorePlayerVersion string `json:"picoreplayer_version"`
 	SqueezeliteVersion  string `json:"squeezelite_version"`
-	LinuxVersion        string `json:"linux_version"`
+	LinuxVersion        string `json:"linux_release"`
 }
 
 func (p *WifiPlusResponse) ReturnResponse(w http.ResponseWriter, err error) {
