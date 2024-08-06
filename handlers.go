@@ -146,7 +146,7 @@ func (a *App) wifiAction(w http.ResponseWriter, r *http.Request) {
 		jsonStr := "["
 		for i := 0; i < len(lines); i++ {
 			wifiDetails := strings.Split(lines[0], "\t")
-			jsonStr = jsonStr + `{"wifi ` + string(i) + `": { "ssid": "` + wifiDetails[4] + `",` +
+			jsonStr = jsonStr + `{"wifi ` + string(rune(i)) + `": { "ssid": "` + wifiDetails[4] + `",` +
 				`"bssid": "` + wifiDetails[0] + `",` +
 				`"flags": "` + wifiDetails[3] + `"}},`
 		}
