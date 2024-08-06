@@ -5,9 +5,7 @@ import (
 	log "github.com/sirupsen/logrus"
 	"net/http"
 	"os/exec"
-	"strconv"
 	"strings"
-	"time"
 )
 
 // ----------------------------------------------------------------------------
@@ -46,7 +44,6 @@ func (a *App) systemAction(w http.ResponseWriter, r *http.Request) {
 	//TODO: Check input string more thoroughly
 
 	var rc []byte
-	var rcInt int
 	var err error
 	pr := WifiPlusResponse{
 		Method: "sysAction",
@@ -55,51 +52,24 @@ func (a *App) systemAction(w http.ResponseWriter, r *http.Request) {
 
 	switch sysAction {
 	case "status":
-		pr.Cmd = "wifi-plus.sh wp_status 200"
-		rc, err = exec.Command("sh", "-c", "cd cgi-bin && ./wifi-plus.sh wp_status 200").Output()
-		if err != nil {
-			pr.ReturnResponse(w, err)
-		}
-		rcInt, err = strconv.Atoi(strings.TrimSpace(string(rc)))
-		if err != nil {
-			pr.ReturnResponse(w, err)
-		}
-		pr.StatusCode = rcInt
-		pr.Message = "System running"
-
+		a.sysStatus(w, &pr, rc, err)
 	case "picore":
-
-		a.piCoreDetails(w, &pr, rc, err)
+		a.sysPiCoreDetails(w, &pr, rc, err)
+	case "reboot":
+		a.sysReboot(w, &pr)
 		/*
-			pr.Cmd = "wifi-plus.sh wp_picore_details"
-			rc, err = exec.Command("sh", "-c", "cd cgi-bin && sudo ./wifi-plus.sh wp_picore_details").Output()
+			pr.StatusCode = 202
+			pr.Message = "System rebooting"
+			pr.Cmd = "sudo pcp rb"
+			pr.ReturnResponse(w, nil)
+			time.Sleep(2 * time.Second)
+			rc, err := exec.Command("sh", "-c", "sudo pcp rb").Output()
+			log.Debug(rc)
 			if err != nil {
 				pr.ReturnResponse(w, err)
 			}
-
-			pr.StatusCode = 200
-			pr.Message = "piCore system details"
-			picoreData := PiCoreSystemData{}
-
-			err = json.Unmarshal(rc, &picoreData)
-			if err != nil {
-				pr.ReturnResponse(w, err)
-			}
-			pr.Data = picoreData
 
 		*/
-
-	case "reboot":
-		pr.StatusCode = 202
-		pr.Message = "System rebooting"
-		pr.Cmd = "sudo pcp rb"
-		pr.ReturnResponse(w, nil)
-		time.Sleep(2 * time.Second)
-		rc, err := exec.Command("sh", "-c", "sudo pcp rb").Output()
-		log.Debug(rc)
-		if err != nil {
-			pr.ReturnResponse(w, err)
-		}
 		return
 
 	default:
