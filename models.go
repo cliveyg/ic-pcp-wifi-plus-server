@@ -14,6 +14,16 @@ type WifiStatus struct {
 	UDHCPStatus         string `json:"udhcp_status"`
 }
 
+type SSID struct {
+	SSID string `json:"ssid"`
+}
+
+type WifiNetwork struct {
+	BSSID string `json:"bssid"`
+	SSID  string `json:"ssid"`
+	Flags string `json:"flags"`
+}
+
 type WPACliResponse struct {
 	BSSID     string `json:"bssid"`
 	Freq      int    `json:"freq"`
@@ -56,12 +66,19 @@ func (p *WPACliResponse) OrganiseData(lines []string) {
 }
 
 type WifiPlusResponse struct {
-	Method     string `json:"method"`
-	Action     string `json:"action"`
-	Cmd        string `default0:"" json:"cmd"`
-	StatusCode int
+	Method     string      `json:"method"`
+	Action     string      `json:"action"`
+	Cmd        string      `default0:"" json:"cmd"`
+	StatusCode int         `json:"-"`
 	Message    string      `json:"message"`
-	Data       interface{} `default0:"" json:"data"`
+	Data       interface{} `json:"data,omitempty"`
+}
+
+type PiCoreSystemData struct {
+	PiCoreVersion       string `json:"pi_core_version"`
+	PiCorePlayerVersion string `json:"pi_core_player_version"`
+	SqueezeliteVersion  string `json:"squeezelite_version"`
+	LinuxVersion        string `json:"linux_version"`
 }
 
 func (p *WifiPlusResponse) ReturnResponse(w http.ResponseWriter, err error) {

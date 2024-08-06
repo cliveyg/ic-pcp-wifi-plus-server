@@ -21,10 +21,10 @@ arg1=$2
 # ---------------------- subroutines ---------------------- #
 
 wp_picore_details() {
-  printf "\"picore_version\": \"%s\", " $(pcp_picore_version)
+  printf "{\"picore_version\": \"%s\", " $(pcp_picore_version)
   printf "\"picoreplayer_version\": \"%s\", " $(pcp_picoreplayer_version)
   printf "\"squeezelite_version\": \"%s\", " $(pcp_squeezelite_version)
-  printf "\"linux_release\": \"%s\"" $(pcp_linux_release)
+  printf "\"linux_release\": \"%s\"}" $(pcp_linux_release)
 }
 
 wp_status() {
