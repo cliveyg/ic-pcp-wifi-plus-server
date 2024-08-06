@@ -134,7 +134,12 @@ func (a *App) wifiAction(w http.ResponseWriter, r *http.Request) {
 		statuses := strings.Split(statret, "\n")
 		pr.Message = "init.d/wifi wlan0 status"
 		pr.Data = `"wpa_supplicant status": "` + statuses[0] + `", "udhcpc status" : "` + statuses[0] + `"`
-		pr.StatusCode = 200
+		if strings.Contains(statret, "not running") {
+			pr.StatusCode = 404
+		} else {
+			pr.StatusCode = 200
+		}
+
 	case "ssid":
 		args = []string{"-r"}
 		sr, err = a.ExecCmd("iwgetid", args)
