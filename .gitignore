@@ -10,6 +10,7 @@
 !handlers.go
 !routes.go
 !helpers.go
+!methods.go
 !api_test.go
 !go.mod
 !go.sum

@@ -1,7 +1,6 @@
 package main
 
 import (
-	"encoding/json"
 	"github.com/gorilla/mux"
 	log "github.com/sirupsen/logrus"
 	"net/http"
@@ -69,21 +68,26 @@ func (a *App) systemAction(w http.ResponseWriter, r *http.Request) {
 		pr.Message = "System running"
 
 	case "picore":
-		pr.Cmd = "wifi-plus.sh wp_picore_details"
-		rc, err = exec.Command("sh", "-c", "cd cgi-bin && sudo ./wifi-plus.sh wp_picore_details").Output()
-		if err != nil {
-			pr.ReturnResponse(w, err)
-		}
 
-		pr.StatusCode = 200
-		pr.Message = "piCore system details"
-		picoreData := PiCoreSystemData{}
+		a.piCoreDetails(w, &pr, &rc, &err)
+		/*
+			pr.Cmd = "wifi-plus.sh wp_picore_details"
+			rc, err = exec.Command("sh", "-c", "cd cgi-bin && sudo ./wifi-plus.sh wp_picore_details").Output()
+			if err != nil {
+				pr.ReturnResponse(w, err)
+			}
 
-		err = json.Unmarshal(rc, &picoreData)
-		if err != nil {
-			pr.ReturnResponse(w, err)
-		}
-		pr.Data = picoreData
+			pr.StatusCode = 200
+			pr.Message = "piCore system details"
+			picoreData := PiCoreSystemData{}
+
+			err = json.Unmarshal(rc, &picoreData)
+			if err != nil {
+				pr.ReturnResponse(w, err)
+			}
+			pr.Data = picoreData
+
+		*/
 
 	case "reboot":
 		pr.StatusCode = 202
@@ -200,7 +204,7 @@ func (a *App) wifiAction(w http.ResponseWriter, r *http.Request) {
 		pr.Message = "Action does not exist"
 	}
 
-	log.WithFields(log.Fields{"PR IS": pr}).Debug()
+	log.WithFields(log.Fields{"Full response is ": pr}).Debug()
 	pr.ReturnResponse(w, err)
 
 }
