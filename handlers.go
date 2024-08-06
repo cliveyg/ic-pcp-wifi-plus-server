@@ -109,16 +109,16 @@ func (a *App) wifiAction(w http.ResponseWriter, r *http.Request) {
 
 	switch wifiAction {
 	case "restart":
-		pr := WifiPlusResponse{
-			StatusCode: 202,
-			Message:    "now we wait...",
-		}
+		pr.StatusCode = 200
+		pr.Message = "now we wait..."
 
 		_, err := exec.Command("sh", "-c", "cd /mnt/UserData/industrialcool-pcp-wifi-plus/pcp-scripts; nohup ./wp-stopstart-wifi.sh > /dev/null 2>&1 &").Output()
 		if err != nil {
 			log.Fatal(err)
 		}
 		pr.Data = "\"script\": \"wp-stopstart.sh\""
+		pr.FormatResponse(w, nil)
+		return
 	case "status":
 		args = []string{"wlan0", "status"}
 		sr, err = a.ExecCmd("/usr/local/etc/init.d/wifi", args)
@@ -148,11 +148,8 @@ func (a *App) wifiAction(w http.ResponseWriter, r *http.Request) {
 		pr.Message = "Action does not exist"
 	}
 
-	if err != nil {
-		pr.FormatResponse(w, err)
-	} else {
-		pr.FormatResponse(w, nil)
-	}
+	pr.FormatResponse(w, err)
+
 }
 
 func (a *App) getWPACliStatus(w http.ResponseWriter, _ *http.Request) {
