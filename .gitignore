@@ -18,5 +18,5 @@
 !pcp-scripts/wifi-plus-startup.sh
 !pcp-scripts/test.sh
 !pcp-scripts/wifi-plus.sh
-!pcp-scripts/wp-stopstart-wifi.sh
+!pcp-scripts/wp-wifi-refresh.sh
 !wifiplus

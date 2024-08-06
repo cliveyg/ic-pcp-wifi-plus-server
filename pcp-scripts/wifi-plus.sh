@@ -20,21 +20,6 @@ arg1=$2
 
 # ---------------------- subroutines ---------------------- #
 
-wp_wifi_restart() {
-    /usr/local/etc/init.d/wifi wlan0 stop
-    mount /dev/mmcblk0p1
-    sudo mv /mnt/mmcblk0p1/used_wpa_supplicant.conf /var/run/wpa_supplicant.conf
-    echo "ctrl_interface=/var/run/wpa_supplicant
-    ctrl_interface_group=staff
-    update_config=1" > /opt/wpa.cfg
-    sudo wpa_supplicant -Dwext -iwlan0 -c/opt/wpa.cfg -B
-    sleep 3
-    sudo /usr/local/etc/init.d/wifi wlan0 stop
-    sudo /usr/local/etc/init.d/wifi wlan0 start
-    cd /mnt/UserData/industrialcool-pcp-wifi-plus/pcp-scripts
-    ./wifi-plus-startup.sh
-}
-
 wp_picore_details() {
   printf "\"picore_version\": \"%s\", " $(pcp_picore_version)
   printf "\"picoreplayer_version\": \"%s\", " $(pcp_picoreplayer_version)
@@ -55,9 +40,6 @@ wp_test() {
 # ---------------------- main program ---------------------- #
 
 case $subroutine in
-  wp_general_hup)
-    wp_general_hup
-  ;;
   wp_picore_details)
     wp_picore_details
   ;;

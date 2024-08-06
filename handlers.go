@@ -24,10 +24,13 @@ func (a *App) testTings(w http.ResponseWriter, _ *http.Request) {
 		StatusCode: 200,
 		Message:    "tings"}
 
-	_, err := exec.Command("sh", "-c", "cd /mnt/UserData/industrialcool-pcp-wifi-plus/pcp-scripts; nohup ./wifi-plus.sh wp_wifi_restart > /dev/null 2>&1 &").Output()
-	if err != nil {
-		log.Fatal(err)
-	}
+	/*
+		_, err := exec.Command("sh", "-c", "cd /mnt/UserData/industrialcool-pcp-wifi-plus/pcp-scripts; nohup ./wifi-plus.sh wp_wifi_restart > /dev/null 2>&1 &").Output()
+		if err != nil {
+			log.Fatal(err)
+		}
+
+	*/
 
 	pr.Data = "\"boopy\": \"beep\""
 	pr.FormatResponse(w, nil)
@@ -112,7 +115,7 @@ func (a *App) wifiAction(w http.ResponseWriter, r *http.Request) {
 		pr.StatusCode = 202
 		pr.Message = "now we wait..."
 
-		_, err := exec.Command("sh", "-c", "cd /mnt/UserData/industrialcool-pcp-wifi-plus/pcp-scripts; nohup ./wp-stopstart-wifi.sh > /dev/null 2>&1 &").Output()
+		_, err := exec.Command("sh", "-c", "cd /mnt/UserData/industrialcool-pcp-wifi-plus/pcp-scripts; nohup ./wp-wifi-refresh.sh > /dev/null 2>&1 &").Output()
 		if err != nil {
 			log.Fatal(err)
 		}
