@@ -10,6 +10,19 @@ import (
 	"time"
 )
 
+func (a *App) sysShutdown(w http.ResponseWriter, pr *WifiPlusResponse) {
+	pr.StatusCode = 202
+	pr.Message = "System shutting down"
+	pr.Cmd = "sudo pcp sd"
+	pr.ReturnResponse(w, nil)
+	time.Sleep(2 * time.Second)
+	rc, err := exec.Command("sh", "-c", "sudo pcp sd").Output()
+	log.Debug(rc)
+	if err != nil {
+		pr.ReturnResponse(w, err)
+	}
+}
+
 func (a *App) sysReboot(w http.ResponseWriter, pr *WifiPlusResponse) {
 	pr.StatusCode = 202
 	pr.Message = "System rebooting"
