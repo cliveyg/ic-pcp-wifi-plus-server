@@ -15,15 +15,15 @@ set +a
 
 subroutine=$1
 arg1=$2
-arg2=$3
-arg3=$4
+#arg2=$3
+#arg3=$4
 
 # ---------------------- subroutines ---------------------- #
 
 wp_cmd_1() {
   sleep 1
   cd /mnt/UserData/industrialcool-pcp-wifi-plus/pcp-scripts/ || exit 238
-  ./wifi-plus-startup.sh
+  ./nohup-test.sh
 }
 
 wp_nohup_test() {
