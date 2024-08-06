@@ -7,4 +7,5 @@ func (a *App) initializeRoutes() {
 	a.Router.HandleFunc("/wpa/status", a.getWPACliStatus).Methods("GET")
 	a.Router.HandleFunc("/system/{action}", a.systemAction).Methods("GET")
 	a.Router.HandleFunc("/wifi/{action}", a.wifiAction).Methods("GET")
+	a.Router.HandleFunc("{rest:[a-zA-Z0-9=\\-\\/]+}", a.return404).Methods("GET")
 }
