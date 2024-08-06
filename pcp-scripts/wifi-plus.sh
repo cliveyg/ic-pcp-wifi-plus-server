@@ -37,7 +37,9 @@ wp_test() {
 }
 
 wp_wap_install() {
-  echo "{\"progress\": \"$(pcp_install_apmode)\"}"
+  ap=$(pcp_install_apmode)
+  sleep 10
+  echo "{\"progress\": \"$ap\"}"
 }
 
 
