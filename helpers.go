@@ -20,13 +20,6 @@ func (a *App) ExecCmd(command string, args []string) (string, error) {
 
 }
 
-func runCmd(cmd string) {
-	_, err := exec.Command("sh", "-c", cmd).Output()
-	if err != nil {
-		log.Fatal(err)
-	}
-}
-
 func substr(input string, start int, length int) string {
 	asRunes := []rune(input)
 	if start >= len(asRunes) {

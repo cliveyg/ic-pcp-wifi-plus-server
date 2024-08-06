@@ -62,8 +62,10 @@ func (p *WifiPlusResponse) ReturnResponse(w http.ResponseWriter, err error) {
 
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 	if err != nil {
-		log.WithFields(log.Fields{"err": err}).Debug("Something went bang")
+		log.WithFields(log.Fields{"err": err}).Error("Something went bang")
 		p.StatusCode = 500
+		p.Message = "Server error"
+		p.Data = `"error": "` + err.Error() + `"`
 		jsonData, _ := json.Marshal(p)
 		w.WriteHeader(p.StatusCode)
 		if _, err := io.WriteString(w, string(jsonData)); err != nil {
