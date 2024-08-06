@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"github.com/gorilla/mux"
 	log "github.com/sirupsen/logrus"
 	"net/http"
@@ -29,8 +30,10 @@ func (a *App) testTings(w http.ResponseWriter, _ *http.Request) {
 		}
 
 	*/
-
-	pr.Data = `{"boopy": "beep"}`
+	r := `{"boopy": "beep"}`
+	var b map[string]interface{}
+	json.Unmarshal([]byte(r), &b)
+	pr.Data = b
 	pr.ReturnResponse(w, nil)
 }
 
