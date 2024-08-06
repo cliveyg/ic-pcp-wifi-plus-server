@@ -75,23 +75,40 @@ func (p *WifiPlusResponse) ReturnResponse(w http.ResponseWriter, err error) {
 		return
 	}
 
-	var jsonStr string
+	//var jsonStr string
 	// check to avoid double brackets
-	if substr(p.Data, 0, 1) == "{" ||
-		substr(p.Data, 0, 1) == "[" {
-		jsonStr = "{ \"command\": \"" + p.Method + "\", " +
-			"\"action\": \"" + p.Action + "\"," +
-			"\"message\": \"" + p.Message + "\"," +
-			"\"data\": " + p.Data + " }"
-	} else {
-		jsonStr = "{ \"command\": \"" + p.Method + "\", " +
-			"\"action\": \"" + p.Action + "\"," +
-			"\"message\": \"" + p.Message + "\"," +
-			"\"data\": {" + p.Data + "} }"
-	}
+	/*
+		if substr(p.Data, 0, 1) == "{" ||
+			substr(p.Data, 0, 1) == "[" {
+			jsonStr = "{ \"command\": \"" + p.Method + "\", " +
+				"\"action\": \"" + p.Action + "\"," +
+				"\"message\": \"" + p.Message + "\"," +
+				"\"data\": " + p.Data + " }"
+		} else {
+			jsonStr = "{ \"command\": \"" + p.Method + "\", " +
+				"\"action\": \"" + p.Action + "\"," +
+				"\"message\": \"" + p.Message + "\"," +
+				"\"data\": {" + p.Data + "} }"
+		}
 
+	*/
+	/*
+		var raw map[string]interface{}
+		raw = p.Data
+		out, er2 := json.Marshal(raw)
+		if er2 != nil {
+			log.Fatal(err)
+		}
+
+	*/
+	//p.Data = ""
+	//jsonStr, _ = json.Marshal(p)
+	jsonBytes, err := json.Marshal(p)
+	if err != nil {
+		log.Fatal(err)
+	}
 	w.WriteHeader(p.StatusCode)
-	if _, err := io.WriteString(w, jsonStr); err != nil {
+	if _, err := io.WriteString(w, string(jsonBytes)); err != nil {
 		log.Fatal(err)
 	}
 

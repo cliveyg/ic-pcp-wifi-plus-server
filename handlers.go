@@ -191,6 +191,7 @@ func (a *App) wifiAction(w http.ResponseWriter, r *http.Request) {
 		pr.Message = "Action does not exist"
 	}
 
+	log.WithFields(log.Fields{"PR IS": pr}).Debug()
 	pr.ReturnResponse(w, err)
 
 }
