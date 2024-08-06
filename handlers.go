@@ -116,7 +116,7 @@ func (a *App) wifiAction(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			log.Fatal(err)
 		}
-		pr.Data = "\"script\": \"wp-stopstart.sh\""
+		pr.Data = `"script": "wp-stopstart.sh"`
 		pr.FormatResponse(w, nil)
 		return
 	case "status":
