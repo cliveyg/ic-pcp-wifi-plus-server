@@ -12,8 +12,6 @@ set -a
 . /var/www/.env
 set +a
 
-. /var/www/cgi-bin/pcp-functions
-
 LOG=/mnt/UserData/industrialcool-pcp-wifi-plus/pcp-scripts/testy.log
 
 if [ $DBUG -eq 1 ]; then
