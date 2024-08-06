@@ -1,9 +1,18 @@
 #!/bin/sh
 
-# getting env settings from .env
+#-----------------------------------------------------------------------------#
+# wp-stop-start-wifi.sh                                                       #
+# for some reason the only way i have been able to run these as nohup is by   #
+# putting them in separate script. at least part of the issue is that         #
+# stopping and starting wlan0 wifi exhibits different behaviours in the shell #
+# and via a script <shrugs>                                                   #
+#-----------------------------------------------------------------------------#
+
 set -a
 . /var/www/.env
 set +a
+
+. /var/www/cgi-bin/pcp-functions
 
 LOG=/mnt/UserData/industrialcool-pcp-wifi-plus/pcp-scripts/testy.log
 
