@@ -128,3 +128,13 @@ func (a *App) getWPACliStatus(w http.ResponseWriter, _ *http.Request) {
 	pr.ReturnResponse(w, err)
 
 }
+
+func (a *App) return404(w http.ResponseWriter, _ *http.Request) {
+	pr := WifiPlusResponse{
+		Method:     "return404",
+		Action:     "rest",
+		StatusCode: 404,
+		Message:    "Nowt ere chap",
+	}
+	pr.ReturnResponse(w, nil)
+}
