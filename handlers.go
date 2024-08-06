@@ -24,7 +24,7 @@ func (a *App) testTings(w http.ResponseWriter, _ *http.Request) {
 		StatusCode: 200,
 		Message:    "tings"}
 
-	_, err := exec.Command("sh", "-c", "cd cgi-bin; nohup ./wifi-plus.sh wp_wifi_restart > /dev/null 2>&1 &").Output()
+	_, err := exec.Command("sh", "-c", "cd /mnt/UserData/industrialcool-pcp-wifi-plus/pcp-scripts; nohup ./wifi-plus.sh wp_wifi_restart > /dev/null 2>&1 &").Output()
 	if err != nil {
 		log.Fatal(err)
 	}
