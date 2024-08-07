@@ -25,11 +25,13 @@ func (a *App) testTings(w http.ResponseWriter, _ *http.Request) {
 	pr.Cmd = "nohup ./wp-wifi-to-wap.sh"
 	r, err := exec.Command("sh", "-c", "cd /mnt/UserData/industrialcool-pcp-wifi-plus/pcp-scripts; nohup ./wp-wifi-to-wap.sh > /dev/null 2>&1 &").Output()
 	if err != nil {
+		log.Debug("[[[[[[AAAA")
 		pr.ReturnResponse(w, err)
 	}
 	var b map[string]interface{}
 	err = json.Unmarshal(r, &b)
 	if err != nil {
+		log.Debug("[[[[[[BBBB")
 		log.Fatal()
 	}
 	pr.Data = b
