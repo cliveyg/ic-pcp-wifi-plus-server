@@ -58,7 +58,7 @@ wp_wap_add() {
   #else
   #  echo '{"status": "500", "message": "Failed to download ap mode file."}'
 	#fi
-  echo '{ "boop": "soup" }'
+  echo "{ \"boop\": \"soup\" }"
 }
 
 
