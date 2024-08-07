@@ -22,5 +22,6 @@
 !pcp-scripts/test.sh
 !pcp-scripts/wifi-plus.sh
 !pcp-scripts/wp-wifi-refresh.sh
+!pcp-scripts/wp-wifi-to-wap.sh
 !wifiplus
 !beep

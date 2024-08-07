@@ -85,11 +85,9 @@ func (a *App) wapAddRemove(w http.ResponseWriter, r *http.Request) {
 
 	if r.Method == http.MethodPost {
 
-		log.Debug("We get here")
 		pr.Cmd = "wifi-plus.sh wp_wap_add"
 		rc, err = exec.Command("sh", "-c", "cd cgi-bin && ./wifi-plus.sh wp_wap_add").Output()
 		if err != nil {
-			log.Info("==============================")
 			pr.ReturnResponse(w, err)
 		}
 		log.Debugf("RC is %s", string(rc))
@@ -99,7 +97,6 @@ func (a *App) wapAddRemove(w http.ResponseWriter, r *http.Request) {
 		var b map[string]interface{}
 		err = json.Unmarshal([]byte(r), &b)
 		if err != nil {
-			log.Info("+++++++++++++++++++++++++++++++++")
 			log.Fatal(err)
 		}
 		pr.Data = b
