@@ -19,18 +19,31 @@ func (a *App) testTings(w http.ResponseWriter, _ *http.Request) {
 		Function:   "testTings",
 		Cmd:        "whatevs",
 		Action:     "testy testy test",
-		StatusCode: 200,
+		StatusCode: 418,
 		Message:    "tings",
 	}
-
-	r := `{"boopy": "beep"}`
+	pr.Cmd = "nohup ./wp-wifi-to-wap.sh"
+	r, err := exec.Command("sh", "-c", "cd /mnt/UserData/industrialcool-pcp-wifi-plus/pcp-scripts; nohup ./wp-wifi-to-wap.sh > /dev/null 2>&1 &").Output()
+	if err != nil {
+		pr.ReturnResponse(w, err)
+	}
 	var b map[string]interface{}
-	err := json.Unmarshal([]byte(r), &b)
+	err = json.Unmarshal(r, &b)
 	if err != nil {
 		log.Fatal()
 	}
 	pr.Data = b
 	pr.ReturnResponse(w, nil)
+	/*
+		r := `{"boopy": "beep"}`
+		var b map[string]interface{}
+		err := json.Unmarshal([]byte(r), &b)
+		if err != nil {
+			log.Fatal()
+		}
+		pr.Data = b
+		pr.ReturnResponse(w, nil)
+	*/
 }
 
 func (a *App) getWPACliStatus(w http.ResponseWriter, _ *http.Request) {
