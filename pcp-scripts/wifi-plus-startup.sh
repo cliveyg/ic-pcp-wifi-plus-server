@@ -22,7 +22,7 @@ wifiplus_pid=0
 wifiplus_pid=$(pidof wifiplus)
 if [ "$wifiplus_pid" ] && [ "$wifiplus_pid" -ne 0 ]; then
     echo "'wifiplus' process [$wifiplus_pid] found!"
-  if kill -9 "$wifiplus_pid"; then
+  if sudo kill -9 "$wifiplus_pid"; then
     echo "Process [$wifiplus_pid] terminated"
   else
     echo "'wifiplus' process could not be terminated!"
