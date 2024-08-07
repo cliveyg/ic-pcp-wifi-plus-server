@@ -83,8 +83,6 @@ func (a *App) wapAction(w http.ResponseWriter, r *http.Request) {
 	}
 
 	switch wa {
-	case "add", "remove":
-		a.wapAddRemove(w, &pr, r.Method)
 	case "stop", "start":
 		if r.Method == http.MethodGet {
 			a.wapStopStart(w, &pr, wa)
