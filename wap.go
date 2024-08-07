@@ -17,9 +17,15 @@ func (a *App) wapStopStart(w http.ResponseWriter, pr *WifiPlusResponse, ac strin
 	pr.ReturnResponse(w, nil)
 }
 
-func (a *App) wapAddRemove(w http.ResponseWriter, pr *WifiPlusResponse, m string) {
+func (a *App) wapAddRemove(w http.ResponseWriter, r *http.Request) {
 
-	if m == http.MethodPost {
+	log.Debug(r.Method)
+	pr := WifiPlusResponse{
+		Function: "wapAddRemove",
+		Action:   r.Method,
+	}
+
+	if r.Method == http.MethodPost {
 
 		var rc []byte
 		pr.Cmd = "wifi-plus.sh wp_wap_add"
@@ -37,13 +43,14 @@ func (a *App) wapAddRemove(w http.ResponseWriter, pr *WifiPlusResponse, m string
 		}
 		pr.Data = b
 
-	} else if m == http.MethodDelete {
+	} else if r.Method == http.MethodDelete {
 		log.Debug("We should be removing the ap mode stuff")
+		pr.Cmd = "wifi-plus.sh wp_wap_remove"
 	} else {
 		pr.StatusCode = 405
 		pr.Function = "wapAddRemove"
 		pr.Cmd = "meep"
-		err := fmt.Errorf("HTTP method [%s] not valid for this resource", m)
+		err := fmt.Errorf("HTTP method [%s] not valid for this resource", r.Method)
 		pr.ReturnResponse(w, err)
 	}
 }
