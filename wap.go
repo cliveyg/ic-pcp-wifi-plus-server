@@ -38,12 +38,13 @@ func (a *App) wapAddRemove(w http.ResponseWriter, r *http.Request) {
 		Function: "wapAddRemove",
 		Action:   r.Method,
 	}
+	var err error
 
 	if r.Method == http.MethodPost {
 
 		var rc []byte
 		pr.Cmd = "wifi-plus.sh wp_wap_add"
-		rc, err := exec.Command("sh", "-c", "cd cgi-bin && ./wifi-plus.sh wp_wap_add").Output()
+		rc, err = exec.Command("sh", "-c", "cd cgi-bin && ./wifi-plus.sh wp_wap_add").Output()
 		if err != nil {
 			pr.ReturnResponse(w, err)
 		}
@@ -60,12 +61,13 @@ func (a *App) wapAddRemove(w http.ResponseWriter, r *http.Request) {
 	} else if r.Method == http.MethodDelete {
 		log.Debug("We should be removing the ap mode stuff")
 		pr.Cmd = "wifi-plus.sh wp_wap_remove"
+		pr.Message = "Deleting wap extensions"
+		pr.StatusCode = http.StatusGone
 	} else {
-		log.Info("WPPPPWPWPWP")
 		pr.StatusCode = 405
 		pr.Function = "wapAddRemove"
 		pr.Cmd = "meep"
-		err := fmt.Errorf("HTTP method [%s] not valid for this resource", r.Method)
-		pr.ReturnResponse(w, err)
+		err = fmt.Errorf("HTTP method [%s] not valid for this resource", r.Method)
 	}
+	pr.ReturnResponse(w, err)
 }
