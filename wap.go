@@ -19,13 +19,18 @@ func (a *App) wapStopStart(w http.ResponseWriter, pr *WifiPlusResponse, ac strin
 
 func (a *App) wapAddRemove(w http.ResponseWriter, r *http.Request) {
 
+	// http 'post' is add the tcz files, 'delete' is remove and 'get' is fetch
+	// the current details if installed
 	log.Debug(r.Method)
 	pr := WifiPlusResponse{
 		Function: "wapAddRemove",
 		Action:   r.Method,
 	}
 
-	if r.Method == http.MethodPost {
+	if r.Method == http.MethodGet {
+		log.Debug("Display WAP deets and status")
+		pr.Cmd = "wifi-plus.sh wp_wap_status"
+	} else if r.Method == http.MethodPost {
 
 		var rc []byte
 		pr.Cmd = "wifi-plus.sh wp_wap_add"
