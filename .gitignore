@@ -7,12 +7,12 @@
 !app.go
 !wifiplus.go
 !models.go
-!handlers.go
 !routes.go
 !helpers.go
-!wifi.go
-!pcpsys.go
-!wap.go
+!other_handlers.go
+!system_handlers.go
+!wap_handlers.go
+!wifi_handlers.go
 !api_test.go
 !go.mod
 !go.sum
