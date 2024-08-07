@@ -37,9 +37,22 @@ wp_test() {
 }
 
 wp_wap_install() {
-  ap=$(pcp_install_apmode)
-  sleep 10
-  echo "{\"progress\": \"$ap\"}"
+
+	sudo -u tc pcp-load -r $PCP_REPO -w pcp-apmode.tcz 2>&1
+
+	if [ -f $TCEMNT/tce/optional/pcp-apmode.tcz ]; then
+		sudo -u tc pcp-load -i firmware-atheros.tcz
+		sudo -u tc pcp-load -i firmware-brcmwifi.tcz
+		sudo -u tc pcp-load -i firmware-mediatek.tcz
+
+		sudo -u tc pcp-load -i firmware-ralinkwifi.tcz
+		sudo -u tc pcp-load -i firmware-rtlwifi.tcz
+		sudo -u tc pcp-load -i firmware-rpi-wifi.tcz
+		sudo -u tc pcp-load -i pcp-apmode.tcz
+		pcp_wifi_update_wifi_onbootlst
+		pcp_wifi_update_onbootlst "add" "pcp-apmode.tcz"
+	fi
+  # echo "{\"progress\": \"$ap\"}"
 }
 
 
