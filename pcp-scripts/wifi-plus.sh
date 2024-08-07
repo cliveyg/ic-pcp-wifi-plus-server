@@ -13,8 +13,8 @@ set +a
 . /var/www/cgi-bin/pcp-functions
 . /var/www/cgi-bin/pcp-wifi-functions
 
-LOG=$LOGFILE
-$LOG="wifi-plus.sh.log"
+#LOG=$LOGFILE
+LOG="wifi-plus.sh.log"
 
 subroutine=$1
 arg1=$2
@@ -24,8 +24,8 @@ arg1=$2
 # ---------------------- subroutines ---------------------- #
 
 wp_picore_details() {
-  touch $LOG
   echo "$LOG"
+  echo "whoami $(whoami)"
   echo "[wifi-plus.sh] wp_picore_details : ------------------------------" >> $LOG
   printf "{\"picore_version\": \"%s\", " $(pcp_picore_version)
   printf "\"picoreplayer_version\": \"%s\", " $(pcp_picoreplayer_version)
