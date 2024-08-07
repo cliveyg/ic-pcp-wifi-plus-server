@@ -14,7 +14,6 @@ func (a *App) wapStopStart(w http.ResponseWriter, pr *WifiPlusResponse, ac strin
 	pr.StatusCode = 200
 	pr.Function = "wapStopStart"
 	pr.Message = fmt.Sprintf("Action is [%s]", ac)
-	pr.ReturnResponse(w, nil)
 }
 
 func (a *App) wapAddRemove(w http.ResponseWriter, r *http.Request) {
