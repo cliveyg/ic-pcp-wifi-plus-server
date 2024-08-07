@@ -14,7 +14,7 @@ set +a
 . /var/www/cgi-bin/pcp-wifi-functions
 
 #LOG=$LOGFILE
-LOG="wifi-plus.sh.log"
+#LOG="wifi-plus.sh.log"
 
 subroutine=$1
 arg1=$2
@@ -24,9 +24,6 @@ arg1=$2
 # ---------------------- subroutines ---------------------- #
 
 wp_picore_details() {
-  echo "$LOG"
-  echo "whoami $(whoami)"
-  echo "[wifi-plus.sh] wp_picore_details : ------------------------------" >> $LOG
   printf "{\"picore_version\": \"%s\", " $(pcp_picore_version)
   printf "\"picoreplayer_version\": \"%s\", " $(pcp_picoreplayer_version)
   printf "\"squeezelite_version\": \"%s\", " $(pcp_squeezelite_version)
@@ -44,28 +41,28 @@ wp_test() {
 
 wp_wap_add() {
 
-  echo "[wifi-plus.sh] wp_wap_add : ------------------------------" >> $LOG
+  #echo "[wifi-plus.sh] wp_wap_add : ------------------------------" >> $LOG
 
-	#pcp-load -r $PCP_REPO -w pcp-apmode.tcz 2>&1
+	pcp-load -r $PCP_REPO -w pcp-apmode.tcz 2>&1
 
-	#if [ -f $TCEMNT/tce/optional/pcp-apmode.tcz ]; then
-		#pcp-load -i firmware-atheros.tcz
-		#pcp-load -i firmware-brcmwifi.tcz
-		#pcp-load -i firmware-mediatek.tcz
+	if [ -f $TCEMNT/tce/optional/pcp-apmode.tcz ]; then
+		pcp-load -i firmware-atheros.tcz
+		pcp-load -i firmware-brcmwifi.tcz
+		pcp-load -i firmware-mediatek.tcz
 
-		#pcp-load -i firmware-ralinkwifi.tcz
-		#pcp-load -i firmware-rtlwifi.tcz
-		#pcp-load -i firmware-rpi-wifi.tcz
-		#pcp-load -i pcp-apmode.tcz
-		#pcp_wifi_update_wifi_onbootlst
-		#pcp_wifi_update_onbootlst "add" "pcp-apmode.tcz"
-    #APMODE="yes"
-    #AP_IP="10.10.10.1"
-    #pcp_save_to_config
-    #pcp_backup "text"
-  #else
-  #  echo '{"status": "500", "message": "Failed to download ap mode file."}'
-	#fi
+		pcp-load -i firmware-ralinkwifi.tcz
+		pcp-load -i firmware-rtlwifi.tcz
+		pcp-load -i firmware-rpi-wifi.tcz
+		pcp-load -i pcp-apmode.tcz
+		pcp_wifi_update_wifi_onbootlst
+		pcp_wifi_update_onbootlst "add" "pcp-apmode.tcz"
+    APMODE="no"
+    AP_IP="10.10.10.1"
+    pcp_save_to_config
+    pcp_backup "text"
+  else
+    echo '{"status": "500", "message": "Failed to download ap mode file."}'
+	fi
   echo "{ \"boop\": \"soup\" }"
 }
 
@@ -82,10 +79,13 @@ case $subroutine in
   wp_test)
     wp_test
   ;;
-  wp_wap_install)
-    wp_wap_install
+  wp_wap_add)
+    wp_wap_add
+  ;;
+  wp_wap_remove)
+    wp_wap_remove
   ;;
   *)
-    echo "$subroutine"
+    echo "$subroutine not found"
   ;;
 esac
