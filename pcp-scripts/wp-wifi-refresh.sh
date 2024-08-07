@@ -56,7 +56,7 @@ else
 
   /usr/local/etc/init.d/wifi wlan0 stop
   mount /dev/mmcblk0p1
-  sudo mv /mnt/mmcblk0p1/used_wpa_supplicant.conf /var/run/wpa_supplicant.conf
+  sudo cp /mnt/mmcblk0p1/used_wpa_supplicant.conf /var/run/wpa_supplicant.conf
   echo "ctrl_interface=/var/run/wpa_supplicant
   ctrl_interface_group=staff
   update_config=1" > /opt/wpa.cfg

@@ -36,12 +36,11 @@ func (a *App) sysReboot(w http.ResponseWriter, pr *WifiPlusResponse) {
 	}
 }
 
-func (a *App) sysStatus(w http.ResponseWriter, pr *WifiPlusResponse, err error) {
+func (a *App) sysStatus(w http.ResponseWriter, pr *WifiPlusResponse) {
 
 	var rcInt int
-	var rc []byte
 	pr.Cmd = "wifi-plus.sh wp_status 200"
-	rc, err = exec.Command("sh", "-c", "cd cgi-bin && ./wifi-plus.sh wp_status 200").Output()
+	rc, err := exec.Command("sh", "-c", "cd cgi-bin && ./wifi-plus.sh wp_status 200").Output()
 	if err != nil {
 		pr.ReturnResponse(w, err)
 	}
@@ -54,11 +53,10 @@ func (a *App) sysStatus(w http.ResponseWriter, pr *WifiPlusResponse, err error) 
 
 }
 
-func (a *App) sysPiCoreDetails(w http.ResponseWriter, pr *WifiPlusResponse, err error) {
+func (a *App) sysPiCoreDetails(w http.ResponseWriter, pr *WifiPlusResponse) {
 
-	var rc []byte
 	pr.Cmd = "wifi-plus.sh wp_picore_details"
-	rc, err = exec.Command("sh", "-c", "cd cgi-bin && sudo ./wifi-plus.sh wp_picore_details").Output()
+	rc, err := exec.Command("sh", "-c", "cd cgi-bin && sudo ./wifi-plus.sh wp_picore_details").Output()
 	if err != nil {
 		pr.ReturnResponse(w, err)
 	}
