@@ -36,23 +36,29 @@ wp_test() {
   echo "Able to call pcp functions"
 }
 
-wp_wap_install() {
+wp_wap_add() {
 
-	sudo -u tc pcp-load -r $PCP_REPO -w pcp-apmode.tcz 2>&1
+	pcp-load -r $PCP_REPO -w pcp-apmode.tcz 2>&1
 
 	if [ -f $TCEMNT/tce/optional/pcp-apmode.tcz ]; then
-		sudo -u tc pcp-load -i firmware-atheros.tcz
-		sudo -u tc pcp-load -i firmware-brcmwifi.tcz
-		sudo -u tc pcp-load -i firmware-mediatek.tcz
+		pcp-load -i firmware-atheros.tcz
+		pcp-load -i firmware-brcmwifi.tcz
+		pcp-load -i firmware-mediatek.tcz
 
-		sudo -u tc pcp-load -i firmware-ralinkwifi.tcz
-		sudo -u tc pcp-load -i firmware-rtlwifi.tcz
-		sudo -u tc pcp-load -i firmware-rpi-wifi.tcz
-		sudo -u tc pcp-load -i pcp-apmode.tcz
+		pcp-load -i firmware-ralinkwifi.tcz
+		pcp-load -i firmware-rtlwifi.tcz
+		pcp-load -i firmware-rpi-wifi.tcz
+		pcp-load -i pcp-apmode.tcz
 		pcp_wifi_update_wifi_onbootlst
 		pcp_wifi_update_onbootlst "add" "pcp-apmode.tcz"
+    APMODE="yes"
+    AP_IP="10.10.10.1"
+    pcp_save_to_config
+    pcp_backup "text"
+  else
+    echo '{"status": "500", "message": "Failed to download ap mode file."}'
 	fi
-  # echo "{\"progress\": \"$ap\"}"
+
 }
 
 

@@ -7,11 +7,11 @@ import (
 	"strings"
 )
 
-func (a *App) wifiSSID(w http.ResponseWriter, pr *WifiPlusResponse, err error) {
+func (a *App) wifiSSID(w http.ResponseWriter, pr *WifiPlusResponse) {
 	args := []string{"-r"}
 	var sr string
 	pr.Cmd = "iwgetid"
-	sr, err = a.ExecCmd("iwgetid", args)
+	sr, err := a.ExecCmd("iwgetid", args)
 	if err != nil {
 		pr.ReturnResponse(w, err)
 	}
@@ -25,21 +25,21 @@ func (a *App) wifiSSID(w http.ResponseWriter, pr *WifiPlusResponse, err error) {
 	}
 }
 
-func (a *App) wifiStatus(w http.ResponseWriter, pr *WifiPlusResponse, err error) {
+func (a *App) wifiStatus(w http.ResponseWriter, pr *WifiPlusResponse) {
 
 	args := []string{"wlan0", "status"}
 	pr.Cmd = "/usr/local/etc/init.d/wifi"
-	statret, err := a.ExecCmd("/usr/local/etc/init.d/wifi", args)
+	ret, err := a.ExecCmd("/usr/local/etc/init.d/wifi", args)
 	if err != nil {
 		pr.ReturnResponse(w, err)
 	}
-	statuses := strings.Split(statret, "\n")
+	stats := strings.Split(ret, "\n")
 	pr.Message = "init.d/wifi wlan0 status"
 	pr.Data = WifiStatus{
-		WPASupplicantStatus: statuses[0],
-		UDHCPStatus:         statuses[1],
+		WPASupplicantStatus: stats[0],
+		UDHCPStatus:         stats[1],
 	}
-	if strings.Contains(statret, "not running") {
+	if strings.Contains(ret, "not running") {
 		pr.StatusCode = 404
 	} else {
 		pr.StatusCode = 200
@@ -47,13 +47,12 @@ func (a *App) wifiStatus(w http.ResponseWriter, pr *WifiPlusResponse, err error)
 
 }
 
-func (a *App) wifiScan(w http.ResponseWriter, pr *WifiPlusResponse, err error) {
+func (a *App) wifiScan(w http.ResponseWriter, pr *WifiPlusResponse) {
 
-	var rc []byte
 	pr.StatusCode = 200
 	pr.Message = "Searching for networks..."
 	pr.Cmd = "wpa_cli scan wlan0; wpa_cli scan_results"
-	rc, err = exec.Command("sh", "-c", "wpa_cli scan wlan0; wpa_cli scan_results").Output()
+	rc, err := exec.Command("sh", "-c", "wpa_cli scan wlan0; wpa_cli scan_results").Output()
 	if err != nil {
 		pr.ReturnResponse(w, err)
 	}
