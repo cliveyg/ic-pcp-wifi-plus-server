@@ -32,7 +32,7 @@ func (a *App) testTings(w http.ResponseWriter, _ *http.Request) {
 	err = json.Unmarshal(r, &b)
 	if err != nil {
 		log.Debug("[[[[[[BBBB")
-		log.Fatal()
+		log.Fatal(err)
 	}
 	pr.Data = b
 	pr.ReturnResponse(w, nil)
