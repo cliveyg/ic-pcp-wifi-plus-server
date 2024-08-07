@@ -68,7 +68,7 @@ func (p *WPACliResponse) OrganiseData(lines []string) {
 type WifiPlusResponse struct {
 	Function   string      `json:"function"`
 	Action     string      `json:"action"`
-	Cmd        string      `default0:"" json:"cmd"`
+	Cmd        string      `json:"cmd,omitempty"`
 	StatusCode int         `json:"-"`
 	Message    string      `json:"message"`
 	Data       interface{} `json:"data,omitempty"`
