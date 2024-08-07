@@ -61,6 +61,7 @@ func (a *App) wapAddRemove(w http.ResponseWriter, r *http.Request) {
 		log.Debug("We should be removing the ap mode stuff")
 		pr.Cmd = "wifi-plus.sh wp_wap_remove"
 	} else {
+		log.Info("WPPPPWPWPWP")
 		pr.StatusCode = 405
 		pr.Function = "wapAddRemove"
 		pr.Cmd = "meep"
