@@ -28,7 +28,7 @@ if [ $DBUG -eq 1 ]; then
   pcp_read_config
   echo "[wp-wifi-to-wap.sh] PCPCFG IS \n$PCPCFG" >> $LOG
 
-else
+#else
   # turning wifi off
  # export WIFI="off"
  # /usr/local/etc/init.d/wifi wlan0 stop
