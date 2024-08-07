@@ -39,10 +39,10 @@ func (a *App) wapAddRemove(w http.ResponseWriter, r *http.Request) {
 		Action:   r.Method,
 	}
 	var err error
+	var rc []byte
 
 	if r.Method == http.MethodPost {
 
-		var rc []byte
 		pr.Cmd = "wifi-plus.sh wp_wap_add"
 		rc, err = exec.Command("sh", "-c", "cd cgi-bin && ./wifi-plus.sh wp_wap_add").Output()
 		if err != nil {

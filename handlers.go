@@ -2,9 +2,11 @@ package main
 
 import (
 	"encoding/json"
+	"errors"
 	"github.com/gorilla/mux"
 	log "github.com/sirupsen/logrus"
 	"net/http"
+	"os"
 	"os/exec"
 	"strings"
 )
@@ -84,11 +86,16 @@ func (a *App) wapAction(w http.ResponseWriter, r *http.Request) {
 
 	switch wa {
 	case "stop", "start":
-		if r.Method == http.MethodGet {
-			a.wapStopStart(w, &pr, wa)
+		if _, err := os.Stat("/usr/local/etc/init.d/pcp-apmode"); errors.Is(err, os.ErrNotExist) {
+			pr.StatusCode = 404
+			pr.Message = "WAP mode is not installed"
 		} else {
-			pr.StatusCode = 405
-			pr.Message = "Incorrect method for action"
+			if r.Method == http.MethodGet {
+				a.wapStopStart(w, &pr, wa)
+			} else {
+				pr.StatusCode = 405
+				pr.Message = "Incorrect method for action"
+			}
 		}
 	default:
 		// do nowt
