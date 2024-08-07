@@ -14,6 +14,7 @@ set +a
 . /var/www/cgi-bin/pcp-wifi-functions
 
 LOG=$LOGFILE
+$LOG=/var/log/wifi-plus.sh.log
 
 subroutine=$1
 arg1=$2
