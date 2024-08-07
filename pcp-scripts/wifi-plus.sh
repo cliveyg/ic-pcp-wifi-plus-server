@@ -13,6 +13,8 @@ set +a
 . /var/www/cgi-bin/pcp-functions
 . /var/www/cgi-bin/pcp-wifi-functions
 
+LOG=$LOGFILE
+
 subroutine=$1
 arg1=$2
 #arg2=$3
@@ -37,6 +39,8 @@ wp_test() {
 }
 
 wp_wap_add() {
+
+  echo "[wifi-plus.sh] wp_wap_add : ------------------------------" >> $LOG
 
 	#pcp-load -r $PCP_REPO -w pcp-apmode.tcz 2>&1
 
