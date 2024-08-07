@@ -7,7 +7,6 @@
 !app.go
 !wifiplus.go
 !models.go
-!handlers.go
 !routes.go
 !helpers.go
 !other_handlers.go
