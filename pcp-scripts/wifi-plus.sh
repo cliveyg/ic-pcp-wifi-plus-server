@@ -23,6 +23,7 @@ arg1=$2
 # ---------------------- subroutines ---------------------- #
 
 wp_picore_details() {
+  echo "[wifi-plus.sh] wp_picore_details : ------------------------------" >> $LOG
   printf "{\"picore_version\": \"%s\", " $(pcp_picore_version)
   printf "\"picoreplayer_version\": \"%s\", " $(pcp_picoreplayer_version)
   printf "\"squeezelite_version\": \"%s\", " $(pcp_squeezelite_version)
