@@ -36,7 +36,7 @@ func textToMap(sg string) map[string]string {
 	log.Debug("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
 	log.Debug("In textToMap")
 	output := map[string]string{}
-	for _, pair := range strings.Split(sg, "\n") {
+	for _, pair := range strings.Split(strings.TrimSpace(sg), "\n") {
 		log.Debugf("PAIR IS %s", pair)
 		kv := strings.Split(pair, "=")
 		rs := strings.ReplaceAll(kv[1], "\"", "")
