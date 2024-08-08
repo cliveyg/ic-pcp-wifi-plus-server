@@ -20,7 +20,7 @@ if [ $DBUG -eq 1 ]; then
     echo "[wp-wifi-refresh.sh] ------------------------------" >> $LOG
     echo "[wp-wifi-refresh.sh] DBUG IS [$DBUG]" >> $LOG
   else
-    sudo touch /var/log/wp-wifi-refresh.log
+    sudo touch $LOG
     echo "[wp-wifi-refresh.sh] ------------------------------" >> $LOG
     echo "[wp-wifi-refresh.sh] DBUG IS [$DBUG]" >> $LOG
   fi

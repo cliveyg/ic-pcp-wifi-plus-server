@@ -12,8 +12,8 @@ set -a
 . /var/www/.env
 set +a
 
-. /var/www/cgi-bin/pcp-functions
-. /var/www/cgi-bin/pcp-wifi-functions
+#. /var/www/cgi-bin/pcp-functions
+#. /var/www/cgi-bin/pcp-wifi-functions
 
 LOG=$LOGFILE
 
@@ -28,10 +28,10 @@ if [ $DBUG -eq 1 ]; then
     echo "[wp-wifi-to-wap.sh] DBUG IS [$DBUG]" >> $LOG
   fi
 
-  pcp_config_file
-  pcp_read_config
-  echo -n"[wp-wifi-to-wap.sh] PCPCFG IS " >> $LOG
-  $PCPCFG >> $LOG
+  #pcp_config_file
+  #pcp_read_config
+  #echo -n"[wp-wifi-to-wap.sh] PCPCFG IS " >> $LOG
+  #$PCPCFG >> $LOG
 
 #else
   # turning wifi off
