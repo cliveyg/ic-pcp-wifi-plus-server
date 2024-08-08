@@ -37,6 +37,7 @@ func textToMap(sg string) map[string]string {
 	log.Debug("In textToMap")
 	output := map[string]string{}
 	for _, pair := range strings.Split(sg, "\n") {
+		log.Debugf("PAIR IS %s", pair)
 		kv := strings.Split(pair, "=")
 		rs := strings.ReplaceAll(kv[1], "\"", "")
 		output[kv[0]] = rs
