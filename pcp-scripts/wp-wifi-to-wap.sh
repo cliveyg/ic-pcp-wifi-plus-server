@@ -25,8 +25,10 @@ if [ $DBUG -eq 1 ]; then
     echo "[wp-wifi-to-wap.sh] DBUG IS [$DBUG]" >> $LOG
   fi
 
+  pcp_config_file
   pcp_read_config
-  echo "[wp-wifi-to-wap.sh] PCPCFG IS \n$PCPCFG" >> $LOG
+  echo -n"[wp-wifi-to-wap.sh] PCPCFG IS " >> $LOG
+  $PCPCFG >> $LOG
 
 #else
   # turning wifi off
