@@ -30,3 +30,14 @@ func substr(input string, start int, length int) string {
 	}
 	return string(asRunes[start : start+length])
 }
+
+func textToMap(sg string) map[string]string {
+
+	output := map[string]string{}
+	for _, pair := range strings.Split(sg, "\n") {
+		kv := strings.Split(pair, "=")
+		output[kv[0]] = kv[1]
+	}
+
+	return output
+}
