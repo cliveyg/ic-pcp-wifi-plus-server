@@ -12,8 +12,8 @@ set -a
 . /var/www/.env
 set +a
 
-#. /var/www/cgi-bin/pcp-functions
-#. /var/www/cgi-bin/pcp-wifi-functions
+. /var/www/cgi-bin/pcp-functions
+. /var/www/cgi-bin/pcp-wifi-functions
 
 LOG=$LOGFILE
 
@@ -21,7 +21,7 @@ if [ $DBUG -eq 1 ]; then
 
   if [ -f $LOG ]; then
     echo "[wp-wifi-to-wap.sh] ------------------------------" >> $LOG
-    echo "[wp-wifi-to-wap.sh] DBUG IS [$DBUG]" >> $LOG
+    echo "[wp-wifi-to-wap.sh] ENVs are [$(printenv)]" >> $LOG
   else
     sudo touch $LOG
     echo "[wp-wifi-to-wap.sh] ------------------------------" >> $LOG
