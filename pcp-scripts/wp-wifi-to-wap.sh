@@ -54,4 +54,5 @@ if [ $DBUG -eq 1 ]; then
 	#sudo /usr/local/etc/init.d/pcp-apmode start
 fi
 
-echo "{ \"beep\": \"boop\", \"yarp\": \"narp\" }"
+#echo "{ \"beep\": \"boop\", \"yarp\": \"narp\" }"
+echo '{ "beep": "boop", "yarp": "narp" }'
