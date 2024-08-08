@@ -24,9 +24,9 @@ arg1=$2
 # ---------------------- subroutines ---------------------- #
 
 wp_pcp_config() {
-  if [ "$arg1" == "read"]; then
+  if [ "$arg1" = "read" ]; then
     echo "$PCPCFG"
-  elif [ "$arg1" == "edit" ]; then
+  elif [ "$arg1" = "edit" ]; then
     echo '{ "error": "not yet implemented" }'
   else
     echo '{ "error": "unknown verb" }'
