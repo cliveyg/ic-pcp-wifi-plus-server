@@ -23,6 +23,17 @@ arg1=$2
 
 # ---------------------- subroutines ---------------------- #
 
+wp_pcp_config() {
+  if [ "$arg1" == "read"]; then
+    echo "$PCPCFG"
+  elif [ "$arg1" == "edit" ]; then
+    echo '{ "error": "not yet implemented" }'
+  else
+    echo '{ "error": "unknown verb" }'
+  fi
+
+}
+
 wp_picore_details() {
   printf "{\"picore_version\": \"%s\", " $(pcp_picore_version)
   printf "\"picoreplayer_version\": \"%s\", " $(pcp_picoreplayer_version)
