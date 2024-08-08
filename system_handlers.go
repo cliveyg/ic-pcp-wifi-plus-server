@@ -25,8 +25,20 @@ func (a *App) systemAction(w http.ResponseWriter, r *http.Request) {
 	}
 
 	switch sa {
+	case "config":
+		if r.Method == http.MethodGet || r.Method == http.MethodPut {
+			a.sysPCPConfig(w, &pr, r.Method)
+		} else {
+			pr.StatusCode = 400
+			pr.Message = "Incorrect HTTP method for action"
+		}
 	case "picore":
-		a.sysPiCoreDetails(w, &pr)
+		if r.Method == http.MethodGet {
+			a.sysPiCoreDetails(w, &pr)
+		} else {
+			pr.StatusCode = 400
+			pr.Message = "Incorrect HTTP method for action"
+		}
 	case "reboot":
 		a.sysReboot(w, &pr)
 		return
@@ -34,7 +46,12 @@ func (a *App) systemAction(w http.ResponseWriter, r *http.Request) {
 		a.sysShutdown(w, &pr)
 		return
 	case "status":
-		a.sysStatus(w, &pr)
+		if r.Method == http.MethodGet {
+			a.sysStatus(w, &pr)
+		} else {
+			pr.StatusCode = 400
+			pr.Message = "Incorrect HTTP method for action"
+		}
 	default:
 		// do nowt
 		pr.StatusCode = 400
@@ -84,6 +101,31 @@ func (a *App) sysStatus(w http.ResponseWriter, pr *WifiPlusResponse) {
 	}
 	pr.StatusCode = rcInt
 	pr.Message = "System running"
+
+}
+
+func (a *App) sysPCPConfig(w http.ResponseWriter, pr *WifiPlusResponse, hm string) {
+
+	if hm == http.MethodGet {
+		pr.Message = "fetch pcp config settings"
+		pr.Cmd = "./wifi-plus.sh wp_pcp_config"
+		r, err := exec.Command("sh", "-c", "cd cgi-bin; ./wifi-plus.sh wp_pcp_config read").Output()
+		if err != nil {
+			pr.ReturnResponse(w, err)
+		}
+		log.Debugf("r is [%s]", string(r))
+		var b map[string]interface{}
+		err = json.Unmarshal(r, &b)
+		if err != nil {
+			log.Fatal(err)
+		}
+		pr.StatusCode = 200
+		pr.Data = b
+	} else if hm == http.MethodPut {
+		log.Debug("Editing not implemented yet")
+		pr.StatusCode = 501
+		pr.Message = "Not implemented yet"
+	}
 
 }
 
