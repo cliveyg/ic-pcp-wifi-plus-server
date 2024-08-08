@@ -12,6 +12,9 @@ set -a
 . /var/www/.env
 set +a
 
+. /var/www/cgi-bin/pcp-functions
+. /var/www/cgi-bin/pcp-wifi-functions
+
 LOG=$LOGFILE
 
 if [ $DBUG -eq 1 ]; then
