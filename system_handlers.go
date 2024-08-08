@@ -116,6 +116,7 @@ func (a *App) sysPCPConfig(w http.ResponseWriter, pr *WifiPlusResponse, hm strin
 		log.Debugf("r is [%s]", string(r))
 		var b map[string]string
 		b = textToMap(string(r))
+		log.WithFields(log.Fields{"[[[b]]]": b}).Debug()
 		/*
 			if err != nil {
 				log.Fatal(err)
