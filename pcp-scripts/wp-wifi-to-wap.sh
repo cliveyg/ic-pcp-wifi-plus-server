@@ -15,17 +15,23 @@ set +a
 . /var/www/cgi-bin/pcp-functions
 . /var/www/cgi-bin/pcp-wifi-functions
 
-LOG=$LOGFILE
+# TODO:
+# for some reason this particular script doesn't get the log location
+# from the .env vars. all other envs appear without a problem...
+# other scripts that use the same mechanism and have the same permissions
+# are able to see the log location - aaargh. will take a deeper look after
+# the backend is feature complete
+LOGGY=/var/log/wifiplus.log
 
 if [ $DBUG -eq 1 ]; then
 
-  if [ -f $LOG ]; then
-    echo "[wp-wifi-to-wap.sh] ------------------------------" >> $LOG
-    echo "[wp-wifi-to-wap.sh] ENVs are [$(printenv)]" >> $LOG
+  if [ -f $LOGGY ]; then
+    echo "[wp-wifi-to-wap.sh] ------------------------------" >> $LOGGY
+    echo "[wp-wifi-to-wap.sh] ENVs are [$(printenv)]" >> $LOGGY
   else
-    sudo touch $LOG
-    echo "[wp-wifi-to-wap.sh] ------------------------------" >> $LOG
-    echo "[wp-wifi-to-wap.sh] DBUG IS [$DBUG]" >> $LOG
+    sudo touch $LOGGY
+    echo "[wp-wifi-to-wap.sh] ------------------------------" >> $LOGGY
+    echo "[wp-wifi-to-wap.sh] DBUG IS [$DBUG]" >> $LOGGY
   fi
 
   #pcp_config_file
