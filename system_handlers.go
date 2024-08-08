@@ -114,11 +114,18 @@ func (a *App) sysPCPConfig(w http.ResponseWriter, pr *WifiPlusResponse, hm strin
 			pr.ReturnResponse(w, err)
 		}
 		log.Debugf("r is [%s]", string(r))
-		var b map[string]interface{}
-		err = json.Unmarshal(r, &b)
-		if err != nil {
-			log.Fatal(err)
-		}
+		var b map[string]string
+		b = textToMap(string(r))
+		/*
+			if err != nil {
+				log.Fatal(err)
+			}
+			err = json.Unmarshal(r, &b)
+			if err != nil {
+				log.Fatal(err)
+			}
+
+		*/
 		pr.StatusCode = 200
 		pr.Data = b
 	} else if hm == http.MethodPut {
