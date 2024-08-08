@@ -33,11 +33,14 @@ func substr(input string, start int, length int) string {
 
 func textToMap(sg string) map[string]string {
 
+	log.Debug("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+	log.Debug("In textToMap")
 	output := map[string]string{}
 	for _, pair := range strings.Split(sg, "\n") {
 		kv := strings.Split(pair, "=")
-		output[kv[0]] = kv[1]
+		rs := strings.ReplaceAll(kv[1], "\"", "")
+		output[kv[0]] = rs
 	}
-
+	log.WithFields(log.Fields{"[[[output]]]": output}).Debug()
 	return output
 }
