@@ -26,18 +26,18 @@ LOGGY=/var/log/wifiplus.log
 if [ $DBUG -eq 1 ]; then
 
   if [ -f $LOGGY ]; then
-    echo "[wp-wifi-to-wap.sh] ------------------------------" >> $LOGGY
-    echo "[wp-wifi-to-wap.sh] ENVs are [$(printenv)]" >> $LOGGY
+    echo "[wp-wifi-to-wap.sh] ------------ woop ------------------" >> $LOGGY
+    #echo "[wp-wifi-to-wap.sh] ENVs are [$(printenv)]" >> $LOGGY
+    pcp_config_file
+    pcp_read_config
+    echo -n"[wp-wifi-to-wap.sh] PCPCFG IS " >> $LOG
+    $PCPCFG
   else
     sudo touch $LOGGY
     echo "[wp-wifi-to-wap.sh] ------------------------------" >> $LOGGY
     echo "[wp-wifi-to-wap.sh] DBUG IS [$DBUG]" >> $LOGGY
   fi
 
-  pcp_config_file
-  pcp_read_config
-  echo -n"[wp-wifi-to-wap.sh] PCPCFG IS " >> $LOG
-  $PCPCFG >> $LOG
 
 #else
   # turning wifi off
