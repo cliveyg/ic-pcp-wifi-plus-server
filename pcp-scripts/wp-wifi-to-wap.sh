@@ -28,10 +28,16 @@ if [ $DBUG -eq 1 ]; then
   if [ -f $LOGGY ]; then
     echo "[wp-wifi-to-wap.sh] ------------ woop ------------------" >> $LOGGY
     #echo "[wp-wifi-to-wap.sh] ENVs are [$(printenv)]" >> $LOGGY
-    $(pcp_config_file)
-    $(pcp_read_config)
-    echo -n"[wp-wifi-to-wap.sh] PCPCFG IS [$($PCPCFG)]" >> $LOGGY
-    $PCPCFG
+    #$(pcp_config_file)
+    #$(pcp_read_config)
+    #[ cd /var/www/cgi-bin ] &&  pcp_picore_version
+    #echo -n"[wp-wifi-to-wap.sh] PCPCFG IS [$($PCPCFG)]" >> $LOGGY
+    echo "$(pcp_picore_version)" >> $LOGGY
+    echo "$PCPCFG" >> $LOGGY
+    #echo "$(pcp_config_file)"
+    #echo "$(. $PCPCFG)"
+    #echo "$(pcp_variables)"
+    echo "$(cat /etc/httpd.conf)" >> $LOGGY
   else
     sudo touch $LOGGY
     echo "[wp-wifi-to-wap.sh] ------------------------------" >> $LOGGY

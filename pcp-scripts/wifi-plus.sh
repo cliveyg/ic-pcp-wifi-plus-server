@@ -70,6 +70,9 @@ wp_wap_add() {
 # ---------------------- main program ---------------------- #
 
 case $subroutine in
+  wp_pcp_config)
+    wp_pcp_config
+  ;;
   wp_picore_details)
     wp_picore_details
   ;;
