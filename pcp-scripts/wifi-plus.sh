@@ -25,7 +25,7 @@ arg1=$2
 
 wp_pcp_config() {
   if [ "$arg1" = "read" ]; then
-    echo "$PCPCFG"
+    echo "$(cat $PCPCFG)"
   elif [ "$arg1" = "edit" ]; then
     echo '{ "error": "not yet implemented" }'
   else
