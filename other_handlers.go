@@ -23,7 +23,8 @@ func (a *App) testTings(w http.ResponseWriter, _ *http.Request) {
 		Message:    "tings",
 	}
 	pr.Cmd = "nohup ./wp-wifi-to-wap.sh"
-	r, err := exec.Command("sh", "-c", "cd /mnt/UserData/industrialcool-pcp-wifi-plus/pcp-scripts; nohup ./wp-wifi-to-wap.sh > /dev/null 2>&1 &").Output()
+	//r, err := exec.Command("sh", "-c", "cd /mnt/UserData/industrialcool-pcp-wifi-plus/pcp-scripts; nohup ./wp-wifi-to-wap.sh > /dev/null 2>&1 &").Output()
+	r, err := exec.Command("sh", "-c", "cd /mnt/UserData/industrialcool-pcp-wifi-plus/pcp-scripts; ./wp-wifi-to-wap.sh").Output()
 	if err != nil {
 		log.Debug("[[[[[[AAAA")
 		pr.ReturnResponse(w, err)
