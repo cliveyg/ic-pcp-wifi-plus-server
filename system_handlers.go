@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"errors"
 	"github.com/gorilla/mux"
 	log "github.com/sirupsen/logrus"
 	"net/http"
@@ -111,6 +112,7 @@ func (a *App) sysPCPConfig(pr *WifiPlusResponse, hm string, err *error) {
 		pr.Message = "Fetch pcp config settings"
 		pr.Cmd = "./wifi-plus.sh wp_pcp_config"
 		r, *err = exec.Command("sh", "-c", "cd cgi-bin; ./wifi-plus.sh wp_pcp_config read").Output()
+		*err = errors.New("BLINGY")
 		if *err != nil {
 			return
 		}
