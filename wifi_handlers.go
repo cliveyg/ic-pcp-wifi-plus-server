@@ -27,11 +27,11 @@ func (a *App) wifiAction(w http.ResponseWriter, r *http.Request) {
 		a.wifiRestart(w, &pr)
 		return
 	case "scan":
-		a.wifiScan(w, &pr)
+		a.wifiScan(&pr, &err)
 	case "ssid":
-		a.wifiSSID(w, &pr)
+		a.wifiSSID(&pr, &err)
 	case "status":
-		a.wifiStatus(w, &pr)
+		a.wifiStatus(&pr, &err)
 	default:
 		// do nowt
 		pr.StatusCode = 400
@@ -43,14 +43,13 @@ func (a *App) wifiAction(w http.ResponseWriter, r *http.Request) {
 
 }
 
-func (a *App) wifiSSID(w http.ResponseWriter, pr *WifiPlusResponse) {
+func (a *App) wifiSSID(pr *WifiPlusResponse, err *error) {
 	args := []string{"-r"}
 	var sr string
 	pr.Cmd = "iwgetid"
-	sr, err := a.ExecCmd("iwgetid", args)
-	err = errors.New("BLAH") //clive
-	if err != nil {
-		pr.ReturnResponse(w, err)
+	sr, *err = a.ExecCmd("iwgetid", args)
+	*err = errors.New("BLAH") //clive
+	if *err != nil {
 		return
 	}
 	if sr == "" {
@@ -63,13 +62,14 @@ func (a *App) wifiSSID(w http.ResponseWriter, pr *WifiPlusResponse) {
 	}
 }
 
-func (a *App) wifiStatus(w http.ResponseWriter, pr *WifiPlusResponse) {
+func (a *App) wifiStatus(pr *WifiPlusResponse, err *error) {
 
 	args := []string{"wlan0", "status"}
+	var ret string
 	pr.Cmd = "/usr/local/etc/init.d/wifi"
-	ret, err := a.ExecCmd("/usr/local/etc/init.d/wifi", args)
-	if err != nil {
-		pr.ReturnResponse(w, err)
+	ret, *err = a.ExecCmd("/usr/local/etc/init.d/wifi", args)
+	if *err != nil {
+		return
 	}
 	stats := strings.Split(ret, "\n")
 	pr.Message = "init.d/wifi wlan0 status"
@@ -85,14 +85,15 @@ func (a *App) wifiStatus(w http.ResponseWriter, pr *WifiPlusResponse) {
 
 }
 
-func (a *App) wifiScan(w http.ResponseWriter, pr *WifiPlusResponse) {
+func (a *App) wifiScan(pr *WifiPlusResponse, err *error) {
 
+	var rc []byte
 	pr.StatusCode = 200
 	pr.Message = "Searching for networks..."
 	pr.Cmd = "wpa_cli scan wlan0; wpa_cli scan_results"
-	rc, err := exec.Command("sh", "-c", "wpa_cli scan wlan0; wpa_cli scan_results").Output()
-	if err != nil {
-		pr.ReturnResponse(w, err)
+	rc, *err = exec.Command("sh", "-c", "wpa_cli scan wlan0; wpa_cli scan_results").Output()
+	if *err != nil {
+		return
 	}
 	lines := strings.Split(strings.TrimSpace(string(rc)), "\n")
 	// remove first 4 lines
