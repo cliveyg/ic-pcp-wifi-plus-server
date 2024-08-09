@@ -118,11 +118,6 @@ func (a *App) wapAddRemove(w http.ResponseWriter, r *http.Request) {
 		pr.Cmd = "wifi-plus.sh wp_wap_remove"
 		pr.Message = "Deleting wap extensions"
 		pr.StatusCode = http.StatusGone
-	} else {
-		pr.StatusCode = 405
-		pr.Function = "wapAddRemove"
-		pr.Cmd = "meep"
-		err = fmt.Errorf("HTTP method [%s] not valid for this resource", r.Method)
 	}
 	pr.ReturnResponse(w, err)
 }

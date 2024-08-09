@@ -73,5 +73,5 @@ if [ -f $TCEMNT/tce/optional/pcp-apmode.tcz ]; then
   fi
 
 else
-  echo '{ "status": 500, "message": "ap mode not installed" }'
+  echo '{ "status": 404, "message": "ap mode not installed" }'
 fi
