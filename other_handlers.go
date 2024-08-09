@@ -26,14 +26,14 @@ func (a *App) testTings(w http.ResponseWriter, _ *http.Request) {
 	//r, err := exec.Command("sh", "-c", "cd /mnt/UserData/industrialcool-pcp-wifi-plus/pcp-scripts; nohup ./wp-wifi-to-wap.sh > /dev/null 2>&1 &").Output()
 	r, err := exec.Command("sh", "-c", "cd /mnt/UserData/industrialcool-pcp-wifi-plus/pcp-scripts; ./wp-wifi-to-wap.sh").Output()
 	if err != nil {
-		log.Debug("[[[[[[AAAA")
+		log.Debug("(((((( 1 ))))))")
 		pr.ReturnResponse(w, err)
 	}
 	log.Debugf("r is [%s]", string(r))
 	var b map[string]interface{}
 	err = json.Unmarshal(r, &b)
 	if err != nil {
-		log.Debug("[[[[[[BBBB")
+		log.Debug("(((((( 2 ))))))")
 		log.Fatal(err)
 	}
 	pr.Data = b
