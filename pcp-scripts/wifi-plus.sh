@@ -54,7 +54,9 @@ wp_test() {
 
 wp_wap_add() {
 
-  #echo "[wifi-plus.sh] wp_wap_add : ------------------------------" >> $LOG
+  if [ $DBUG -eq 1 ]; then
+    echo "[wifi-plus.sh] wp_wap_add" >> $LOG
+  fi
 
 	pcp-load -r $PCP_REPO -w pcp-apmode.tcz 2>&1
 
@@ -82,7 +84,9 @@ wp_wap_add() {
 
 wp_wap_remove() {
 
-  #echo "[wifi-plus.sh] wp_wap_add : ------------------------------" >> $LOG
+  if [ $DBUG -eq 1 ]; then
+    echo "[wifi-plus.sh] wp_wap_remove" >> $LOG
+  fi
 
 	pcp_write_var_to_config APMODE "no"
 	pcp_save_to_config
