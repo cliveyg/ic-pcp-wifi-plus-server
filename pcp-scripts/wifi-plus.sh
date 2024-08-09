@@ -77,6 +77,10 @@ wp_wap_add() {
     pcp_write_var_to_config AP_IP "10.10.10.1"
     pcp_save_to_config
     pcp_backup "text"
+
+    sudo chown tc:staff /usr/local/etc/pcp/dnsmasq.conf
+    cp /mnt/UserData/industrialcool-pcp-wifi-plus/confs/hostapd.conf /usr/local/etc/pcp/hostapd.conf
+    sudo chown tc:staff /usr/local/etc/pcp/hostapd.conf
   else
     echo '{"status": "500", "message": "Failed to download ap mode file."}'
 	fi
