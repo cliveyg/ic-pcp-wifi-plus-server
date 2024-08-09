@@ -89,11 +89,12 @@ func (p *WifiPlusResponse) ReturnResponse(w http.ResponseWriter, err error) {
 
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 	if err != nil {
+		log.Debug("(((((( 0 ))))))")
 		log.WithFields(log.Fields{"err": err}).Error("Something went bang")
 		p.StatusCode = 500
 		p.Message = "Server error"
 		p.Data = Eek{Error: err.Error()}
-		log.Debug("(((((( 0 ))))))")
+
 		//jsonData, err := json.Marshal(p)
 		//if err != nil {
 		//	log.Debug("=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-[[]]")
@@ -105,10 +106,11 @@ func (p *WifiPlusResponse) ReturnResponse(w http.ResponseWriter, err error) {
 		//}
 		//return
 	}
-
+	log.Debug("(((((( 5 ))))))")
 	//var jba []byte
 	jba, er2 := json.Marshal(p)
 	if er2 != nil {
+		log.Debug("(((((( 6 ))))))")
 		log.Fatal(err)
 	}
 	w.WriteHeader(p.StatusCode)
