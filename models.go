@@ -89,33 +89,29 @@ func (p *WifiPlusResponse) ReturnResponse(w http.ResponseWriter, err error) {
 
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 	if err != nil {
-		log.WithFields(log.Fields{"err": err}).Error("Something went bang")
+		log.WithFields(log.Fields{"err": err}).Error("Something went bang!")
 		p.StatusCode = 500
 		p.Message = "Server error"
 		p.Data = Eek{Error: err.Error()}
-		/*
-			jsonData, err := json.Marshal(p)
-			if err != nil {
-				log.Fatal(err)
-			}
-			w.WriteHeader(p.StatusCode)
-			if _, err := io.WriteString(w, string(jsonData)); err != nil {
-				log.Fatal(err)
-			}
-			return
 
-		*/
+		jsonData, err := json.Marshal(p)
+		if err != nil {
+			log.Fatal(err)
+		}
+		w.WriteHeader(p.StatusCode)
+		if _, err := io.WriteString(w, string(jsonData)); err != nil {
+			log.Fatal(err)
+		}
+		return
+
 	}
-	log.Debug("(((((( 5 ))))))")
-	//var jba []byte
-	jba, er2 := json.Marshal(p)
-	if er2 != nil {
-		log.Debug("(((((( 6 ))))))")
+	var jba []byte
+	jba, err = json.Marshal(p)
+	if err != nil {
 		log.Fatal(err)
 	}
 	w.WriteHeader(p.StatusCode)
-	if _, er3 := io.WriteString(w, string(jba)); er3 != nil {
-		log.Debug("(((((( 11 ))))))")
-		log.Fatal(er3)
+	if _, err = io.WriteString(w, string(jba)); err != nil {
+		log.Fatal(err)
 	}
 }

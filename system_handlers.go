@@ -93,7 +93,6 @@ func (a *App) sysStatus(w http.ResponseWriter, pr *WifiPlusResponse) {
 	var rcInt int
 	pr.Cmd = "wifi-plus.sh wp_status 200"
 	rc, err := exec.Command("sh", "-c", "cd cgi-bin && ./wifi-plus.sh wp_status 200").Output()
-	err = errors.New("test status error") //clive
 	if err != nil {
 		pr.ReturnResponse(w, err)
 		return
@@ -114,6 +113,7 @@ func (a *App) sysPCPConfig(w http.ResponseWriter, pr *WifiPlusResponse, hm strin
 		pr.Message = "Fetch pcp config settings"
 		pr.Cmd = "./wifi-plus.sh wp_pcp_config"
 		r, err := exec.Command("sh", "-c", "cd cgi-bin; ./wifi-plus.sh wp_pcp_config read").Output()
+		err = errors.New("test error") //clive
 		if err != nil {
 			pr.ReturnResponse(w, err)
 			return
@@ -132,7 +132,6 @@ func (a *App) sysPiCoreDetails(w http.ResponseWriter, pr *WifiPlusResponse) {
 
 	pr.Cmd = "wifi-plus.sh wp_picore_details"
 	rc, err := exec.Command("sh", "-c", "cd cgi-bin && sudo ./wifi-plus.sh wp_picore_details").Output()
-	err = errors.New("test sysPiCoreDetails error") //clive
 	if err != nil {
 		pr.ReturnResponse(w, err)
 		return
