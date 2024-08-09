@@ -96,11 +96,12 @@ func (a *App) sysStatus(pr *WifiPlusResponse, err *error) {
 	var rc []byte
 	pr.Cmd = "wifi-plus.sh wp_status 200"
 	rc, *err = exec.Command("sh", "-c", "cd cgi-bin && ./wifi-plus.sh wp_status 200").Output()
-	if err != nil {
+	if *err != nil {
 		return
 	}
+	log.Debugf("[][][] RC is %s", strings.TrimSpace(string(rc)))
 	rcInt, *err = strconv.Atoi(strings.TrimSpace(string(rc)))
-	if err != nil {
+	if *err != nil {
 		return
 	}
 	log.Debug("(((((((105))))))")
