@@ -10,6 +10,7 @@ echo "Starting wifi-plus-startup script..."
 echo "Copying go binary and script files to web folders..."
 sudo chmod 777 /mnt/UserData/industrialcool-pcp-wifi-plus/pcp-scripts/wifi-plus.sh
 if sudo cp /mnt/UserData/industrialcool-pcp-wifi-plus/pcp-scripts/wifi-plus.sh /var/www/cgi-bin/wifi-plus.sh; then
+  sudo chown tc:staff /var/www/cgi-bin/wifi-plus.sh
   echo "Successfully copied wifi-plus shell script to cgi-bin"
 else
   echo "Unable to copy shell file to cgi-bin"
