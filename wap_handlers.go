@@ -73,6 +73,7 @@ func (a *App) wapInfo(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		log.Debug("(((((( 4 ))))))")
 		pr.ReturnResponse(w, err)
+		return
 	}
 	log.Debug("(((((( 8 ))))))")
 
@@ -99,6 +100,7 @@ func (a *App) wapAddRemove(w http.ResponseWriter, r *http.Request) {
 		rc, err = exec.Command("sh", "-c", "cd cgi-bin && ./wifi-plus.sh wp_wap_add").Output()
 		if err != nil {
 			pr.ReturnResponse(w, err)
+			return
 		}
 		log.Debugf("RC is %s", string(rc))
 		pr.StatusCode = 200
