@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"errors"
 	"github.com/gorilla/mux"
 	log "github.com/sirupsen/logrus"
 	"net/http"
@@ -92,6 +93,7 @@ func (a *App) sysStatus(w http.ResponseWriter, pr *WifiPlusResponse) {
 	var rcInt int
 	pr.Cmd = "wifi-plus.sh wp_status 200"
 	rc, err := exec.Command("sh", "-c", "cd cgi-bin && ./wifi-plus.sh wp_status 200").Output()
+	err = errors.New("test status error")
 	if err != nil {
 		pr.ReturnResponse(w, err)
 	}
