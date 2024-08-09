@@ -118,5 +118,5 @@ func (p *WifiPlusResponse) ReturnResponse(w http.ResponseWriter, err error) {
 		log.Debug("(((((( 11 ))))))")
 		log.Fatal(er3)
 	}
-
+	return
 }
