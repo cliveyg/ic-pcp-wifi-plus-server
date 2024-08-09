@@ -86,7 +86,7 @@ type PiCoreSystemData struct {
 }
 
 func (p *WifiPlusResponse) ReturnResponse(w http.ResponseWriter, err error) {
-
+	log.Debug("(((((((100))))))")
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 	if err != nil {
 		log.WithFields(log.Fields{"err": err}).Error("Something went bang!")
@@ -105,6 +105,7 @@ func (p *WifiPlusResponse) ReturnResponse(w http.ResponseWriter, err error) {
 		return
 
 	}
+	log.Debug("(((((((101))))))")
 	var jba []byte
 	jba, err = json.Marshal(p)
 	if err != nil {
@@ -114,4 +115,5 @@ func (p *WifiPlusResponse) ReturnResponse(w http.ResponseWriter, err error) {
 	if _, err = io.WriteString(w, string(jba)); err != nil {
 		log.Fatal(err)
 	}
+	return
 }

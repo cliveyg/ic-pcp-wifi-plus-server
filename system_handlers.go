@@ -58,7 +58,7 @@ func (a *App) systemAction(w http.ResponseWriter, r *http.Request) {
 		pr.StatusCode = 400
 		pr.Message = "Action does not exist"
 	}
-
+	log.Debug("(((((((99))))))")
 	pr.ReturnResponse(w, err)
 }
 
