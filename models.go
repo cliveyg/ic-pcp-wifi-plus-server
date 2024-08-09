@@ -102,19 +102,22 @@ func (p *WifiPlusResponse) ReturnResponse(w http.ResponseWriter, err error) {
 		if _, err := io.WriteString(w, string(jsonData)); err != nil {
 			log.Fatal(err)
 		}
-		return
 
+	} else {
+		log.Debug("(((((((101))))))")
+		var jba []byte
+		jba, err = json.Marshal(p)
+		if err != nil {
+			log.Debug("(((((((101a))))))")
+			log.Fatal(err)
+		}
+		w.WriteHeader(p.StatusCode)
+		if _, err = io.WriteString(w, string(jba)); err != nil {
+			log.Debug("(((((((101b))))))")
+			log.Fatal(err)
+		}
+		log.Debug("(((((((102))))))")
+		//return
 	}
-	log.Debug("(((((((101))))))")
-	var jba []byte
-	jba, err = json.Marshal(p)
-	if err != nil {
-		log.Fatal(err)
-	}
-	w.WriteHeader(p.StatusCode)
-	if _, err = io.WriteString(w, string(jba)); err != nil {
-		log.Fatal(err)
-	}
-	log.Debug("(((((((102))))))")
-	//return
+	log.Debug("(((((((999))))))")
 }
