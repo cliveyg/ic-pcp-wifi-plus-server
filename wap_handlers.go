@@ -73,7 +73,6 @@ func (a *App) wapInfo(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		log.Debug("(((((( 4 ))))))")
 		pr.ReturnResponse(w, err)
-		return
 	}
 	log.Debug("(((((( 8 ))))))")
 
