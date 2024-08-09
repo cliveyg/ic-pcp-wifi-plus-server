@@ -41,7 +41,9 @@ wp_picore_details() {
 }
 
 wp_status() {
-  echo "[wifi-plus.sh] wp_status : Log writing success" >> $LOG
+  if [ $DBUG -eq 1 ]; then
+    echo "[wifi-plus.sh] wp_status : Debug is on. Successful write to logfile" >> $LOG
+  fi
   echo "$arg1"
 }
 
