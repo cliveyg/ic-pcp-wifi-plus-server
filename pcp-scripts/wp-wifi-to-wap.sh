@@ -28,30 +28,20 @@ if [ -f $TCEMNT/tce/optional/pcp-apmode.tcz ]; then
   if [ $DBUG -eq 1 ]; then
 
     if [ -f $LOGGY ]; then
-      echo "[wp-wifi-to-wap.sh] ------------------------------------" >> $LOGGY
+      echo "[wp-wifi-to-wap.sh] --------------- running --------------------" >> $LOGGY
       #pcp_write_var_to_config USER_COMMAND_3 "echo 'boop'"
       #pcp_save_to_config
       #pcp_backup "text"
-      if [ $(pcp_write_var_to_config USER_COMMAND_3 "echo 'boop'") ] && $(pcp_save_to_config) && $(pcp_backup "text"); then
-        echo '{ "status": 200, "message": "var written to config successfully" }'
-      else
-        echo '{ "status": 500, "message": "failed to save to pcp config and backup" }'
-      fi
+      #if [ $(pcp_write_var_to_config USER_COMMAND_3 "echo 'boop'") ] && $(pcp_save_to_config) && $(pcp_backup "text"); then
+      #  echo '{ "status": 200, "message": "var written to config successfully" }'
+      #else
+      #  echo '{ "status": 500, "message": "failed to save to pcp config and backup" }'
+      #fi
 
-      #echo "[wp-wifi-to-wap.sh] ENVs are [$(printenv)]" >> $LOGGY
-      #$(pcp_config_file)
-      #$(pcp_read_config)
-      #[ cd /var/www/cgi-bin ] &&  pcp_picore_version
-      #echo -n"[wp-wifi-to-wap.sh] PCPCFG IS [$($PCPCFG)]" >> $LOGGY
-      #echo "$(pcp_picore_version)" >> $LOGGY
-      #echo "$PCPCFG" >> $LOGGY
-      #echo "$(pcp_config_file)"
-      #echo "$(. $PCPCFG)"
-      #echo "$(pcp_variables)"
-      #echo "$(cat /etc/httpd.conf)" >> $LOGGY
+
     else
       sudo touch $LOGGY
-      echo "[wp-wifi-to-wap.sh] ------------------------------" >> $LOGGY
+      echo "[wp-wifi-to-wap.sh] --------------- running --------------------" >> $LOGGY
       echo "[wp-wifi-to-wap.sh] DBUG IS [$DBUG]" >> $LOGGY
     fi
 

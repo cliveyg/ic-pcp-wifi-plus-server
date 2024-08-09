@@ -75,8 +75,36 @@ wp_wap_add() {
     echo '{"status": "500", "message": "Failed to download ap mode file."}'
 	fi
   echo "{ \"boop\": \"soup\" }"
+
 }
 
+wp_wap_remove() {
+
+  #echo "[wifi-plus.sh] wp_wap_add : ------------------------------" >> $LOG
+
+	pcp-load -r $PCP_REPO -w pcp-apmode.tcz 2>&1
+
+	if [ -f $TCEMNT/tce/optional/pcp-apmode.tcz ]; then
+		pcp-load -i firmware-atheros.tcz
+		pcp-load -i firmware-brcmwifi.tcz
+		pcp-load -i firmware-mediatek.tcz
+
+		pcp-load -i firmware-ralinkwifi.tcz
+		pcp-load -i firmware-rtlwifi.tcz
+		pcp-load -i firmware-rpi-wifi.tcz
+		pcp-load -i pcp-apmode.tcz
+		pcp_wifi_update_wifi_onbootlst
+		pcp_wifi_update_onbootlst "add" "pcp-apmode.tcz"
+    APMODE="no"
+    AP_IP="10.10.10.1"
+    pcp_save_to_config
+    pcp_backup "text"
+  else
+    echo '{"status": "500", "message": "Failed to download ap mode file."}'
+	fi
+  echo "{ \"boop\": \"soup\" }"
+
+}
 
 # ---------------------- main program ---------------------- #
 
