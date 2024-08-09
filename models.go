@@ -86,7 +86,7 @@ type PiCoreSystemData struct {
 }
 
 func (p *WifiPlusResponse) ReturnResponse(w http.ResponseWriter, err error) {
-	log.Debug("(((((((100))))))")
+
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 	if err != nil {
 		log.WithFields(log.Fields{"err": err}).Error("Something went bang!")
@@ -94,32 +94,26 @@ func (p *WifiPlusResponse) ReturnResponse(w http.ResponseWriter, err error) {
 		p.Message = "Server error"
 		p.Data = Eek{Error: err.Error()}
 
-		jsonData, err := json.Marshal(p)
-		if err != nil {
-			log.Fatal(err)
-		}
-		w.WriteHeader(p.StatusCode)
-		if _, err := io.WriteString(w, string(jsonData)); err != nil {
-			log.Fatal(err)
-		}
+		/*
+			jsonData, err := json.Marshal(p)
+			if err != nil {
+				log.Fatal(err)
+			}
+			w.WriteHeader(p.StatusCode)
+			if _, err := io.WriteString(w, string(jsonData)); err != nil {
+				log.Fatal(err)
+			}
 
-	} else {
-		log.Debug("(((((((101))))))")
-		var jba []byte
-		jba, err = json.Marshal(p)
-		if err != nil {
-			log.Debug("(((((((101a))))))")
-			log.Fatal(err)
-		}
-		log.Debug("(((((((101c))))))")
-		log.Debugf("(((((((SC is %d))))))", p.StatusCode)
-		w.WriteHeader(p.StatusCode)
-		if _, err = io.WriteString(w, string(jba)); err != nil {
-			log.Debug("(((((((101b))))))")
-			log.Fatal(err)
-		}
-		log.Debug("(((((((102))))))")
-		//return
+		*/
 	}
-	log.Debug("(((((((999))))))")
+
+	var jba []byte
+	jba, err = json.Marshal(p)
+	if err != nil {
+		log.Fatal(err)
+	}
+	w.WriteHeader(p.StatusCode)
+	if _, err = io.WriteString(w, string(jba)); err != nil {
+		log.Fatal(err)
+	}
 }
