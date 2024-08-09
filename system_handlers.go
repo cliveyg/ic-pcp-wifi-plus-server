@@ -48,7 +48,7 @@ func (a *App) systemAction(w http.ResponseWriter, r *http.Request) {
 		return
 	case "status":
 		if r.Method == http.MethodGet {
-			a.sysStatus(w, &pr)
+			a.sysStatus(&pr, &err)
 		} else {
 			pr.StatusCode = 400
 			pr.Message = "Incorrect HTTP method for action"
@@ -88,24 +88,25 @@ func (a *App) sysReboot(w http.ResponseWriter, pr *WifiPlusResponse) {
 	}
 }
 
-func (a *App) sysStatus(w http.ResponseWriter, pr *WifiPlusResponse) {
+func (a *App) sysStatus(pr *WifiPlusResponse, err *error) {
 
 	var rcInt int
+	var rc []byte
 	pr.Cmd = "wifi-plus.sh wp_status 200"
-	rc, err := exec.Command("sh", "-c", "cd cgi-bin && ./wifi-plus.sh wp_status 200").Output()
-	err = errors.New("test error") //clive
+	rc, *err = exec.Command("sh", "-c", "cd cgi-bin && ./wifi-plus.sh wp_status 200").Output()
+	*err = errors.New("test error") //clive
 	if err != nil {
-		pr.ReturnResponse(w, err)
+		//pr.ReturnResponse(w, err)
 		return
 	}
-	rcInt, err = strconv.Atoi(strings.TrimSpace(string(rc)))
+	rcInt, *err = strconv.Atoi(strings.TrimSpace(string(rc)))
 	if err != nil {
-		pr.ReturnResponse(w, err)
+		//pr.ReturnResponse(w, err)
 		return
 	}
 	pr.StatusCode = rcInt
 	pr.Message = "System running"
-
+	//pr.ReturnResponse(w, nil)
 }
 
 func (a *App) sysPCPConfig(w http.ResponseWriter, pr *WifiPlusResponse, hm string) {
