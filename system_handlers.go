@@ -107,28 +107,14 @@ func (a *App) sysStatus(w http.ResponseWriter, pr *WifiPlusResponse) {
 func (a *App) sysPCPConfig(w http.ResponseWriter, pr *WifiPlusResponse, hm string) {
 
 	if hm == http.MethodGet {
-		pr.Message = "fetch pcp config settings"
+		pr.Message = "Fetch pcp config settings"
 		pr.Cmd = "./wifi-plus.sh wp_pcp_config"
 		r, err := exec.Command("sh", "-c", "cd cgi-bin; ./wifi-plus.sh wp_pcp_config read").Output()
 		if err != nil {
 			pr.ReturnResponse(w, err)
 		}
-		log.Debugf("r is [%s]", string(r))
-		var b map[string]string
-		b = textToMap(string(r))
-		log.WithFields(log.Fields{"[[[b]]]": b}).Debug()
-		/*
-			if err != nil {
-				log.Fatal(err)
-			}
-			err = json.Unmarshal(r, &b)
-			if err != nil {
-				log.Fatal(err)
-			}
-
-		*/
 		pr.StatusCode = 200
-		pr.Data = b
+		pr.Data = textToMap(string(r))
 	} else if hm == http.MethodPut {
 		log.Debug("Editing not implemented yet")
 		pr.StatusCode = 501

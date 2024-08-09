@@ -13,13 +13,11 @@ import (
 
 func (a *App) wapAction(w http.ResponseWriter, r *http.Request) {
 
-	log.Debug("-----------------------------")
-	log.Debug("In wapAction")
 	vars := mux.Vars(r)
 	wa := vars["action"]
 
 	//TODO: Check input string more thoroughly
-	log.Debug(r.Method)
+
 	var err error
 	pr := WifiPlusResponse{
 		Function: "wapAction",
@@ -39,6 +37,9 @@ func (a *App) wapAction(w http.ResponseWriter, r *http.Request) {
 				pr.Message = "Incorrect method for action"
 			}
 		}
+	case "config":
+		pr.StatusCode = 501
+		pr.Message = "Not implemented yet"
 	default:
 		// do nowt
 		pr.StatusCode = 400
@@ -65,9 +66,16 @@ func (a *App) wapInfo(w http.ResponseWriter, r *http.Request) {
 		Function: "wapInfo",
 		Action:   r.Method,
 	}
-	pr.Cmd = "nowt yet"
+	pr.Cmd = "/usr/local/etc/init.d/pcp-apmode status"
+	args := []string{"status"}
+	var sr string
+	sr, err := a.ExecCmd("/usr/local/etc/init.d/pcp-apmode", args)
+	if err != nil {
+		pr.ReturnResponse(w, err)
+	}
+
 	pr.StatusCode = 200
-	pr.Message = fmt.Sprintf("Action is [%s]", r.Method)
+	pr.Message = sr
 	pr.ReturnResponse(w, nil)
 }
 
