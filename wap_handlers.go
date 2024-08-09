@@ -71,6 +71,9 @@ func (a *App) wapInfo(w http.ResponseWriter, r *http.Request) {
 	var sr string
 	sr, err := a.ExecCmd("/usr/local/etc/init.d/pcp-apmode", args)
 	if err != nil {
+		// even though we have an error we call ReturnResponse with an
+		// error we create due to how the cmd itself returns errors
+		err = errors.New(sr)
 		pr.ReturnResponse(w, err)
 		return
 	}
