@@ -94,19 +94,15 @@ func (a *App) sysStatus(pr *WifiPlusResponse, err *error) {
 	var rc []byte
 	pr.Cmd = "wifi-plus.sh wp_status 200"
 	rc, *err = exec.Command("sh", "-c", "cd cgi-bin && ./wifi-plus.sh wp_status 200").Output()
-	*err = errors.New("test error") //clive
 	if err != nil {
-		//pr.ReturnResponse(w, err)
 		return
 	}
 	rcInt, *err = strconv.Atoi(strings.TrimSpace(string(rc)))
 	if err != nil {
-		//pr.ReturnResponse(w, err)
 		return
 	}
 	pr.StatusCode = rcInt
 	pr.Message = "System running"
-	//pr.ReturnResponse(w, nil)
 }
 
 func (a *App) sysPCPConfig(w http.ResponseWriter, pr *WifiPlusResponse, hm string) {
