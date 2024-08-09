@@ -32,7 +32,7 @@ if [ -f $TCEMNT/tce/optional/pcp-apmode.tcz ]; then
       #pcp_write_var_to_config USER_COMMAND_3 "echo 'boop'"
       #pcp_save_to_config
       #pcp_backup "text"
-      if [ $(pcp_write_var_to_config USER_COMMAND_3 "echo 'boop'") ] && $(pcp_save_to_config) && $(pcp_backup "text"); then
+      if [ $(pcp_write_var_to_config USER_COMMAND_3 "echo 'boop'") ] && [ $(pcp_save_to_config) ] && [ $(pcp_backup "text") ]; then
         echo '{ "status": 200, "message": "var written to config successfully" }'
       else
         echo '{ "status": 500, "message": "failed to save to pcp config and backup" }'
