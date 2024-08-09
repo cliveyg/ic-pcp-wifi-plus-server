@@ -28,6 +28,7 @@ func (a *App) testTings(w http.ResponseWriter, _ *http.Request) {
 	if err != nil {
 		log.Debug("(((((( 1 ))))))")
 		pr.ReturnResponse(w, err)
+		return
 	}
 	log.Debugf("r is [%s]", string(r))
 	var b map[string]interface{}
