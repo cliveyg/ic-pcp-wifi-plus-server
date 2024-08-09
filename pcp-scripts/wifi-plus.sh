@@ -104,12 +104,12 @@ wp_wap_remove() {
 	tce-audit builddb
 	tce-audit delete pcp-apmode.tcz
 
-	sed -i '/firmware-atheros.tcz/d' $ONBOOTLST
-	sed -i '/firmware-brcmwifi.tcz/d' $ONBOOTLST
-	sed -i '/firmware-mediatek.tcz/d' $ONBOOTLST
-	sed -i '/firmware-rpi-wifi.tcz/d' $ONBOOTLST
-	sed -i '/firmware-ralinkwifi.tcz/d' $ONBOOTLST
-	sed -i '/firmware-rtlwifi.tcz/d' $ONBOOTLST
+	#sed -i '/firmware-atheros.tcz/d' $ONBOOTLST
+	#sed -i '/firmware-brcmwifi.tcz/d' $ONBOOTLST
+	#sed -i '/firmware-mediatek.tcz/d' $ONBOOTLST
+	#sed -i '/firmware-rpi-wifi.tcz/d' $ONBOOTLST
+	#sed -i '/firmware-ralinkwifi.tcz/d' $ONBOOTLST
+	#sed -i '/firmware-rtlwifi.tcz/d' $ONBOOTLST
 	sed -i '/pcp-apmode.tcz/d' $ONBOOTLST
 
 	rm -f $APMODECONF >/dev/null 2>&1
