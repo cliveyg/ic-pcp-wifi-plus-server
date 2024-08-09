@@ -1,7 +1,6 @@
 package main
 
 import (
-	"errors"
 	"github.com/gorilla/mux"
 	log "github.com/sirupsen/logrus"
 	"net/http"
@@ -48,7 +47,6 @@ func (a *App) wifiSSID(pr *WifiPlusResponse, err *error) {
 	var sr string
 	pr.Cmd = "iwgetid"
 	sr, *err = a.ExecCmd("iwgetid", args)
-	*err = errors.New("BLAH") //clive
 	if *err != nil {
 		return
 	}

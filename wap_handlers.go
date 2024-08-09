@@ -61,7 +61,7 @@ func (a *App) wapStopStart(w http.ResponseWriter, pr *WifiPlusResponse, ac strin
 }
 
 func (a *App) wapInfo(w http.ResponseWriter, r *http.Request) {
-	log.Debugf("In wapInfo and our action is [%s]", r.Method)
+
 	pr := WifiPlusResponse{
 		Function: "wapInfo",
 		Action:   r.Method,
@@ -71,11 +71,9 @@ func (a *App) wapInfo(w http.ResponseWriter, r *http.Request) {
 	var sr string
 	sr, err := a.ExecCmd("sudo /usr/local/etc/init.d/pcp-apmode", args)
 	if err != nil {
-		log.Debug("(((((( 4 ))))))")
 		pr.ReturnResponse(w, err)
 		return
 	}
-	log.Debug("(((((( 8 ))))))")
 
 	pr.StatusCode = 200
 	pr.Message = sr
