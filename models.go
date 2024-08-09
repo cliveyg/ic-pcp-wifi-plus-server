@@ -88,7 +88,7 @@ func (p *WifiPlusResponse) ReturnResponse(w http.ResponseWriter, err error) {
 		log.WithFields(log.Fields{"err": err}).Error("Something went bang")
 		p.StatusCode = 500
 		p.Message = "Server error"
-		p.Data = `"error": "` + err.Error() + `"`
+		p.Data = `{"error": "` + err.Error() + `}"`
 		jsonData, err := json.Marshal(p)
 		if err != nil {
 			log.Debug("=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-[[]]")
