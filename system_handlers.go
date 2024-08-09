@@ -49,6 +49,7 @@ func (a *App) systemAction(w http.ResponseWriter, r *http.Request) {
 	case "status":
 		if r.Method == http.MethodGet {
 			a.sysStatus(&pr, &err)
+			log.Debug("(((((((106))))))")
 		} else {
 			pr.StatusCode = 400
 			pr.Message = "Incorrect HTTP method for action"
@@ -60,6 +61,7 @@ func (a *App) systemAction(w http.ResponseWriter, r *http.Request) {
 	}
 	log.Debug("(((((((99))))))")
 	pr.ReturnResponse(w, err)
+	log.Debug("(((((((103))))))")
 }
 
 func (a *App) sysShutdown(w http.ResponseWriter, pr *WifiPlusResponse) {
@@ -101,9 +103,10 @@ func (a *App) sysStatus(pr *WifiPlusResponse, err *error) {
 	if err != nil {
 		return
 	}
+	log.Debug("(((((((105))))))")
 	pr.StatusCode = rcInt
 	pr.Message = "System running"
-	return
+
 }
 
 func (a *App) sysPCPConfig(w http.ResponseWriter, pr *WifiPlusResponse, hm string) {
