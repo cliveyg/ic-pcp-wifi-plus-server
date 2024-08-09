@@ -96,10 +96,12 @@ func (a *App) sysStatus(w http.ResponseWriter, pr *WifiPlusResponse) {
 	err = errors.New("test status error") //clive
 	if err != nil {
 		pr.ReturnResponse(w, err)
+		return
 	}
 	rcInt, err = strconv.Atoi(strings.TrimSpace(string(rc)))
 	if err != nil {
 		pr.ReturnResponse(w, err)
+		return
 	}
 	pr.StatusCode = rcInt
 	pr.Message = "System running"
@@ -112,9 +114,9 @@ func (a *App) sysPCPConfig(w http.ResponseWriter, pr *WifiPlusResponse, hm strin
 		pr.Message = "Fetch pcp config settings"
 		pr.Cmd = "./wifi-plus.sh wp_pcp_config"
 		r, err := exec.Command("sh", "-c", "cd cgi-bin; ./wifi-plus.sh wp_pcp_config read").Output()
-		err = errors.New("test sysPCPConfig error") //clive
 		if err != nil {
 			pr.ReturnResponse(w, err)
+			return
 		}
 		pr.StatusCode = 200
 		pr.Data = textToMap(string(r))
@@ -133,6 +135,7 @@ func (a *App) sysPiCoreDetails(w http.ResponseWriter, pr *WifiPlusResponse) {
 	err = errors.New("test sysPiCoreDetails error") //clive
 	if err != nil {
 		pr.ReturnResponse(w, err)
+		return
 	}
 
 	pr.StatusCode = 200
@@ -142,6 +145,7 @@ func (a *App) sysPiCoreDetails(w http.ResponseWriter, pr *WifiPlusResponse) {
 	err = json.Unmarshal(rc, &picoreData)
 	if err != nil {
 		pr.ReturnResponse(w, err)
+		return
 	}
 	pr.Data = picoreData
 
