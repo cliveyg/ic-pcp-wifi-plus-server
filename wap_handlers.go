@@ -124,7 +124,23 @@ func (a *App) wapAddRemove(w http.ResponseWriter, r *http.Request) {
 		log.Debug("We should be removing the ap mode stuff")
 		pr.Cmd = "wifi-plus.sh wp_wap_remove"
 		pr.Message = "Deleting wap extensions"
+
+		rc, err = exec.Command("sh", "-c", "cd cgi-bin && ./wifi-plus.sh wp_wap_remove").Output()
+		if err != nil {
+			pr.ReturnResponse(w, err)
+			return
+		}
+		log.Debugf("RC from [wifi-plus.sh wp_wap_remove] is %s", string(rc))
 		pr.StatusCode = http.StatusGone
+		pr.Message = "Removing wap extensions"
+		r := `{"doop": "noop"}`
+		var b map[string]interface{}
+		err = json.Unmarshal([]byte(r), &b)
+		if err != nil {
+			log.Fatal(err)
+		}
+		pr.Data = b
+
 	}
 	pr.ReturnResponse(w, err)
 }

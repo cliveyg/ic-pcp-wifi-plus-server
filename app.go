@@ -12,11 +12,8 @@ type App struct {
 }
 
 func (a *App) Initialize() {
-
-	log.Info("In Initialize")
 	a.Router = mux.NewRouter()
 	a.initializeRoutes()
-
 }
 
 func (a *App) Run(addr string) {
