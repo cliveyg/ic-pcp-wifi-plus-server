@@ -11,6 +11,7 @@ func (a *App) ExecCmd(command string, args []string) (string, error) {
 	stdout, err := exec.Command(command, args...).Output()
 	if err != nil {
 		log.WithFields(log.Fields{"err": err}).Debug("Something went wrong")
+		log.Debug("(((((( 9 ))))))")
 		return "", err
 	}
 	return strings.TrimSpace(string(stdout)), nil

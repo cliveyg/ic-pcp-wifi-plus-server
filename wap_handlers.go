@@ -74,9 +74,11 @@ func (a *App) wapInfo(w http.ResponseWriter, r *http.Request) {
 		log.Debug("(((((( 4 ))))))")
 		pr.ReturnResponse(w, err)
 	}
+	log.Debug("(((((( 8 ))))))")
 
 	pr.StatusCode = 200
 	pr.Message = sr
+	pr.ReturnResponse(w, nil)
 }
 
 func (a *App) wapAddRemove(w http.ResponseWriter, r *http.Request) {

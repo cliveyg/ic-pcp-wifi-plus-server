@@ -94,7 +94,7 @@ func (p *WifiPlusResponse) ReturnResponse(w http.ResponseWriter, err error) {
 		p.StatusCode = 500
 		p.Message = "Server error"
 		p.Data = Eek{Error: err.Error()}
-
+		log.Debug("(((((( 10 ))))))")
 		//jsonData, err := json.Marshal(p)
 		//if err != nil {
 		//	log.Debug("=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-[[]]")
@@ -115,6 +115,7 @@ func (p *WifiPlusResponse) ReturnResponse(w http.ResponseWriter, err error) {
 	}
 	w.WriteHeader(p.StatusCode)
 	if _, er3 := io.WriteString(w, string(jba)); er3 != nil {
+		log.Debug("(((((( 11 ))))))")
 		log.Fatal(er3)
 	}
 
