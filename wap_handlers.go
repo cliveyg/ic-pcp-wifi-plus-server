@@ -1,14 +1,12 @@
 package main
 
 import (
-	"encoding/json"
 	"errors"
 	"fmt"
 	"github.com/gorilla/mux"
 	log "github.com/sirupsen/logrus"
 	"net/http"
 	"os"
-	"os/exec"
 )
 
 func (a *App) wapAction(w http.ResponseWriter, r *http.Request) {
@@ -92,26 +90,38 @@ func (a *App) wapAddRemove(w http.ResponseWriter, r *http.Request) {
 		Action:   r.Method,
 	}
 	var err error
-	var rc []byte
+	//var rc []byte
 
 	if r.Method == http.MethodPost {
 
 		pr.Cmd = "wifi-plus.sh wp_wap_add"
-		rc, err = exec.Command("sh", "-c", "cd cgi-bin && ./wifi-plus.sh wp_wap_add").Output()
-		if err != nil {
-			pr.ReturnResponse(w, err)
+		if _, err := os.Stat("/usr/local/etc/init.d/pcp-apmode"); err == nil {
+			pr.StatusCode = 409
+			pr.Message = "WAP is already installed"
+			pr.ReturnResponse(w, nil)
 			return
 		}
-		log.Debugf("RC is %s", string(rc))
-		pr.StatusCode = 200
-		pr.Message = "Installing wap extensions"
-		r := `{"noop": "doop"}`
-		var b map[string]interface{}
-		err = json.Unmarshal([]byte(r), &b)
-		if err != nil {
-			log.Fatal(err)
-		}
-		pr.Data = b
+		pr.StatusCode = 500
+		pr.Message = "SHOUILD NOT GET HERE"
+
+		/*
+			rc, err = exec.Command("sh", "-c", "cd cgi-bin && ./wifi-plus.sh wp_wap_add").Output()
+			if err != nil {
+				pr.ReturnResponse(w, err)
+				return
+			}
+			log.Debugf("RC is %s", string(rc))
+			pr.StatusCode = 200
+			pr.Message = "Installing wap extensions"
+			r := `{"noop": "doop"}`
+			var b map[string]interface{}
+			err = json.Unmarshal([]byte(r), &b)
+			if err != nil {
+				log.Fatal(err)
+			}
+			pr.Data = b
+
+		*/
 
 	} else if r.Method == http.MethodDelete {
 		log.Debug("We should be removing the ap mode stuff")
