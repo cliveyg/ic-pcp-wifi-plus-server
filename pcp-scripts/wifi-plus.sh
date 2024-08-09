@@ -58,7 +58,7 @@ wp_wap_add() {
     echo "[wifi-plus.sh] wp_wap_add : Attempting to add apmode" >> $LOG
   fi
 
-	sudo -u tc pcp-load -r $PCP_REPO -w pcp-apmode.tcz 2>&1
+	pcp-load -r $PCP_REPO -w pcp-apmode.tcz 2>&1
 
 	if [ -f $TCEMNT/tce/optional/pcp-apmode.tcz ]; then
 
