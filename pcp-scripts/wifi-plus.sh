@@ -56,6 +56,7 @@ wp_wap_add() {
 
   if [ $DBUG -eq 1 ]; then
     echo "[wifi-plus.sh] wp_wap_add : Attempting to add apmode" >> $LOG
+    printf "WHOAMI %s" $(whoami) >> $LOG
   fi
 
 	pcp-load -r $PCP_REPO -w pcp-apmode.tcz 2>&1
