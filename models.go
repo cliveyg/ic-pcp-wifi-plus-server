@@ -115,5 +115,6 @@ func (p *WifiPlusResponse) ReturnResponse(w http.ResponseWriter, err error) {
 	if _, err = io.WriteString(w, string(jba)); err != nil {
 		log.Fatal(err)
 	}
-	return
+	log.Debug("(((((((102))))))")
+	//return
 }
