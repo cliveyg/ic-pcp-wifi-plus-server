@@ -93,6 +93,7 @@ func (a *App) sysStatus(w http.ResponseWriter, pr *WifiPlusResponse) {
 	var rcInt int
 	pr.Cmd = "wifi-plus.sh wp_status 200"
 	rc, err := exec.Command("sh", "-c", "cd cgi-bin && ./wifi-plus.sh wp_status 200").Output()
+	err = errors.New("test error") //clive
 	if err != nil {
 		pr.ReturnResponse(w, err)
 		return
