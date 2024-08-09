@@ -103,6 +103,7 @@ func (a *App) sysStatus(pr *WifiPlusResponse, err *error) {
 	}
 	pr.StatusCode = rcInt
 	pr.Message = "System running"
+	return
 }
 
 func (a *App) sysPCPConfig(w http.ResponseWriter, pr *WifiPlusResponse, hm string) {
