@@ -54,40 +54,73 @@ wp_test() {
 
 wp_wap_add() {
 
-  #echo "[wifi-plus.sh] wp_wap_add : ------------------------------" >> $LOG
+  if [ $DBUG -eq 1 ]; then
+    echo "[wifi-plus.sh] wp_wap_add : Attempting to add apmode" >> $LOG
+  fi
 
 	pcp-load -r $PCP_REPO -w pcp-apmode.tcz 2>&1
 
 	if [ -f $TCEMNT/tce/optional/pcp-apmode.tcz ]; then
+
 		pcp-load -i firmware-atheros.tcz
 		pcp-load -i firmware-brcmwifi.tcz
 		pcp-load -i firmware-mediatek.tcz
-
 		pcp-load -i firmware-ralinkwifi.tcz
 		pcp-load -i firmware-rtlwifi.tcz
 		pcp-load -i firmware-rpi-wifi.tcz
 		pcp-load -i pcp-apmode.tcz
+
 		pcp_wifi_update_wifi_onbootlst
 		pcp_wifi_update_onbootlst "add" "pcp-apmode.tcz"
-    APMODE="no"
-    AP_IP="10.10.10.1"
+
+    pcp_write_var_to_config APMODE "no"
+    pcp_write_var_to_config AP_IP "10.10.10.1"
     pcp_save_to_config
     pcp_backup "text"
   else
     echo '{"status": "500", "message": "Failed to download ap mode file."}'
 	fi
+
+	[ $DBUG -eq 1 ] && echo "[wifi-plus.sh] wp_wap_add: Added apmode" >> $LOG
+
   echo "{ \"boop\": \"soup\" }"
 
 }
 
 wp_wap_remove() {
 
-  #echo "[wifi-plus.sh] wp_wap_add : ------------------------------" >> $LOG
+  if [ $DBUG -eq 1 ]; then
+      if [ ! -f $LOG ]; then
+        sudo touch $LOG
+      fi
+    echo "[wifi-plus.sh] wp_wap_remove: Attempting to remove apmode" >> $LOG
+  fi
 
 	pcp_write_var_to_config APMODE "no"
 	pcp_save_to_config
-	pcp_remove_apmode
+
+	sudo /usr/local/etc/init.d/pcp-apmode stop >/dev/null 2>&1
+
+	tce-audit builddb
+	tce-audit delete pcp-apmode.tcz
+
+	sed -i '/firmware-atheros.tcz/d' $ONBOOTLST
+	sed -i '/firmware-brcmwifi.tcz/d' $ONBOOTLST
+	sed -i '/firmware-mediatek.tcz/d' $ONBOOTLST
+	sed -i '/firmware-rpi-wifi.tcz/d' $ONBOOTLST
+	sed -i '/firmware-ralinkwifi.tcz/d' $ONBOOTLST
+	sed -i '/firmware-rtlwifi.tcz/d' $ONBOOTLST
+	sed -i '/pcp-apmode.tcz/d' $ONBOOTLST
+
+	rm -f $APMODECONF >/dev/null 2>&1
+	rm -f $HOSTAPDCONF >/dev/null 2>&1
+	rm -f $DNSMASQCONF >/dev/null 2>&1
+	rm -f /usr/local/etc/pcp/pcp_hosts >/dev/null 2>&1
+
 	pcp_backup "text"
+
+	[ $DBUG -eq 1 ] && echo "[wifi-plus.sh] wp_wap_remove: Removed apmode" >> $LOG
+
   echo "{ \"soup\": \"boop\" }"
 
 }

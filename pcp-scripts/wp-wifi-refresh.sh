@@ -16,14 +16,10 @@ LOG=$LOGFILE
 
 if [ $DBUG -eq 1 ]; then
 
-  if [ -f $LOG ]; then
-    echo "[wp-wifi-refresh.sh] ------------------------------" >> $LOG
-    echo "[wp-wifi-refresh.sh] DBUG IS [$DBUG]" >> $LOG
-  else
+  if [ ! -f $LOG ]; then
     sudo touch $LOG
-    echo "[wp-wifi-refresh.sh] ------------------------------" >> $LOG
-    echo "[wp-wifi-refresh.sh] DBUG IS [$DBUG]" >> $LOG
   fi
+  echo "[wp-wifi-refresh.sh] ------------------------------" >> $LOG
   echo -n "[wp-wifi-refresh.sh] " >> $LOG
   echo $(/usr/local/etc/init.d/wifi wlan0 stop) >> $LOG
   echo -n "[wp-wifi-refresh.sh] " >> $LOG
