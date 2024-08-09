@@ -2,7 +2,6 @@ package main
 
 import (
 	"encoding/json"
-	"errors"
 	"github.com/gorilla/mux"
 	log "github.com/sirupsen/logrus"
 	"net/http"
@@ -28,14 +27,14 @@ func (a *App) systemAction(w http.ResponseWriter, r *http.Request) {
 	switch sa {
 	case "config":
 		if r.Method == http.MethodGet || r.Method == http.MethodPut {
-			a.sysPCPConfig(w, &pr, r.Method)
+			a.sysPCPConfig(&pr, r.Method, &err)
 		} else {
 			pr.StatusCode = 400
 			pr.Message = "Incorrect HTTP method for action"
 		}
 	case "picore":
 		if r.Method == http.MethodGet {
-			a.sysPiCoreDetails(w, &pr)
+			a.sysPiCoreDetails(&pr, &err)
 		} else {
 			pr.StatusCode = 400
 			pr.Message = "Incorrect HTTP method for action"
@@ -49,7 +48,6 @@ func (a *App) systemAction(w http.ResponseWriter, r *http.Request) {
 	case "status":
 		if r.Method == http.MethodGet {
 			a.sysStatus(&pr, &err)
-			log.Debug("(((((((106))))))")
 		} else {
 			pr.StatusCode = 400
 			pr.Message = "Incorrect HTTP method for action"
@@ -59,9 +57,7 @@ func (a *App) systemAction(w http.ResponseWriter, r *http.Request) {
 		pr.StatusCode = 400
 		pr.Message = "Action does not exist"
 	}
-	log.Debug("(((((((99))))))")
 	pr.ReturnResponse(w, err)
-	log.Debug("(((((((103))))))")
 }
 
 func (a *App) sysShutdown(w http.ResponseWriter, pr *WifiPlusResponse) {
@@ -99,26 +95,23 @@ func (a *App) sysStatus(pr *WifiPlusResponse, err *error) {
 	if *err != nil {
 		return
 	}
-	log.Debugf("[][][] RC is %s", strings.TrimSpace(string(rc)))
 	rcInt, *err = strconv.Atoi(strings.TrimSpace(string(rc)))
 	if *err != nil {
 		return
 	}
-	log.Debug("(((((((105))))))")
 	pr.StatusCode = rcInt
 	pr.Message = "System running"
 
 }
 
-func (a *App) sysPCPConfig(w http.ResponseWriter, pr *WifiPlusResponse, hm string) {
+func (a *App) sysPCPConfig(pr *WifiPlusResponse, hm string, err *error) {
 
+	var r []byte
 	if hm == http.MethodGet {
 		pr.Message = "Fetch pcp config settings"
 		pr.Cmd = "./wifi-plus.sh wp_pcp_config"
-		r, err := exec.Command("sh", "-c", "cd cgi-bin; ./wifi-plus.sh wp_pcp_config read").Output()
-		err = errors.New("test error") //clive
-		if err != nil {
-			pr.ReturnResponse(w, err)
+		r, *err = exec.Command("sh", "-c", "cd cgi-bin; ./wifi-plus.sh wp_pcp_config read").Output()
+		if *err != nil {
 			return
 		}
 		pr.StatusCode = 200
@@ -131,12 +124,12 @@ func (a *App) sysPCPConfig(w http.ResponseWriter, pr *WifiPlusResponse, hm strin
 
 }
 
-func (a *App) sysPiCoreDetails(w http.ResponseWriter, pr *WifiPlusResponse) {
+func (a *App) sysPiCoreDetails(pr *WifiPlusResponse, err *error) {
 
+	var rc []byte
 	pr.Cmd = "wifi-plus.sh wp_picore_details"
-	rc, err := exec.Command("sh", "-c", "cd cgi-bin && sudo ./wifi-plus.sh wp_picore_details").Output()
-	if err != nil {
-		pr.ReturnResponse(w, err)
+	rc, *err = exec.Command("sh", "-c", "cd cgi-bin && sudo ./wifi-plus.sh wp_picore_details").Output()
+	if *err != nil {
 		return
 	}
 
@@ -144,9 +137,8 @@ func (a *App) sysPiCoreDetails(w http.ResponseWriter, pr *WifiPlusResponse) {
 	pr.Message = "piCore system details"
 	picoreData := PiCoreSystemData{}
 
-	err = json.Unmarshal(rc, &picoreData)
-	if err != nil {
-		pr.ReturnResponse(w, err)
+	*err = json.Unmarshal(rc, &picoreData)
+	if *err != nil {
 		return
 	}
 	pr.Data = picoreData
