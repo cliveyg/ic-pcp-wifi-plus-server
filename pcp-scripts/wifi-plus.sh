@@ -57,15 +57,15 @@ wp_test() {
 
 }
 
-wp_wap_edit_config() {
+wp_edit_wap_config() {
   if [ $DBUG -eq 1 ]; then
-    echo "[wifi-plus.sh] wp_wap_edit_config" >> $LOG
+    echo "[wifi-plus.sh] wp_edit_wap_config" >> $LOG
     printf "arg1 is [%s]" $arg1 >> $LOG
   fi
   echo '{ "status": 200, "message": "success"}'
 }
 
-wp_fetch_config() {
+wp_fetch_wap_config() {
   if [ $DBUG -eq 1 ]; then
     echo "[wifi-plus.sh] wp_fetch_config" >> $LOG
   fi
@@ -171,6 +171,12 @@ wp_wap_remove() {
 # ---------------------- main program ---------------------- #
 
 case $subroutine in
+  wp_edit_wap_config)
+    wp_edit_wap_config
+  ;;
+  wp_fetch_wap_config)
+    wp_fetch_wap_config
+  ;;
   wp_pcp_config)
     wp_pcp_config
   ;;

@@ -75,7 +75,7 @@ func (a *App) wapConfig(w http.ResponseWriter, pr *WifiPlusResponse, hm string, 
 			return
 		}
 		// sending the wap settings as a single string to script
-		sCmd := "cd cgi-bin && ./wifi-plus.sh wp_wap_edit_config " + cf.Stringify()
+		sCmd := "cd cgi-bin && ./wifi-plus.sh wp_edit_wap_config " + cf.Stringify()
 		rc, er2 := exec.Command("sh", "-c", sCmd).Output()
 		if er2 != nil {
 			pr.ReturnResponse(w, er2)
@@ -89,8 +89,8 @@ func (a *App) wapConfig(w http.ResponseWriter, pr *WifiPlusResponse, hm string, 
 		pr.Message = "Successfully updated WAP config"
 	} else {
 		// only GET
-		pr.Cmd = "wifi-plus.sh wp_fetch_config"
-		rc, err := exec.Command("sh", "-c", "cd cgi-bin && ./wifi-plus.sh wp_fetch_config").Output()
+		pr.Cmd = "wifi-plus.sh wp_fetch_wap_config"
+		rc, err := exec.Command("sh", "-c", "cd cgi-bin && ./wifi-plus.sh wp_fetch_wap_config").Output()
 		if err != nil {
 			log.Debug("[[[[[ 0 ]]]]]")
 			pr.ReturnResponse(w, err)
