@@ -68,17 +68,33 @@ wp_wap_add() {
     printf "WHOAMI %s" $(whoami) >> $LOG
   fi
 
-	pcp-load -r $PCP_REPO -w pcp-apmode.tcz 2>&1
+  if [ $(whoami) = "root" ]; then
+    echo "root user running pcp-load repo as tc" >> $LOG
+    sudo -u tc pcp-load -r $PCP_REPO -w pcp-apmode.tcz 2>&1
+  else
+    echo "tc user running pcp-load repo" >> $LOG
+    pcp-load -r $PCP_REPO -w pcp-apmode.tcz 2>&1
+  fi
 
 	if [ -f $TCEMNT/tce/optional/pcp-apmode.tcz ]; then
 
-		pcp-load -i firmware-atheros.tcz
-		pcp-load -i firmware-brcmwifi.tcz
-		pcp-load -i firmware-mediatek.tcz
-		pcp-load -i firmware-ralinkwifi.tcz
-		pcp-load -i firmware-rtlwifi.tcz
-		pcp-load -i firmware-rpi-wifi.tcz
-		pcp-load -i pcp-apmode.tcz
+    if [ $(whoami) = "root" ]; then
+      sudo -u tc pcp-load -i firmware-atheros.tcz
+      sudo -u tc pcp-load -i firmware-brcmwifi.tcz
+      sudo -u tc pcp-load -i firmware-mediatek.tcz
+      sudo -u tc pcp-load -i firmware-ralinkwifi.tcz
+      sudo -u tc pcp-load -i firmware-rtlwifi.tcz
+      sudo -u tc pcp-load -i firmware-rpi-wifi.tcz
+      sudo -u tc pcp-load -i pcp-apmode.tcz
+		else
+      pcp-load -i firmware-atheros.tcz
+      pcp-load -i firmware-brcmwifi.tcz
+      pcp-load -i firmware-mediatek.tcz
+      pcp-load -i firmware-ralinkwifi.tcz
+      pcp-load -i firmware-rtlwifi.tcz
+      pcp-load -i firmware-rpi-wifi.tcz
+      pcp-load -i pcp-apmode.tcz
+		fi
 
 		pcp_wifi_update_wifi_onbootlst
 		pcp_wifi_update_onbootlst "add" "pcp-apmode.tcz"
@@ -115,8 +131,13 @@ wp_wap_remove() {
 
 	sudo /usr/local/etc/init.d/pcp-apmode stop >/dev/null 2>&1
 
-	tce-audit builddb
-	tce-audit delete pcp-apmode.tcz
+  if [ $(whoami) = "root" ]; then
+	  sudo -u tc tce-audit builddb
+	  sudo -u tc tce-audit delete pcp-apmode.tcz
+  else
+	  tce-audit builddb
+	  tce-audit delete pcp-apmode.tcz
+	fi
 
 	#sed -i '/firmware-atheros.tcz/d' $ONBOOTLST
 	#sed -i '/firmware-brcmwifi.tcz/d' $ONBOOTLST
