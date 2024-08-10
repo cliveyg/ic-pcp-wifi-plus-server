@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"github.com/gorilla/mux"
 	log "github.com/sirupsen/logrus"
+	"io"
 	"net/http"
 	"os"
 	"os/exec"
@@ -38,8 +39,7 @@ func (a *App) wapAction(w http.ResponseWriter, r *http.Request) {
 			}
 		}
 	case "config":
-		pr.StatusCode = 501
-		pr.Message = "Not implemented yet"
+		a.wapConfig(w, &pr, wa, r.Body)
 	default:
 		// do nowt
 		pr.StatusCode = 400
@@ -49,6 +49,59 @@ func (a *App) wapAction(w http.ResponseWriter, r *http.Request) {
 	log.WithFields(log.Fields{"Full response is ": pr}).Debug()
 	pr.ReturnResponse(w, err)
 
+}
+
+func (a *App) wapConfig(w http.ResponseWriter, pr *WifiPlusResponse, ac string, bd io.ReadCloser) {
+	log.Debugf("In wapConfig and our action is [%s]", ac)
+
+	pr.Function = "wapConfig"
+	if ac == http.MethodPut {
+		var cf WAPConfig
+		pr.Cmd = "wifi-plus.sh wp_wap_edit_config"
+		err := json.NewDecoder(bd).Decode(&cf)
+		if err != nil {
+			pr.StatusCode = 400
+			pr.Message = "Incorrect input"
+			pr.Data = Eek{Error: err.Error()}
+			pr.ReturnResponse(w, nil)
+			return
+		}
+		cf.ValidateInput(&err)
+		if err != nil {
+			pr.StatusCode = 400
+			pr.Message = "Failed validation"
+			pr.Data = Eek{Error: err.Error()}
+			pr.ReturnResponse(w, nil)
+			return
+		}
+		// sending the wap settings as a single string to script
+		sCmd := "cd cgi-bin && ./wifi-plus.sh wp_wap_edit_config " + cf.Stringify()
+		rc, er2 := exec.Command("sh", "-c", sCmd).Output()
+		if er2 != nil {
+			pr.ReturnResponse(w, er2)
+			return
+		}
+		var b map[string]interface{}
+		err = json.Unmarshal(rc, &b)
+		if err != nil {
+			log.Fatal(err)
+		}
+		pr.Message = "Successfully updated WAP config"
+	} else {
+		// only GET
+		pr.Cmd = "wifi-plus.sh wp_fetch_config"
+		rc, err := exec.Command("sh", "-c", "cd cgi-bin && ./wifi-plus.sh wp_fetch_config").Output()
+		if err != nil {
+			pr.ReturnResponse(w, err)
+			return
+		}
+		wapCfg := WAPConfig{}
+		err = json.Unmarshal(rc, &wapCfg)
+		pr.Message = "WAP config details"
+		pr.Data = wapCfg
+	}
+	pr.StatusCode = 200
+	pr.ReturnResponse(w, nil)
 }
 
 func (a *App) wapStopStart(w http.ResponseWriter, pr *WifiPlusResponse, ac string) {
