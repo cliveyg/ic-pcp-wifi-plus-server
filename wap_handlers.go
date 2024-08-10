@@ -39,7 +39,7 @@ func (a *App) wapAction(w http.ResponseWriter, r *http.Request) {
 			}
 		}
 	case "config":
-		a.wapConfig(w, &pr, r.Method, r.Body)
+		err = a.wapConfig(w, &pr, r.Method, r.Body)
 	default:
 		// do nowt
 		pr.StatusCode = 400
@@ -51,7 +51,7 @@ func (a *App) wapAction(w http.ResponseWriter, r *http.Request) {
 
 }
 
-func (a *App) wapConfig(w http.ResponseWriter, pr *WifiPlusResponse, hm string, bd io.ReadCloser) {
+func (a *App) wapConfig(w http.ResponseWriter, pr *WifiPlusResponse, hm string, bd io.ReadCloser) error {
 	log.Debugf("In wapConfig and our action is [%s]", hm)
 
 	pr.Function = "wapConfig"
@@ -63,23 +63,20 @@ func (a *App) wapConfig(w http.ResponseWriter, pr *WifiPlusResponse, hm string, 
 			pr.StatusCode = 400
 			pr.Message = "Incorrect input"
 			pr.Data = Eek{Error: err.Error()}
-			pr.ReturnResponse(w, nil)
-			return
+			return err
 		}
 		cf.ValidateInput(&err)
 		if err != nil {
 			pr.StatusCode = 400
 			pr.Message = "Failed validation"
 			pr.Data = Eek{Error: err.Error()}
-			pr.ReturnResponse(w, nil)
-			return
+			return err
 		}
 		// sending the wap settings as a single string to script
 		sCmd := "cd cgi-bin && ./wifi-plus.sh wp_edit_wap_config " + cf.Stringify()
 		rc, er2 := exec.Command("sh", "-c", sCmd).Output()
 		if er2 != nil {
-			pr.ReturnResponse(w, er2)
-			return
+			return er2
 		}
 		var b map[string]interface{}
 		err = json.Unmarshal(rc, &b)
@@ -93,8 +90,7 @@ func (a *App) wapConfig(w http.ResponseWriter, pr *WifiPlusResponse, hm string, 
 		rc, err := exec.Command("sh", "-c", "cd cgi-bin && ./wifi-plus.sh wp_fetch_wap_config").Output()
 		if err != nil {
 			log.Debug("[[[[[ 0 ]]]]]")
-			pr.ReturnResponse(w, err)
-			return
+			return err
 		}
 		log.Debugf("RC is [%s]", string(rc))
 		wapCfg := WAPConfig{}
@@ -103,7 +99,7 @@ func (a *App) wapConfig(w http.ResponseWriter, pr *WifiPlusResponse, hm string, 
 		pr.Data = wapCfg
 	}
 	pr.StatusCode = 200
-
+	return nil
 }
 
 func (a *App) wapStopStart(w http.ResponseWriter, pr *WifiPlusResponse, ac string) {
