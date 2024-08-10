@@ -41,7 +41,7 @@ func (a *App) testTings(w http.ResponseWriter, _ *http.Request) {
 		return
 	}
 	log.Debugf("r is [%s]", string(rc))
-	src := `{ "mess": "'+string(rc)+'"}`
+	src := `{ "mess": "` + strings.TrimSpace(string(rc)) + `"}`
 	var b map[string]interface{}
 	err = json.Unmarshal([]byte(src), &b)
 	if err != nil {
