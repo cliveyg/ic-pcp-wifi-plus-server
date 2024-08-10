@@ -17,10 +17,8 @@ LOG=/var/log/wifiplus.log
 
 subroutine=$1
 arg1=$2
-#arg2=$3
-#arg3=$4
 
-# ---------------------- subroutines ---------------------- #
+#-------------------------------- subroutines --------------------------------#
 
 wp_pcp_config() {
   if [ "$arg1" = "read" ]; then
@@ -33,6 +31,8 @@ wp_pcp_config() {
 
 }
 
+#-----------------------------------------------------------------------------#
+
 wp_picore_details() {
   printf "{\"picore_version\": \"%s\", " $(pcp_picore_version)
   printf "\"picoreplayer_version\": \"%s\", " $(pcp_picoreplayer_version)
@@ -40,12 +40,16 @@ wp_picore_details() {
   printf "\"linux_release\": \"%s\"}" $(pcp_linux_release)
 }
 
+#-----------------------------------------------------------------------------#
+
 wp_status() {
   if [ $DBUG -eq 1 ]; then
     echo "[wifi-plus.sh] wp_status : Debug is on. Successful write to logfile" >> $LOG
   fi
   echo "$arg1"
 }
+
+#-----------------------------------------------------------------------------#
 
 wp_test() {
 
@@ -57,6 +61,8 @@ wp_test() {
 
 }
 
+#-----------------------------------------------------------------------------#
+
 wp_edit_wap_config() {
   if [ $DBUG -eq 1 ]; then
     echo "[wifi-plus.sh] wp_edit_wap_config" >> $LOG
@@ -65,12 +71,32 @@ wp_edit_wap_config() {
   echo '{ "status": 200, "message": "success"}'
 }
 
+#-----------------------------------------------------------------------------#
+
 wp_fetch_wap_config() {
   if [ $DBUG -eq 1 ]; then
     echo "[wifi-plus.sh] wp_fetch_config" >> $LOG
   fi
-  echo '{ "ssid": "blah", "ap_ip_address": "10.10.99.1", "password": "supersecret", "country_code": "FR", "channel": 67 }'
+
+  if [ -f /usr/local/etc/pcp/hostapd.conf ]; then
+    filename="/usr/local/etc/pcp/hostapd.conf"
+  elif [ -f /mnt/UserData/industrialcool-pcp-wifi-plus/pcp-scripts/hostapd.conf ]; then
+    filename=/mnt/UserData/industrialcool-pcp-wifi-plus/pcp-scripts/hostapd.conf
+  else
+    echo '{ "status": 404, "error": "hostapd.conf file not found" }'
+    exit 0
+  fi
+
+  ssid=$(grep ssid $filename)
+  pass=$(grep wpa_passphrase $filename)
+  country_code=$(grep country_code $filename)
+  channel=$(grep channel $filename)
+
+  printf '{ "ssid": "%s", "ap_ip_address": "%s", "password": "%s", "country_code": "%s", "channel": %d }' $ssid $AP_IP $pass $country_code $channel
+
 }
+
+#-----------------------------------------------------------------------------#
 
 wp_wap_add() {
 
@@ -131,6 +157,8 @@ wp_wap_add() {
 
 }
 
+#-----------------------------------------------------------------------------#
+
 wp_wap_remove() {
 
   if [ $DBUG -eq 1 ]; then
@@ -168,7 +196,7 @@ wp_wap_remove() {
 
 }
 
-# ---------------------- main program ---------------------- #
+#------------------------------- main program --------------------------------#
 
 case $subroutine in
   wp_edit_wap_config)
