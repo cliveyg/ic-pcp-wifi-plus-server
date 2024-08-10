@@ -48,11 +48,12 @@ wp_status() {
 }
 
 wp_test() {
-  if [ $(whoami) = "root" ]; then
-    sudo -u tc printf "I'm root [%s]" $(whoami)
-  else
-    printf "I'm tc [%s]" $(whoami)
-  fi
+  sudo -u tc $(printf '{ "message": "I am testy [%s]"}' $(whoami))
+  #if [ $(whoami) = "root" ]; then
+  #  sudo -u tc printf '{ "message": "I am root [%s]"}' $(whoami)
+  #else
+  #  printf '{ "message": "I am tc [%s]"}' $(whoami)
+  #fi
 }
 
 wp_wap_add() {
