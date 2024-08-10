@@ -93,7 +93,7 @@ wp_fetch_wap_config() {
   channel=$(grep channel $filename)
 
   #printf '{ "ssid": "%s", "ap_ip_address": "%s", "password": "%s", "country_code": "%s", "channel": %d }' $ssid $AP_IP $pass $country_code $channel
-  echo '{ "ssid": "'+$ssid+'", "ap_ip_address": "'+$AP_IP+'", "password": "'+$pass+'"country_code": "'+$country_code+'", "channel": '+$channel+'}'
+  echo '{ "ssid": "'$ssid'", "ap_ip_address": "'$AP_IP'", "password": "'$pass'"country_code": "'$country_code'", "channel": '$channel'}'
 }
 
 #-----------------------------------------------------------------------------#
