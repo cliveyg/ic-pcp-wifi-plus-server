@@ -2,9 +2,12 @@ package main
 
 import (
 	"encoding/json"
+	"errors"
+	"fmt"
 	log "github.com/sirupsen/logrus"
 	"io"
 	"net/http"
+	"regexp"
 	"strconv"
 	"strings"
 )
@@ -94,17 +97,6 @@ func (p *WifiPlusResponse) ReturnResponse(w http.ResponseWriter, err error) {
 		p.Message = "Server error"
 		p.Data = Eek{Error: err.Error()}
 
-		/*
-			jsonData, err := json.Marshal(p)
-			if err != nil {
-				log.Fatal(err)
-			}
-			w.WriteHeader(p.StatusCode)
-			if _, err := io.WriteString(w, string(jsonData)); err != nil {
-				log.Fatal(err)
-			}
-
-		*/
 	}
 
 	var jba []byte
@@ -116,4 +108,48 @@ func (p *WifiPlusResponse) ReturnResponse(w http.ResponseWriter, err error) {
 	if _, err = io.WriteString(w, string(jba)); err != nil {
 		log.Fatal(err)
 	}
+}
+
+type WAPConfig struct {
+	SSID        string `json:"ssid"`
+	APIPAddress string `json:"ap_ip_address"`
+	Password    string `json:"password"`
+	CountryCode string `json:"country_code"`
+	Channel     int    `json:"channel"`
+}
+
+func (c *WAPConfig) ValidateInput(err *error) {
+	if len(c.SSID) > 31 {
+		*err = errors.New("SSID is too long")
+		return
+	}
+	if len(c.Password) < 8 || len(c.Password) > 63 {
+		*err = errors.New("Password must be between 8 and 63 characters")
+		return
+	}
+	//TODO - could do more in depth country code validation
+	match, rErr := regexp.MatchString("[A-Z][A-Z]", c.CountryCode)
+	if !match || rErr != nil {
+		*err = errors.New("Country code not valid")
+		return
+	}
+	// must match 10.nnn.nnn.1 where nnn is between 1 and 255 inclusive
+	match, rErr = regexp.MatchString("[10].[1-255].[1-255].1", c.APIPAddress)
+	if !match || rErr != nil {
+		*err = errors.New("Access point IP address not valid")
+		return
+	}
+	if c.Channel < 1 || c.Channel > 140 {
+		*err = errors.New("Channel is not valid")
+		return
+	}
+}
+
+func (c *WAPConfig) Stringify() string {
+	rs := "SSID=" + c.SSID + "&"
+	rs = rs + "IP=" + c.APIPAddress + "&"
+	rs = rs + "Ch=" + fmt.Sprint(c.Channel) + "&"
+	rs = rs + "CC=" + c.CountryCode + "&"
+	rs = rs + "Pass=" + c.Password
+	return rs
 }

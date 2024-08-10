@@ -48,17 +48,28 @@ wp_status() {
 }
 
 wp_test() {
-  #sudo -u tc printf '{ "message": "I am testy [%s]"}' $(whoami)
-  #sudo -u tc echo "sudoing echo"
+
   if [ $(whoami) = "root" ]; then
     sudo -u tc echo "root sudoing echo as user tc"
   else
     sudo echo "tc sudoing echo as normal"
   fi
-  #  sudo -u tc printf '{ "message": "I am root [%s]"}' $(whoami)
-  #else
-  #  printf '{ "message": "I am tc [%s]"}' $(whoami)
-  #fi
+
+}
+
+wp_wap_edit_config() {
+  if [ $DBUG -eq 1 ]; then
+    echo "[wifi-plus.sh] wp_wap_edit_config" >> $LOG
+    printf "arg1 is [%s]" $arg1 >> $LOG
+  fi
+  echo '{ "status": 200, "message": "success"}'
+}
+
+wp_fetch_config() {
+  if [ $DBUG -eq 1 ]; then
+    echo "[wifi-plus.sh] wp_fetch_config" >> $LOG
+  fi
+  echo '{ "ssid": "blah", "ap_ip_address": "10.10.99.1", "password": "supersecret", "country_code": "FR", "channel": 67 }'
 }
 
 wp_wap_add() {
@@ -68,6 +79,9 @@ wp_wap_add() {
     printf "WHOAMI %s" $(whoami) >> $LOG
   fi
 
+  # not sure why but sometimes this script runs as root and sometimes as tc
+  # hence this check here. very cludgy but it works
+  # TODO: work out why script runs under different users sometimes
   if [ $(whoami) = "root" ]; then
     echo "root user running pcp-load repo as tc" >> $LOG
     sudo -u tc pcp-load -r $PCP_REPO -w pcp-apmode.tcz 2>&1
@@ -139,12 +153,6 @@ wp_wap_remove() {
 	  tce-audit delete pcp-apmode.tcz
 	fi
 
-	#sed -i '/firmware-atheros.tcz/d' $ONBOOTLST
-	#sed -i '/firmware-brcmwifi.tcz/d' $ONBOOTLST
-	#sed -i '/firmware-mediatek.tcz/d' $ONBOOTLST
-	#sed -i '/firmware-rpi-wifi.tcz/d' $ONBOOTLST
-	#sed -i '/firmware-ralinkwifi.tcz/d' $ONBOOTLST
-	#sed -i '/firmware-rtlwifi.tcz/d' $ONBOOTLST
 	sed -i '/pcp-apmode.tcz/d' $ONBOOTLST
 
 	rm -f $APMODECONF >/dev/null 2>&1
