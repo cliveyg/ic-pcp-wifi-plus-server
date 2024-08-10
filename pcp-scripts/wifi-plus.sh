@@ -49,8 +49,12 @@ wp_status() {
 
 wp_test() {
   #sudo -u tc printf '{ "message": "I am testy [%s]"}' $(whoami)
-  sudo -u tc echo "sudoing echo"
-  #if [ $(whoami) = "root" ]; then
+  #sudo -u tc echo "sudoing echo"
+  if [ $(whoami) = "root" ]; then
+    sudo -u tc echo "root sudoing echo as user tc"
+  else
+    sudo echo "tc sudoing echo as normal"
+  fi
   #  sudo -u tc printf '{ "message": "I am root [%s]"}' $(whoami)
   #else
   #  printf '{ "message": "I am tc [%s]"}' $(whoami)
