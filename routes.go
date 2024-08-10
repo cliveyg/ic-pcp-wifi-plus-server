@@ -7,7 +7,6 @@ func (a *App) initializeRoutes() {
 	a.Router.HandleFunc("/wpa/status", a.getWPACliStatus).Methods("GET")
 	a.Router.HandleFunc("/system/{action}", a.systemAction).Methods("GET", "PUT")
 	a.Router.HandleFunc("/wifi/{action}", a.wifiAction).Methods("GET")
-	//a.Router.HandleFunc("/wap/config", a.wapAction).Methods("GET", "PUT")
 	a.Router.HandleFunc("/wap/{action}", a.wapAction).Methods("GET", "PUT")
 	a.Router.HandleFunc("/wap", a.wapInfo).Methods("GET")
 	a.Router.HandleFunc("/wap", a.wapAddRemove).Methods("POST", "DELETE")

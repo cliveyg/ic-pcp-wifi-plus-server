@@ -80,7 +80,7 @@ wp_wap_add() {
   fi
 
   # not sure why but sometimes this script runs as root and sometimes as tc
-  # hence this check here. but cludgy but it works
+  # hence this check here. very cludgy but it works
   # TODO: work out why script runs under different users sometimes
   if [ $(whoami) = "root" ]; then
     echo "root user running pcp-load repo as tc" >> $LOG
@@ -153,12 +153,6 @@ wp_wap_remove() {
 	  tce-audit delete pcp-apmode.tcz
 	fi
 
-	#sed -i '/firmware-atheros.tcz/d' $ONBOOTLST
-	#sed -i '/firmware-brcmwifi.tcz/d' $ONBOOTLST
-	#sed -i '/firmware-mediatek.tcz/d' $ONBOOTLST
-	#sed -i '/firmware-rpi-wifi.tcz/d' $ONBOOTLST
-	#sed -i '/firmware-ralinkwifi.tcz/d' $ONBOOTLST
-	#sed -i '/firmware-rtlwifi.tcz/d' $ONBOOTLST
 	sed -i '/pcp-apmode.tcz/d' $ONBOOTLST
 
 	rm -f $APMODECONF >/dev/null 2>&1
