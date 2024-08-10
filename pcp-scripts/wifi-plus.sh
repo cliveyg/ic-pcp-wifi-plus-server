@@ -48,8 +48,11 @@ wp_status() {
 }
 
 wp_test() {
-  pcp_set_coloured_text
-  echo "Able to call pcp functions"
+  if [ $(whoami) = "root" ]; then
+    sudo -u tc printf "I'm tc [%s]" $(whoami)
+  else
+    printf "I'm root [%s]" $(whoami)
+  fi
 }
 
 wp_wap_add() {

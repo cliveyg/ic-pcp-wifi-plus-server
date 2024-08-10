@@ -20,21 +20,29 @@ func (a *App) testTings(w http.ResponseWriter, _ *http.Request) {
 		Cmd:        "whatevs",
 		Action:     "testy testy test",
 		StatusCode: 418,
-		Message:    "tings",
+		Message:    "testing whoami stuff",
 	}
-	pr.Cmd = "nohup ./wp-wifi-to-wap.sh"
-	//r, err := exec.Command("sh", "-c", "cd /mnt/UserData/industrialcool-pcp-wifi-plus/pcp-scripts; nohup ./wp-wifi-to-wap.sh > /dev/null 2>&1 &").Output()
-	r, err := exec.Command("sh", "-c", "cd /mnt/UserData/industrialcool-pcp-wifi-plus/pcp-scripts; ./wp-wifi-to-wap.sh").Output()
+	/*
+		pr.Cmd = "nohup ./wp-wifi-to-wap.sh"
+		//r, err := exec.Command("sh", "-c", "cd /mnt/UserData/industrialcool-pcp-wifi-plus/pcp-scripts; nohup ./wp-wifi-to-wap.sh > /dev/null 2>&1 &").Output()
+		r, err := exec.Command("sh", "-c", "cd /mnt/UserData/industrialcool-pcp-wifi-plus/pcp-scripts; ./wp-wifi-to-wap.sh").Output()
+		if err != nil {
+			log.Debug("(((((( 1 ))))))")
+			pr.ReturnResponse(w, err)
+			return
+		}
+
+	*/
+	pr.Cmd = "./wifi-plus.sh wp_test"
+	rc, err := exec.Command("sh", "-c", "cd cgi-bin && ./wifi-plus.sh wp_test").Output()
 	if err != nil {
-		log.Debug("(((((( 1 ))))))")
 		pr.ReturnResponse(w, err)
 		return
 	}
-	log.Debugf("r is [%s]", string(r))
+	log.Debugf("r is [%s]", string(rc))
 	var b map[string]interface{}
-	err = json.Unmarshal(r, &b)
+	err = json.Unmarshal(rc, &b)
 	if err != nil {
-		log.Debug("(((((( 2 ))))))")
 		log.Fatal(err)
 	}
 	pr.Data = b
