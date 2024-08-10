@@ -41,8 +41,9 @@ func (a *App) testTings(w http.ResponseWriter, _ *http.Request) {
 		return
 	}
 	log.Debugf("r is [%s]", string(rc))
+	src := `{ "mess": "'+string(rc)+'"}`
 	var b map[string]interface{}
-	err = json.Unmarshal(rc, &b)
+	err = json.Unmarshal([]byte(src), &b)
 	if err != nil {
 		log.Debug("[[[[[ 1 ]]]]]")
 		log.Fatal(err)
