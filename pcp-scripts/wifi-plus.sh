@@ -49,9 +49,9 @@ wp_status() {
 
 wp_test() {
   if [ $(whoami) = "root" ]; then
-    sudo -u tc printf "I'm tc [%s]" $(whoami)
+    sudo -u tc printf "I'm root [%s]" $(whoami)
   else
-    printf "I'm root [%s]" $(whoami)
+    printf "I'm tc [%s]" $(whoami)
   fi
 }
 

@@ -36,6 +36,7 @@ func (a *App) testTings(w http.ResponseWriter, _ *http.Request) {
 	pr.Cmd = "./wifi-plus.sh wp_test"
 	rc, err := exec.Command("sh", "-c", "cd cgi-bin && ./wifi-plus.sh wp_test").Output()
 	if err != nil {
+		log.Debug("[[[[[ 0 ]]]]]")
 		pr.ReturnResponse(w, err)
 		return
 	}
@@ -43,6 +44,7 @@ func (a *App) testTings(w http.ResponseWriter, _ *http.Request) {
 	var b map[string]interface{}
 	err = json.Unmarshal(rc, &b)
 	if err != nil {
+		log.Debug("[[[[[ 1 ]]]]]")
 		log.Fatal(err)
 	}
 	pr.Data = b
