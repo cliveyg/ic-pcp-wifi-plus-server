@@ -39,7 +39,7 @@ func (a *App) wapAction(w http.ResponseWriter, r *http.Request) {
 			}
 		}
 	case "config":
-		a.wapConfig(w, &pr, wa, r.Body)
+		a.wapConfig(w, &pr, r.Method, r.Body)
 	default:
 		// do nowt
 		pr.StatusCode = 400
@@ -51,11 +51,11 @@ func (a *App) wapAction(w http.ResponseWriter, r *http.Request) {
 
 }
 
-func (a *App) wapConfig(w http.ResponseWriter, pr *WifiPlusResponse, ac string, bd io.ReadCloser) {
-	log.Debugf("In wapConfig and our action is [%s]", ac)
+func (a *App) wapConfig(w http.ResponseWriter, pr *WifiPlusResponse, hm string, bd io.ReadCloser) {
+	log.Debugf("In wapConfig and our action is [%s]", hm)
 
 	pr.Function = "wapConfig"
-	if ac == http.MethodPut {
+	if hm == http.MethodPut {
 		var cf WAPConfig
 		pr.Cmd = "wifi-plus.sh wp_wap_edit_config"
 		err := json.NewDecoder(bd).Decode(&cf)
