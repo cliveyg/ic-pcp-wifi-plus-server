@@ -87,13 +87,18 @@ wp_fetch_wap_config() {
     exit 0
   fi
 
-  ssid=$(grep ssid $filename)
-  pass=$(grep wpa_passphrase $filename)
-  country_code=$(grep country_code $filename)
-  channel=$(grep channel $filename)
+  #ssid=$(grep ssid $filename)
+  #pass=$(grep wpa_passphrase $filename)
+  #country_code=$(grep country_code $filename)
+  #channel=$(grep channel $filename)
+
+  ssid=($(echo $(grep ssid $filename) | tr ";" "\n"))
+  pass=($(echo $(grep pass $filename) | tr ";" "\n"))
+  country_code=($(echo $(grep country_code $filename) | tr ";" "\n"))
+  channel=($(echo $(grep channel $filename) | tr ";" "\n"))
 
   #printf '{ "ssid": "%s", "ap_ip_address": "%s", "password": "%s", "country_code": "%s", "channel": %d }' $ssid $AP_IP $pass $country_code $channel
-  echo '{ "ssid": "'$ssid'", "ap_ip_address": "'$AP_IP'", "password": "'$pass'"country_code": "'$country_code'", "channel": '$channel'}'
+  echo '{ "ssid": "'$ssid[1]'", "ap_ip_address": "'$AP_IP'", "password": "'$pass[1]'"country_code": "'$country_code[0]'", "channel": '$channel[0]'}'
 }
 
 #-----------------------------------------------------------------------------#
