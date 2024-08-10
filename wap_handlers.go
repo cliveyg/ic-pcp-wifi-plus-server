@@ -101,7 +101,7 @@ func (a *App) wapConfig(w http.ResponseWriter, pr *WifiPlusResponse, ac string, 
 		pr.Data = wapCfg
 	}
 	pr.StatusCode = 200
-	pr.ReturnResponse(w, nil)
+
 }
 
 func (a *App) wapStopStart(w http.ResponseWriter, pr *WifiPlusResponse, ac string) {
