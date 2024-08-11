@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"errors"
 	log "github.com/sirupsen/logrus"
 	"net/http"
 	"os/exec"
@@ -65,26 +66,41 @@ func (a *App) testTings(w http.ResponseWriter, _ *http.Request) {
 func (a *App) wpSwitcher(w http.ResponseWriter, r *http.Request) {
 
 	log.Debug("wpSwitcher - attempting to switch between wifi and wap")
-	// work out whether we are in wifi or wap mode
+
 	pr := WifiPlusResponse{
 		Function:   "wpSwitcher",
+		Action:     "switcheroo",
 		StatusCode: 200,
+		Message:    "Attempting to switch modes",
 	}
+	si := SwitcherInfo{}
+
 	var err error
-	var sr string
-	a.sysPCPConfig(&pr, r.Method, &err, &sr)
+	var pc string
+	args := []string{"status"}
 
-	md := textToMap(sr)
-	pr.Cmd = "blah"
-	pr.Message = "testing wpSwitcher"
+	a.sysPCPConfig(&pr, r.Method, &err, &pc)
+	md := textToMap(pc)
 
-	pr.Data = SwitcherData{
-		APMode:     md["APMODE"],
-		APStatus:   "unknown",
-		APAddress:  md["AP_IP"],
-		Wifi:       "on",
-		WifiStatus: "ok",
+	_, err = a.ExecCmd("/usr/local/etc/init.d/pcp-apmode", args)
+	if err != nil {
+		err = errors.New("Unable to switch. apmode is not installed")
+		pr.ReturnResponse(w, err)
+		return
 	}
+
+	si.APStatus = 200
+	si.APMode = md["APMODE"]
+
+	a.wifiStatus(&pr, &err)
+	ws := pr.StatusCode
+
+	if md["WIFI"] == "on" && ws == 200 {
+		si.Wifi = md["WIFI"]
+		si.WifiStatus = ws
+	}
+
+	pr.Data = si
 	pr.ReturnResponse(w, err)
 }
 
