@@ -73,12 +73,18 @@ func (a *App) wpSwitcher(w http.ResponseWriter, r *http.Request) {
 	var err error
 	var sr string
 	a.sysPCPConfig(&pr, r.Method, &err, &sr)
-	
+
 	md := textToMap(sr)
 	pr.Cmd = "blah"
 	pr.Message = "testing wpSwitcher"
 
-	pr.Data = "{\"ap_mode\": \"" + md["APMODE"] + "\"}"
+	pr.Data = SwitcherData{
+		APMode:     md["APMODE"],
+		APStatus:   "unknown",
+		APAddress:  md["AP_IP"],
+		Wifi:       "on",
+		WifiStatus: "ok",
+	}
 	pr.ReturnResponse(w, err)
 }
 
