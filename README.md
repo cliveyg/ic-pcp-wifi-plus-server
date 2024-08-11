@@ -1,4 +1,4 @@
-# industrialcool-pcp-wifi
+# industrialcool-pcp-wifi-plus
 Project to add currently unsupported wifi functionality to piCorePlayer.
 
 ### The background:
