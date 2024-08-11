@@ -27,7 +27,7 @@ func (a *App) wapAction(w http.ResponseWriter, r *http.Request) {
 
 	switch wa {
 	case "stop", "start":
-		if _, err := os.Stat("/usr/local/etc/init.d/pcp-apmode"); errors.Is(err, os.ErrNotExist) {
+		if _, err := os.Stat(os.Getenv("PCPSH")); errors.Is(err, os.ErrNotExist) {
 			pr.StatusCode = 404
 			pr.Message = "WAP mode is not installed"
 		} else {
@@ -39,7 +39,7 @@ func (a *App) wapAction(w http.ResponseWriter, r *http.Request) {
 			}
 		}
 	case "config":
-		if _, err := os.Stat("/usr/local/etc/pcp/hostapd.conf"); errors.Is(err, os.ErrNotExist) {
+		if _, err := os.Stat(os.Getenv("HOSTAPDCONF")); errors.Is(err, os.ErrNotExist) {
 			pr.StatusCode = 404
 			pr.Message = "/usr/local/etc/pcp/hostapd.conf not loaded"
 		} else {
@@ -100,7 +100,6 @@ func (a *App) wapConfig(w http.ResponseWriter, pr *WifiPlusResponse, hm string, 
 		wapCfg := WAPConfig{}
 		err = json.Unmarshal(rc, &wapCfg)
 		if err != nil {
-			log.Debug("WQRWERWERWERWRWERWER")
 			log.Fatal(err)
 		}
 		pr.Message = "WAP config details"
@@ -180,7 +179,6 @@ func (a *App) wapAddRemove(w http.ResponseWriter, r *http.Request) {
 		pr.Data = b
 
 	} else if r.Method == http.MethodDelete {
-		log.Debug("We should be removing the ap mode stuff")
 		pr.Cmd = "wifi-plus.sh wp_wap_remove"
 		pr.Message = "Deleting wap extensions"
 
