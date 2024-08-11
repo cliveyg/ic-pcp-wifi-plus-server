@@ -98,8 +98,19 @@ func (a *App) wpSwitcher(w http.ResponseWriter, r *http.Request) {
 
 	*/
 
+	err = a.wapConfig(&pr, http.MethodGet, nil)
+	if err != nil {
+		pr.ReturnResponse(w, err)
+		return
+	}
+
 	si.APStatus = 200
 	si.APMode = md["APMODE"]
+	wc, ok := pr.Data.(WAPConfig)
+	if !ok {
+		log.Fatal("Unable to cast pr.Data to variable")
+	}
+	si.APAddress = wc.APIPAddress
 
 	a.wifiStatus(&pr, &err)
 	ws := pr.StatusCode

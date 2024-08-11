@@ -43,7 +43,7 @@ func (a *App) wapAction(w http.ResponseWriter, r *http.Request) {
 			pr.StatusCode = 404
 			pr.Message = "/usr/local/etc/pcp/hostapd.conf not loaded"
 		} else {
-			err = a.wapConfig(w, &pr, r.Method, r.Body)
+			err = a.wapConfig(&pr, r.Method, r.Body)
 		}
 	default:
 		// do nowt
@@ -56,7 +56,7 @@ func (a *App) wapAction(w http.ResponseWriter, r *http.Request) {
 
 }
 
-func (a *App) wapConfig(w http.ResponseWriter, pr *WifiPlusResponse, hm string, bd io.ReadCloser) error {
+func (a *App) wapConfig(pr *WifiPlusResponse, hm string, bd io.ReadCloser) error {
 	log.Debugf("In wapConfig and our action is [%s]", hm)
 
 	pr.Function = "wapConfig"
