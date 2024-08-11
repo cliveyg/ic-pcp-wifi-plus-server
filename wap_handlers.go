@@ -39,7 +39,12 @@ func (a *App) wapAction(w http.ResponseWriter, r *http.Request) {
 			}
 		}
 	case "config":
-		err = a.wapConfig(w, &pr, r.Method, r.Body)
+		if _, err := os.Stat("/usr/local/etc/pcp/hostapd.conf"); errors.Is(err, os.ErrNotExist) {
+			pr.StatusCode = 404
+			pr.Message = "/usr/local/etc/pcp/hostapd.conf not loaded"
+		} else {
+			err = a.wapConfig(w, &pr, r.Method, r.Body)
+		}
 	default:
 		// do nowt
 		pr.StatusCode = 400
