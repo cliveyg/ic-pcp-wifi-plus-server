@@ -71,18 +71,24 @@ func (a *App) wpSwitcher(w http.ResponseWriter, r *http.Request) {
 		StatusCode: 200,
 	}
 	var err error
-	a.sysPCPConfig(&pr, r.Method, &err)
+	var sr string
+	a.sysPCPConfig(&pr, r.Method, &err, &sr)
 
 	// convert from interface to map[string]string
 	// so that we can access the data needed
-	var res = map[string]string{}
-	for k, v := range pr.Data.(map[string]interface{}) {
-		res[k] = v.(string)
-	}
+	md := textToMap(sr)
+	/*
+		var res = map[string]string{}
+		for k, v := range pr.Data.(map[string]interface{}) {
+			log.Debug("Blah here")
+			res[k] = v.(string)
+		}
+
+	*/
 	pr.Cmd = "blah"
 	pr.Message = "testing wpSwitcher"
-	log.Debugf("res is %s", res)
-	pr.Data = `{"ap_mode": "` + res["APMODE"] + `"}`
+	//log.Debugf("res is %s", res)
+	pr.Data = `{"ap_mode": "` + md["APMODE"] + `"}`
 	pr.ReturnResponse(w, err)
 }
 
