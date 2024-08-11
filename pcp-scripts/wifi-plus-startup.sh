@@ -5,7 +5,10 @@ set -a
 . /mnt/UserData/industrialcool-pcp-wifi-plus/.env
 set +a
 
-echo "-----------------------------------------------------------------------"
+sleep 3
+echo "------------------------------------------------------------------------"
+echo "--------------------------- wifi-plus ----------------------------------"
+echo "------------------------------------------------------------------------"
 echo "Starting wifi-plus-startup script..."
 echo "Copying go binary and script files to web folders..."
 sudo chmod 777 /mnt/UserData/industrialcool-pcp-wifi-plus/pcp-scripts/wifi-plus.sh
