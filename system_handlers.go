@@ -115,7 +115,9 @@ func (a *App) sysPCPConfig(pr *WifiPlusResponse, hm string, err *error, sr *stri
 			return
 		}
 		pr.StatusCode = 200
-		*sr = string(r)
+		if sr != nil {
+			*sr = string(r)
+		}
 		pr.Data = textToMap(string(r))
 	} else if hm == http.MethodPut {
 		log.Debug("Editing not implemented yet")
