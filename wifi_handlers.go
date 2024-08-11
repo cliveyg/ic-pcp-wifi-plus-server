@@ -31,6 +31,8 @@ func (a *App) wifiAction(w http.ResponseWriter, r *http.Request) {
 		a.wifiSSID(&pr, &err)
 	case "status":
 		a.wifiStatus(&pr, &err)
+	case "stop", "start":
+		a.wifiStopStart(&pr, &err)
 	default:
 		// do nowt
 		pr.StatusCode = 400
@@ -40,6 +42,12 @@ func (a *App) wifiAction(w http.ResponseWriter, r *http.Request) {
 	log.WithFields(log.Fields{"Full response is ": pr}).Debug()
 	pr.ReturnResponse(w, err)
 
+}
+
+func (a *App) wifiStopStart(pr *WifiPlusResponse, err *error) {
+	log.Debug("Woop")
+	pr.Function = "wifiStopStart"
+	
 }
 
 func (a *App) wifiSSID(pr *WifiPlusResponse, err *error) {
