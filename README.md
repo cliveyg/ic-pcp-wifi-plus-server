@@ -1,27 +1,27 @@
-# industrialcool-pcp-Wi-Fi
-Project to add currently unsupported Wi-Fi functionality to piCorePlayer.
+# industrialcool-pcp-wifi
+Project to add currently unsupported wifi functionality to piCorePlayer.
 
 ### The background:
 I make boomboxes out of wood, and I'm currently developing a new sound system that uses a RaspberryPi 4 with an DigiAmp+ sound card. The RPi4 controls a touchscreen and runs piCorePlayer, Squeezelite and Lyrion Music Server.
 
-The boomboxes are intended to be portable and by default LMS and PiCorePlayer prefer to have an external Wi-Fi to connect to. It is possible to switch to using the RPi as a wireless access point (WAP) but as piCorePlayer currently stands you need an ethernet connection or keyboard connected to the RPi4 to manage the switch. For a portable sound system this could sometimes prove to be a bit tricky ;)
+The boomboxes are intended to be portable and by default LMS and PiCorePlayer prefer to have an external wifi to connect to. It is possible to switch to using the RPi as a wireless access point (WAP) but as piCorePlayer currently stands you need an ethernet connection or keyboard connected to the RPi4 to manage the switch. For a portable sound system this could sometimes prove to be a bit tricky ;)
 
 ### The problem:
-Controlling pcp and LMS is easiest via a phone using the local Wi-Fi network. For example your home router/modem is used to communicate between the pcp/LMS system and the phone in the most typical use case.
+Controlling pcp and LMS is easiest via a phone using the local wifi network. For example your home router/modem is used to communicate between the pcp/LMS system and the phone in the most typical use case.
 
-However, there will be occasions when there is a need to use the sound system when there is no available Wi-Fi network. piCorePlayer, and LMS in particular, expect and need a network to function. Luckily pcp provides the facility to configure the RPi as a WAP. I know it is possible to use AirPlay or Bluetooth but this leaves users unable to access parts of the complete pcp system. I will implement both but also anticipate users wanting to use Wi-Fi connectivity.
+However, there will be occasions when there is a need to use the sound system when there is no available wifi network. piCorePlayer, and LMS in particular, expect and need a network to function. Luckily pcp provides the facility to configure the RPi as a WAP. I know it is possible to use AirPlay or Bluetooth but this leaves users unable to access parts of the complete pcp system. I will implement both but also anticipate users wanting to use wifi connectivity.
 
-The issue is that as pcp currently stands a wired ethernet connection or keyboard is needed as the Wi-Fi needs to be turned off for the WAP page to be accessible. There are also issues around making sure to follow quite a specific set of actions to complete the switchover successfully. There are similar issues going the other way; switching off the WAP and switching on using the local Wi-Fi.
+The issue is that as pcp currently stands a wired ethernet connection or keyboard is needed as the wifi needs to be turned off for the WAP page to be accessible. There are also issues around making sure to follow quite a specific set of actions to complete the switchover successfully. There are similar issues going the other way; switching off the WAP and switching on using the local wifi.
 
-I would also like to be able to change Wi-Fi networks more easily. piCorePlayer is built using TinyCore Linux and as it currently stands changing Wi-Fi networks easily is not possible. I would also like the system to remember known Wi-Fi networks and on start up connect automatically to one if available.
+I would also like to be able to change wifi networks more easily. piCorePlayer is built using TinyCore Linux and as it currently stands changing wifi networks easily is not possible. I would also like the system to remember known wifi networks and on start up connect automatically to one if available.
 
 ### The plan:
 To create an additional, cut-down and more user-friendly controller of piCorePlayer functions to supplement the current piCorePlayer whilst offering some additional functionality. After studying the pcp code I think I can plug in to existing shell code to achieve my aims. 
 
 The new system must provide the following:
 
-* On boot, scan for Wi-Fi networks and connect to known Wi-Fi.
-* Provide a method for connecting to new Wi-Fi networks that doesn't involve the user having to fiddle with the wpa_supplicant file :)
+* On boot, scan for wifi networks and connect to known wifi.
+* Provide a method for connecting to new wifi networks that doesn't involve the user having to fiddle with the wpa_supplicant file :)
 * If neither of the above then create a wireless access point.
 * Make this interface more modern looking and simpler for the end user.
 * Provide access to the pcp ui if needed for power users.
