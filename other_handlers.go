@@ -23,9 +23,9 @@ func (a *App) testTings(w http.ResponseWriter, _ *http.Request) {
 		Message:    "testing whoami stuff",
 	}
 	/*
-		pr.Cmd = "nohup ./wp-wifi-to-wap.sh"
-		//r, err := exec.Command("sh", "-c", "cd /mnt/UserData/industrialcool-pcp-wifi-plus/pcp-scripts; nohup ./wp-wifi-to-wap.sh > /dev/null 2>&1 &").Output()
-		r, err := exec.Command("sh", "-c", "cd /mnt/UserData/industrialcool-pcp-wifi-plus/pcp-scripts; ./wp-wifi-to-wap.sh").Output()
+		pr.Cmd = "nohup ./wp-switcher.sh"
+		//r, err := exec.Command("sh", "-c", "cd /mnt/UserData/industrialcool-pcp-wifi-plus/pcp-scripts; nohup ./wp-switcher.sh > /dev/null 2>&1 &").Output()
+		r, err := exec.Command("sh", "-c", "cd /mnt/UserData/industrialcool-pcp-wifi-plus/pcp-scripts; ./wp-switcher.sh").Output()
 		if err != nil {
 			log.Debug("(((((( 1 ))))))")
 			pr.ReturnResponse(w, err)
@@ -62,13 +62,35 @@ func (a *App) testTings(w http.ResponseWriter, _ *http.Request) {
 	*/
 }
 
+func (a *App) wpSwitcher(w http.ResponseWriter, r *http.Request) {
+
+	log.Debug("wpSwitcher - attempting to switch between wifi and wap")
+	// work out whether we are in wifi or wap mode
+	pr := WifiPlusResponse{
+		Function:   "wpSwitcher",
+		Cmd:        "blah",
+		StatusCode: 200,
+		Message:    "testing wpSwitcher",
+	}
+	var err error
+	a.sysPCPConfig(&pr, r.Method, &err)
+	log.Debugf("pr Data is %s", pr.Data)
+	pr.ReturnResponse(w, err)
+}
+
 func (a *App) getWPACliStatus(w http.ResponseWriter, _ *http.Request) {
 
-	log.Debug("-----------------------------")
-	log.Debug("In getWPACliStatus")
+	pr := WifiPlusResponse{
+		Function: "getWPACliStatus",
+		Action:   "wpa_cli",
+		Cmd:      "wpa_cli status",
+		Message:  "Getting wifi status from wpa_cli",
+	}
+
 	rc, err := exec.Command("sh", "-c", "wpa_cli status").Output()
 	if err != nil {
-		log.Fatal(err)
+		pr.ReturnResponse(w, err)
+		return
 	}
 	lines := strings.Split(strings.TrimSpace(string(rc)), "\n")
 	// remove first line
@@ -77,12 +99,8 @@ func (a *App) getWPACliStatus(w http.ResponseWriter, _ *http.Request) {
 	wpaData := WPACliResponse{}
 	wpaData.OrganiseData(lines)
 
-	pr := WifiPlusResponse{
-		Function:   "getWPACliStatus",
-		Action:     "wpa_cli",
-		StatusCode: 200,
-		Message:    "wpa_cli status",
-		Data:       wpaData}
+	pr.StatusCode = 200
+	pr.Data = wpaData
 	pr.ReturnResponse(w, err)
 
 }
