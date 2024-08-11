@@ -120,6 +120,8 @@ func (a *App) wpSwitcher(w http.ResponseWriter, r *http.Request) {
 		si.WifiStatus = ws
 	}
 
+	pr.Cmd = ""
+	pr.Message = "bling"
 	pr.Data = si
 	pr.ReturnResponse(w, err)
 }
