@@ -27,7 +27,7 @@ func (a *App) systemAction(w http.ResponseWriter, r *http.Request) {
 	switch sa {
 	case "config":
 		if r.Method == http.MethodGet || r.Method == http.MethodPut {
-			a.sysPCPConfig(&pr, r.Method, &err)
+			a.sysPCPConfig(&pr, r.Method, &err, nil)
 		} else {
 			pr.StatusCode = 400
 			pr.Message = "Incorrect HTTP method for action"
@@ -104,7 +104,7 @@ func (a *App) sysStatus(pr *WifiPlusResponse, err *error) {
 
 }
 
-func (a *App) sysPCPConfig(pr *WifiPlusResponse, hm string, err *error) {
+func (a *App) sysPCPConfig(pr *WifiPlusResponse, hm string, err *error, sr *string) {
 
 	var r []byte
 	if hm == http.MethodGet {
@@ -115,6 +115,7 @@ func (a *App) sysPCPConfig(pr *WifiPlusResponse, hm string, err *error) {
 			return
 		}
 		pr.StatusCode = 200
+		*sr = string(r)
 		pr.Data = textToMap(string(r))
 	} else if hm == http.MethodPut {
 		log.Debug("Editing not implemented yet")
