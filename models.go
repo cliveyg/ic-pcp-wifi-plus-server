@@ -81,6 +81,14 @@ type WifiPlusResponse struct {
 	Data       interface{} `json:"data,omitempty"`
 }
 
+type SwitcherData struct {
+	APMode     string `json:"ap_mode"`
+	APAddress  string `json:"ap_address"`
+	APStatus   string `json:"ap_status"`
+	Wifi       string `json:"wifi"`
+	WifiStatus string `json:"wifi_status"`
+}
+
 type PiCoreSystemData struct {
 	PiCoreVersion       string `json:"picore_version"`
 	PiCorePlayerVersion string `json:"picoreplayer_version"`
