@@ -37,6 +37,8 @@ fi
 if [ -f $TCEMNT/tce/optional/pcp-apmode.tcz ]; then
   echo "Copying wifiplus hostapd.conf to /usr/local/etc/pcp/"
   cp /mnt/UserData/industrialcool-pcp-wifi-plus/confs/hostapd.conf /usr/local/etc/pcp/hostapd.conf
+else
+  echo "apmode not installed; no need to copy hostapd.conf to /usr/local/etc/pcp/"
 fi
 
 if sudo cp /mnt/UserData/industrialcool-pcp-wifi-plus/wifiplus /var/www/wifiplus &&
