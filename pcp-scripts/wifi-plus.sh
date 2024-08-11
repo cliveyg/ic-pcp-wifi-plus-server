@@ -97,7 +97,7 @@ wp_fetch_wap_config() {
   country_code=$(echo $country_code_line | sed 's/country_code=//g')
   channel=$(echo $channel_line | sed 's/channel=//g')
 
-  echo '{ "ssid": "'$ssid'", "ap_ip_address": "'$AP_IP'", "password": "'$pass'", country_code": "'$country_code'", "channel": '$channel'}'
+  echo '{ "ssid": "'$ssid'", "ap_ip_address": "'$AP_IP'", "password": "'$pass'", "country_code": "'$country_code'", "channel": '$channel'}'
 }
 
 #-----------------------------------------------------------------------------#
