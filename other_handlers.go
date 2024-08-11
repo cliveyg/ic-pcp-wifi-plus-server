@@ -5,6 +5,7 @@ import (
 	"errors"
 	log "github.com/sirupsen/logrus"
 	"net/http"
+	"os"
 	"os/exec"
 	"strings"
 )
@@ -77,17 +78,25 @@ func (a *App) wpSwitcher(w http.ResponseWriter, r *http.Request) {
 
 	var err error
 	var pc string
-	args := []string{"status"}
+	//args := []string{"status"}
 
 	a.sysPCPConfig(&pr, r.Method, &err, &pc)
 	md := textToMap(pc)
 
-	_, err = a.ExecCmd("/usr/local/etc/init.d/pcp-apmode", args)
-	if err != nil {
+	if _, err := os.Stat(os.Getenv("TCEPCPLOC")); errors.Is(err, os.ErrNotExist) {
 		err = errors.New("Unable to switch. apmode is not installed")
 		pr.ReturnResponse(w, err)
 		return
 	}
+	/*
+		_, err = a.ExecCmd("/usr/local/etc/init.d/pcp-apmode", args)
+		if err != nil {
+			err = errors.New("Unable to switch. apmode is not installed")
+			pr.ReturnResponse(w, err)
+			return
+		}
+
+	*/
 
 	si.APStatus = 200
 	si.APMode = md["APMODE"]
