@@ -89,12 +89,15 @@ func (a *App) wapConfig(w http.ResponseWriter, pr *WifiPlusResponse, hm string, 
 		pr.Cmd = "wifi-plus.sh wp_fetch_wap_config"
 		rc, err := exec.Command("sh", "-c", "cd cgi-bin && ./wifi-plus.sh wp_fetch_wap_config").Output()
 		if err != nil {
-			log.Debug("[[[[[ 0 ]]]]]")
 			return err
 		}
 		log.Debugf("RC is [%s]", string(rc))
 		wapCfg := WAPConfig{}
 		err = json.Unmarshal(rc, &wapCfg)
+		if err != nil {
+			log.Debug("WQRWERWERWERWRWERWER")
+			log.Fatal(err)
+		}
 		pr.Message = "WAP config details"
 		pr.Data = wapCfg
 	}
