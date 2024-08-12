@@ -75,6 +75,9 @@ func (a *App) wpSwitcher(w http.ResponseWriter, r *http.Request) {
 		Message:    "Attempting to switch modes",
 	}
 	si := SwitcherInfo{}
+	wifiRunning := false
+	wapRunning := false
+	pcpInitdFileExists := false
 
 	var err error
 	var pc string
@@ -116,12 +119,34 @@ func (a *App) wpSwitcher(w http.ResponseWriter, r *http.Request) {
 	ws := pr.StatusCode
 
 	if md["WIFI"] == "on" && ws == 200 {
-		si.Wifi = md["WIFI"]
-		si.WifiStatus = ws
+		wifiRunning = true
+	}
+	if _, err := os.Stat(os.Getenv("PCPSH")); err == nil {
+		pcpInitdFileExists = true
+	}
+	if si.APMode == "on" && pcpInitdFileExists {
+		wapRunning = true
+	}
+
+	if wifiRunning && wapRunning {
+		err = errors.New("Both wifi and wap are running")
+		pr.ReturnResponse(w, err)
+		return
+	} else if !wifiRunning && !wapRunning {
+		err = errors.New("Both wifi and wap are not running")
+		pr.ReturnResponse(w, err)
+		return
+	}
+
+	if wifiRunning {
+		// switch to wap
+		pr.Message = "Switch to wap"
+	} else if wapRunning {
+		// switch to wifi
+		pr.Message = "switch to wifi"
 	}
 
 	pr.Cmd = ""
-	pr.Message = "bling"
 	pr.Data = si
 	pr.ReturnResponse(w, err)
 }
