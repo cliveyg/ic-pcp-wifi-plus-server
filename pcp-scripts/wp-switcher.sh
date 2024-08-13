@@ -23,45 +23,45 @@ set +a
 # the backend is feature complete
 LOGGY=/var/log/wifiplus.log
 
-if [ -f $TCEMNT/tce/optional/pcp-apmode.tcz ]; then
 
-  if [ $DBUG -eq 1 ]; then
+if [ $DBUG -eq 1 ]; then
 
-    if [ -f $LOGGY ]; then
-      echo "[wp-wifi-to-wap.sh] --------------- running --------------------" >> $LOGGY
-      #pcp_write_var_to_config USER_COMMAND_3 "echo 'boop'"
-      #pcp_save_to_config
-      #pcp_backup "text"
-      #if [ $(pcp_write_var_to_config USER_COMMAND_3 "echo 'boop'") ] && $(pcp_save_to_config) && $(pcp_backup "text"); then
-      #  echo '{ "status": 200, "message": "var written to config successfully" }'
-      #else
-      #  echo '{ "status": 500, "message": "failed to save to pcp config and backup" }'
-      #fi
+  if [ -f $LOGGY ]; then
+    echo "[wp-switcher.sh  ] --------------- running --------------------" >> $LOGGY
+  else
+    sudo touch $LOGGY
+    echo "[wp-switcher.sh] --------------- running --------------------" >> $LOGGY
+  fi
 
+  if [ $arg1 = "towap" ]; then
+    # get all wap stuff set up
 
-    else
-      sudo touch $LOGGY
-      echo "[wp-wifi-to-wap.sh] --------------- running --------------------" >> $LOGGY
-      echo "[wp-wifi-to-wap.sh] DBUG IS [$DBUG]" >> $LOGGY
-    fi
+    # turn wifi off
 
+  elif [ $arg1 = "towifi" ]; then
 
   else
-    # turning wifi off
-    echo '{ "status": 501, "message": "not implemented yet [1]" }'
-    #pcp_write_var_to_config WIFI "off"
-    #/usr/local/etc/init.d/wifi wlan0 stop
-    #pcp_wifi_unload_wifi_extns "text"
-    #pcp_wifi_unload_wifi_firmware_extns "text"
-    #pcp_save_to_config
-    #pcp_backup "text"
-    # turning wap on
-    #if [ ! -x /usr/local/etc/init.d/pcp-apmode ]; then
-    #  pcp-load -i pcp-apmode.tcz
-    #fi
-    #/usr/local/etc/init.d/pcp-apmode start
+    echo '{ "status": 400, "message": "action not valid" }'
   fi
 
 else
-  echo '{ "status": 404, "message": "ap mode not installed" }'
+  echo "no loggy"
+
 fi
+
+
+# turning wifi off
+echo '{ "status": 501, "message": "not implemented yet [1]" }'
+#pcp_write_var_to_config WIFI "off"
+#/usr/local/etc/init.d/wifi wlan0 stop
+#pcp_wifi_unload_wifi_extns "text"
+#pcp_wifi_unload_wifi_firmware_extns "text"
+#pcp_save_to_config
+#pcp_backup "text"
+# turning wap on
+#if [ ! -x /usr/local/etc/init.d/pcp-apmode ]; then
+#  pcp-load -i pcp-apmode.tcz
+#fi
+#/usr/local/etc/init.d/pcp-apmode start
+
+

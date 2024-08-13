@@ -47,7 +47,7 @@ func (a *App) wifiAction(w http.ResponseWriter, r *http.Request) {
 func (a *App) wifiStopStart(pr *WifiPlusResponse, err *error) {
 	log.Debug("Woop")
 	pr.Function = "wifiStopStart"
-	
+
 }
 
 func (a *App) wifiSSID(pr *WifiPlusResponse, err *error) {
@@ -97,7 +97,7 @@ func (a *App) wifiScan(pr *WifiPlusResponse, err *error) {
 	pr.StatusCode = 200
 	pr.Message = "Searching for networks..."
 	pr.Cmd = "wpa_cli scan wlan0; wpa_cli scan_results"
-	rc, *err = exec.Command("sh", "-c", "wpa_cli scan wlan0; wpa_cli scan_results").Output()
+	rc, *err = exec.Command("sh", "-c", "wpa_cli scan wlan0; sleep 5; wpa_cli scan_results").Output()
 	if *err != nil {
 		return
 	}
