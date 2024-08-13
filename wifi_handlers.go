@@ -109,7 +109,7 @@ func (a *App) wifiScan(pr *WifiPlusResponse, err *error) {
 
 	var netArr []WifiNetwork
 	for i := 0; i < len(lines); i++ {
-		wifiDetails := strings.Split(lines[0], "\t")
+		wifiDetails := strings.Split(lines[i], "\t")
 		wn := WifiNetwork{SSID: wifiDetails[4],
 			BSSID: wifiDetails[0],
 			Flags: wifiDetails[3]}
