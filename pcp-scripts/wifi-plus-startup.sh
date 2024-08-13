@@ -45,7 +45,6 @@ if [ -f $TCEMNT/tce/optional/pcp-apmode.tcz ]; then
   if [ -f /usr/local/etc/pcp/hostapd.conf ]; then
     sudo chown tc:staff /usr/local/etc/pcp/hostapd.conf
   fi
-
 else
   echo "apmode not installed; no need to copy hostapd.conf to /usr/local/etc/pcp/"
 fi
