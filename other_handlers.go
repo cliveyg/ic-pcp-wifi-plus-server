@@ -81,7 +81,8 @@ func (a *App) wpSwitcher(w http.ResponseWriter, r *http.Request) {
 
 	var err error
 	var pc string
-	//args := []string{"status"}
+	var rc []byte
+	ssi := ShellSwitchInfo{}
 
 	a.sysPCPConfig(&pr, r.Method, &err, &pc)
 	md := textToMap(pc)
@@ -91,15 +92,6 @@ func (a *App) wpSwitcher(w http.ResponseWriter, r *http.Request) {
 		pr.ReturnResponse(w, err)
 		return
 	}
-	/*
-		_, err = a.ExecCmd("/usr/local/etc/init.d/pcp-apmode", args)
-		if err != nil {
-			err = errors.New("Unable to switch. apmode is not installed")
-			pr.ReturnResponse(w, err)
-			return
-		}
-
-	*/
 
 	err = a.wapConfig(&pr, http.MethodGet, nil)
 	if err != nil {
@@ -109,6 +101,7 @@ func (a *App) wpSwitcher(w http.ResponseWriter, r *http.Request) {
 
 	si.APStatus = 200
 	si.APMode = md["APMODE"]
+	si.Wifi = md["WIFI"]
 	wc, ok := pr.Data.(WAPConfig)
 	if !ok {
 		log.Fatal("Unable to cast pr.Data to variable")
@@ -140,13 +133,30 @@ func (a *App) wpSwitcher(w http.ResponseWriter, r *http.Request) {
 
 	if wifiRunning {
 		// switch to wap
-		pr.Message = "Switch to wap"
+		pr.Message = "Switching to wap"
+		pr.Cmd = "nohup ./wp-switcher.sh towap"
+		rc, err = exec.Command("sh", "-c", "cd /mnt/UserData/industrialcool-pcp-wifi-plus/pcp-scripts; nohup ./wp-switcher.sh towap").Output()
+		if err != nil {
+			pr.ReturnResponse(w, err)
+			return
+		}
+
 	} else if wapRunning {
 		// switch to wifi
-		pr.Message = "switch to wifi"
+		pr.Message = "Switching to wifi"
+		pr.Cmd = "nohup ./wp-switcher.sh towifi"
+		rc, err = exec.Command("sh", "-c", "cd /mnt/UserData/industrialcool-pcp-wifi-plus/pcp-scripts; nohup ./wp-switcher.sh towifi").Output()
+		if err != nil {
+			pr.ReturnResponse(w, err)
+			return
+		}
 	}
 
-	pr.Cmd = ""
+	err = json.Unmarshal(rc, &ssi)
+	if err != nil {
+		log.Fatal(err)
+	}
+
 	pr.Data = si
 	pr.ReturnResponse(w, err)
 }

@@ -81,6 +81,10 @@ type WifiPlusResponse struct {
 	Data       interface{} `json:"data,omitempty"`
 }
 
+type ShellSwitchInfo struct {
+	Res interface{} `json:"data,omitempty"`
+}
+
 type SwitcherInfo struct {
 	APMode     string `json:"ap_mode"`
 	APAddress  string `json:"ap_address"`
