@@ -25,5 +25,6 @@
 !pcp-scripts/wp-switcher.sh
 !confs
 !confs/hostapd.conf
+!confs/known-wifi-networks.conf
 !wifiplus
 !beep
