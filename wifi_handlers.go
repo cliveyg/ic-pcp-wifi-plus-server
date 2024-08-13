@@ -101,6 +101,7 @@ func (a *App) wifiScan(pr *WifiPlusResponse, err *error) {
 	if *err != nil {
 		return
 	}
+	log.Debug(string(rc))
 	lines := strings.Split(strings.TrimSpace(string(rc)), "\n")
 	// remove first 4 lines
 	lines = append(lines[:0], lines[4:]...)
