@@ -70,6 +70,9 @@ func (a *App) wifiSwitchNetwork(w http.ResponseWriter, r *http.Request) {
 	newNet := false
 	connOk := false
 	pm, nf := passMatch(&wd, &err, nil)
+
+	log.Debug("[[[[[[[[[ 111 ]]]]]]]]")
+	log.Debugf("pm[%b] and nf[%b]", pm, nf)
 	if pm && nf {
 		log.Debug("[[[[[[[[[ c ]]]]]]]]")
 		pr.Message = "Network found and passwords match"
