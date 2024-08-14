@@ -60,6 +60,7 @@ func (a *App) wifiSwitchNetwork(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	cp := wd.Password
 	encryptPass(&wd, &err)
 	if err != nil {
 		pr.StatusCode = 400
@@ -68,6 +69,18 @@ func (a *App) wifiSwitchNetwork(w http.ResponseWriter, r *http.Request) {
 		pr.ReturnResponse(w, err)
 		return
 	}
+
+	// hashed pass returned from encryptPass
+	hp := wd.Password
+	// clear pass saved from earlier
+	wd.Password = cp
+
+	if passMatch(&wd, hp) {
+		pr.Message = "YARP! :D"
+	} else {
+		pr.Message = "NARP! :("
+	}
+
 	pr.StatusCode = 418
 	pr.Data = wd
 
