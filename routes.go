@@ -3,7 +3,7 @@ package main
 func (a *App) initializeRoutes() {
 
 	// endpoints
-	a.Router.HandleFunc("/test", a.testTings).Methods("GET")
+	a.Router.HandleFunc("/test", a.testTings).Methods("GET", "POST")
 	a.Router.HandleFunc("/wpa/status", a.getWPACliStatus).Methods("GET")
 	a.Router.HandleFunc("/wifiplus/switcher", a.wpSwitcher).Methods("GET")
 	a.Router.HandleFunc("/system/{action}", a.systemAction).Methods("GET", "PUT")
