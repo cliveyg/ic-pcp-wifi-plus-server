@@ -67,7 +67,6 @@ func (a *App) wifiSwitchNetwork(w http.ResponseWriter, r *http.Request) {
 
 	file, ferr := os.Open(os.Getenv("KNOWNWIFIFILE"))
 	if ferr != nil {
-		log.Debug("[[[[[[[[ 0 ]]]]]]]")
 		pr.ReturnResponse(w, err)
 		return
 	}
@@ -75,19 +74,22 @@ func (a *App) wifiSwitchNetwork(w http.ResponseWriter, r *http.Request) {
 	scanner := bufio.NewScanner(file)
 	for scanner.Scan() {
 		knownWifi := strings.Split(scanner.Text(), "+")
-		if strings.Trim(knownWifi[0], "\"") == wd.BSSID {
-			hashedp = strings.Trim(knownWifi[2], "\"")
+		if knownWifi[0] == wd.BSSID {
+			hashedp = knownWifi[2]
+			log.Debugf("Orig hashed pass from file is [%s]", hashedp)
 		}
 	}
+	/*
+		encryptPass(&wd, &err)
+		if err != nil {
+			pr.StatusCode = 400
+			pr.Message = "Unable to encrypt password"
+			pr.Data = Eek{Error: err.Error()}
+			pr.ReturnResponse(w, err)
+			return
+		}
 
-	encryptPass(&wd, &err)
-	if err != nil {
-		pr.StatusCode = 400
-		pr.Message = "Unable to encrypt password"
-		pr.Data = Eek{Error: err.Error()}
-		pr.ReturnResponse(w, err)
-		return
-	}
+	*/
 
 	if passMatch(&wd, hashedp) {
 		pr.Message = "YARP! :D"
