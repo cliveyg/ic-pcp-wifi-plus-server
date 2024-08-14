@@ -92,7 +92,7 @@ func (a *App) wifiSwitchNetwork(w http.ResponseWriter, r *http.Request) {
 	pr.StatusCode = 200
 	pr.Message = pr.Message + ". Switching networks..."
 	pr.Cmd = "nohup ./wp-wifi-switch.sh"
-	rc, err = exec.Command("sh", "-c", "cd /mnt/UserData/industrialcool-pcp-wifi-plus/pcp-scripts; nohup ./wp-wifi-switch.sh > /dev/null 2>&1 &").Output()
+	rc, err = exec.Command("sh", "-c", "cd /mnt/UserData/industrialcool-pcp-wifi-plus/pcp-scripts; ./wp-wifi-switch.sh > /dev/null 2>&1 &").Output()
 	if err != nil {
 		log.Debug("[[[[[[[[[ 0 ]]]]]]]]")
 		pr.ReturnResponse(w, err)
