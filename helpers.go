@@ -1,8 +1,10 @@
 package main
 
 import (
+	"bufio"
 	log "github.com/sirupsen/logrus"
 	"golang.org/x/crypto/bcrypt"
+	"os"
 	"os/exec"
 	"strings"
 )
@@ -29,17 +31,59 @@ func textToMap(sg string) map[string]string {
 	return output
 }
 
-func encryptPass(wd *WifiDetails, err *error) {
+func encryptPass(wd *WifiDetails, err *error) string {
 	var hashed []byte
 	hashed, *err = bcrypt.GenerateFromPassword([]byte(wd.Password), 8)
 	log.Debugf("Hash is %s", hashed)
-	wd.Password = string(hashed)
+	return string(hashed)
 }
 
-func passMatch(wd *WifiDetails, hp string) bool {
-	err := bcrypt.CompareHashAndPassword([]byte(hp), []byte(wd.Password))
-	if err == nil {
-		return true
+func passMatch(wd *WifiDetails, err *error) (bool, bool) {
+
+	var hashedp string
+	networkFound := false
+
+	file, ferr := os.Open(os.Getenv("KNOWNWIFIFILE"))
+	if ferr != nil {
+		*err = ferr
+		return false, false
 	}
-	return false
+	defer file.Close()
+	scanner := bufio.NewScanner(file)
+	for scanner.Scan() {
+		knownWifi := strings.Split(scanner.Text(), "+")
+		if knownWifi[0] == wd.BSSID {
+			hashedp = knownWifi[2]
+			networkFound = true
+			log.Debugf("Orig hashed pass from file is [%s]", hashedp)
+		}
+	}
+
+	*err = bcrypt.CompareHashAndPassword([]byte(hashedp), []byte(wd.Password))
+	if *err == nil {
+		return true, networkFound
+	}
+	return false, networkFound
+}
+
+func savedToNetConf(wd *WifiDetails, err *error) bool {
+	f, ferr := os.OpenFile(os.Getenv("KNOWNWIFIFILE"), os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
+	if ferr != nil {
+		*err = ferr
+		return false
+	}
+	hashedp := encryptPass(wd, err)
+	if *err != nil {
+		return false
+	}
+	line := wd.BSSID + "+" + wd.SSID + "+" + hashedp
+	if _, ferr = f.Write([]byte(line)); err != nil {
+		*err = ferr
+		return false
+	}
+	if ferr = f.Close(); err != nil {
+		*err = ferr
+		return false
+	}
+	return true
 }

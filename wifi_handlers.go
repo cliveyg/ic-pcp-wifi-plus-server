@@ -1,12 +1,10 @@
 package main
 
 import (
-	"bufio"
 	"encoding/json"
 	"github.com/gorilla/mux"
 	log "github.com/sirupsen/logrus"
 	"net/http"
-	"os"
 	"os/exec"
 	"strings"
 )
@@ -62,45 +60,30 @@ func (a *App) wifiSwitchNetwork(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// get known wifi details and match against incoming
-	var hashedp string
-
-	file, ferr := os.Open(os.Getenv("KNOWNWIFIFILE"))
-	if ferr != nil {
-		pr.ReturnResponse(w, err)
-		return
-	}
-	defer file.Close()
-	scanner := bufio.NewScanner(file)
-	for scanner.Scan() {
-		knownWifi := strings.Split(scanner.Text(), "+")
-		if knownWifi[0] == wd.BSSID {
-			hashedp = knownWifi[2]
-			log.Debugf("Orig hashed pass from file is [%s]", hashedp)
-		}
-	}
-	/*
-		encryptPass(&wd, &err)
-		if err != nil {
-			pr.StatusCode = 400
-			pr.Message = "Unable to encrypt password"
-			pr.Data = Eek{Error: err.Error()}
-			pr.ReturnResponse(w, err)
-			return
-		}
-
-	*/
-
-	if passMatch(&wd, hashedp) {
-		pr.Message = "YARP! :D"
+	// check if sent wifi details match details on file
+	newNet := false
+	connOk := false
+	pm, nf := passMatch(&wd, &err)
+	if pm && nf {
+		pr.Message = "Network found and passwords match"
 		pr.StatusCode = 418
-	} else {
-		pr.Message = "NARP! :("
+	} else if !pm && nf {
 		pr.StatusCode = 403
+		pr.Message = "Network found but password doesn't match"
+	} else {
+		newNet = true
+	}
+	// try to connect here
+
+	if newNet && connOk && savedToNetConf(&wd, &err) {
+		// could not save to file
+		pr.Message = "Connected but unable to save network details to file"
+		pr.ReturnResponse(w, err)
 	}
 
+	// blank pass in returned data
+	wd.Password = "********"
 	pr.Data = wd
-
 	pr.ReturnResponse(w, err)
 }
 
