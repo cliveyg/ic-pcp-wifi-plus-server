@@ -105,19 +105,20 @@ func savedToNewNetConf(wd *WifiDetails, err *error) bool {
 
 func fileSwitch(err *error) bool {
 
+	// delete old version of wifi network conf file
 	*err = os.Remove(os.Getenv("KNOWNWIFIFILE"))
 	if *err != nil {
 		return false
 	}
 	// open new version of file
-	src, fer1 := os.Open(os.Getenv("KNOWNWIFIFILE") + ".new")
+	src, fer1 := os.Open(os.Getenv("KNOWNWIFIFILE") + ".temp")
 	if fer1 != nil {
 		*err = fer1
 		return false
 	}
 	defer src.Close()
 
-	// create old filename
+	// create new file with old filename
 	dst, fer2 := os.Create(os.Getenv("KNOWNWIFIFILE"))
 	if fer2 != nil {
 		*err = fer2
@@ -131,9 +132,9 @@ func fileSwitch(err *error) bool {
 		*err = fer3
 		return false
 	}
-	log.Debugf("Copied %d bytes from new version to old filename", bytesCopied)
+	log.Debugf("Copied %d bytes from temp version to old filename", bytesCopied)
 
-	// delete .new file
+	// delete .temp file
 	*err = os.Remove(os.Getenv("KNOWNWIFIFILE"))
 	if *err != nil {
 		return false
