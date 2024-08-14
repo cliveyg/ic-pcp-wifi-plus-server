@@ -44,6 +44,7 @@ func passMatch(wd *WifiDetails, err *error, sa *[]string) (bool, bool) {
 	var hashedp string
 	networkFound := false
 	pm := false
+	var isa []string
 
 	log.Debug("[[[[[[[[[ x ]]]]]]]]")
 	file, ferr := os.Open(os.Getenv("KNOWNWIFIFILE"))
@@ -72,7 +73,7 @@ func passMatch(wd *WifiDetails, err *error, sa *[]string) (bool, bool) {
 			if *err == nil {
 				// passwords match
 				log.Debug("[[[[[[[[[ s ]]]]]]]]")
-				*sa = append(*sa, line)
+				isa = append(isa, line)
 				log.Debug("[[[[[[[[[ r ]]]]]]]]")
 				networkFound = true
 				pm = true
@@ -82,12 +83,12 @@ func passMatch(wd *WifiDetails, err *error, sa *[]string) (bool, bool) {
 			networkFound = true
 			hashedp = encryptPass(wd, err)
 			editedLine := knownWifi[0] + "+" + wd.SSID + "+" + hashedp
-			*sa = append(*sa, editedLine)
+			isa = append(isa, editedLine)
 		} else {
-			*sa = append(*sa, line)
+			isa = append(isa, line)
 		}
 	}
-
+	*sa = isa
 	return pm, networkFound
 }
 
