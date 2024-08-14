@@ -2,6 +2,8 @@ package main
 
 import (
 	"encoding/json"
+	"errors"
+	"fmt"
 	"github.com/gorilla/mux"
 	log "github.com/sirupsen/logrus"
 	"net/http"
@@ -73,19 +75,46 @@ func (a *App) wifiSwitchNetwork(w http.ResponseWriter, r *http.Request) {
 	} else {
 		newNet = true
 	}
-	// try to connect here
+	// try to switch to network
+	var rc []byte
+	pr.StatusCode = 200
+	pr.Message = pr.Message + ". Switching networks..."
+	pr.Cmd = "nohup ./wp-wifi-switch.sh"
+	rc, err = exec.Command("sh", "-c", "cd /mnt/UserData/industrialcool-pcp-wifi-plus/pcp-scripts; nohup ./wp-wifi-switch.sh > /dev/null 2>&1 &").Output()
+	if err != nil {
+		pr.ReturnResponse(w, err)
+		return
+	}
+	sr := ShellResponse{}
+	err = json.Unmarshal(rc, &sr)
+	if err != nil {
+		log.Fatal(err)
+	}
+	if sr.Status == 200 {
+		connOk = true
+	}
 
 	// if a new network or existing network but with new pass and connected ok then save to file
-	if (newNet || (nf && !pm)) && connOk && savedToNewNetConf(&wd, &err) {
+	if (newNet || (nf && !pm)) && connOk && savedToTempNetConf(&wd, &err) {
 		// saved to temp file so overwrite old file with new version
 		if !fileSwitch(&err) {
-			pr.Message = "Connected but unable to switch temp file for old"
+			if restoreFromBackup() {
+				pr.Message = "Connected but unable to create new version of conf - restored old version"
+			} else {
+				pr.Message = "Connected but unable to create new version of conf or restore from backup"
+				err = errors.New(pr.Message)
+			}
 			pr.ReturnResponse(w, err)
 		}
 
 	} else if (newNet || (nf && !pm)) && connOk {
 		pr.Message = "Connected but unable to save network details to temp file"
+		err = errors.New(pr.Message)
 		pr.ReturnResponse(w, err)
+	} else if !connOk {
+		pr.Message = fmt.Sprintf("Unable to switch to %s wifi network", wd.SSID)
+		pr.ReturnResponse(w, err)
+		return
 	}
 
 	wd.Password = "********"
@@ -146,13 +175,13 @@ func (a *App) wifiScan(pr *WifiPlusResponse, err *error) {
 	pr.StatusCode = 200
 	pr.Message = "Searching for networks..."
 	pr.Cmd = "wpa_cli scan wlan0; wpa_cli scan_results"
-	rc, *err = exec.Command("sh", "-c", "wpa_cli scan wlan0; sleep 5; wpa_cli scan_results").Output()
+	rc, *err = exec.Command("sh", "-c", "wpa_cli scan wlan0; sleep 3; wpa_cli scan_results").Output()
 	if *err != nil {
 		return
 	}
 	log.Debug(string(rc))
 	lines := strings.Split(strings.TrimSpace(string(rc)), "\n")
-	// remove first 4 lines
+	// remove first 4 lines of returned data
 	lines = append(lines[:0], lines[4:]...)
 	log.WithFields(log.Fields{"no of wifi networks": len(lines)}).Debug()
 
