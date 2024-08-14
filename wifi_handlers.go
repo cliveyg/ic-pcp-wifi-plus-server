@@ -63,7 +63,7 @@ func (a *App) wifiSwitchNetwork(w http.ResponseWriter, r *http.Request) {
 	// check if sent wifi details match details on file
 	newNet := false
 	connOk := false
-	pm, nf := passMatch(&wd, &err)
+	pm, nf := passMatch(&wd, &err, nil)
 	if pm && nf {
 		pr.Message = "Network found and passwords match"
 		pr.StatusCode = 418
@@ -75,13 +75,19 @@ func (a *App) wifiSwitchNetwork(w http.ResponseWriter, r *http.Request) {
 	}
 	// try to connect here
 
-	if newNet && connOk && savedToNetConf(&wd, &err) {
-		// could not save to file
-		pr.Message = "Connected but unable to save network details to file"
+	// if a new network or existing network but with new pass and connected ok then save to file
+	if (newNet || (nf && !pm)) && connOk && savedToNewNetConf(&wd, &err) {
+		// saved to temp file so overwrite old file with new version
+		if !fileSwitch(&err) {
+			pr.Message = "Connected but unable to switch temp file for old"
+			pr.ReturnResponse(w, err)
+		}
+
+	} else if (newNet || (nf && !pm)) && connOk {
+		pr.Message = "Connected but unable to save network details to temp file"
 		pr.ReturnResponse(w, err)
 	}
 
-	// blank pass in returned data
 	wd.Password = "********"
 	pr.Data = wd
 	pr.ReturnResponse(w, err)
