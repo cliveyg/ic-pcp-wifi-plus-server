@@ -43,6 +43,7 @@ func passMatch(wd *WifiDetails, err *error, sa *[]string) (bool, bool) {
 
 	var hashedp string
 	networkFound := false
+	pm := false
 
 	log.Debug("[[[[[[[[[ x ]]]]]]]]")
 	file, ferr := os.Open(os.Getenv("KNOWNWIFIFILE"))
@@ -52,7 +53,7 @@ func passMatch(wd *WifiDetails, err *error, sa *[]string) (bool, bool) {
 		return false, false
 	}
 	defer func(file *os.File) {
-		err := file.Close()
+		*err = file.Close()
 		if err != nil {
 			log.Debug("[[[[[[[[[ v ]]]]]]]]")
 			log.Fatal(err)
@@ -62,7 +63,8 @@ func passMatch(wd *WifiDetails, err *error, sa *[]string) (bool, bool) {
 	scanner := bufio.NewScanner(file)
 	for scanner.Scan() {
 		log.Debug("[[[[[[[[[ t ]]]]]]]]")
-		knownWifi := strings.Split(scanner.Text(), "+")
+		line := scanner.Text()
+		knownWifi := strings.Split(line, "+")
 		if knownWifi[0] == wd.BSSID {
 			hashedp = knownWifi[2]
 			*err = bcrypt.CompareHashAndPassword([]byte(hashedp), []byte(wd.Password))
@@ -70,26 +72,23 @@ func passMatch(wd *WifiDetails, err *error, sa *[]string) (bool, bool) {
 			if *err == nil {
 				// passwords match
 				log.Debug("[[[[[[[[[ s ]]]]]]]]")
-				*sa = append(*sa, scanner.Text())
+				*sa = append(*sa, line)
 				log.Debug("[[[[[[[[[ r ]]]]]]]]")
 				networkFound = true
-				return true, networkFound
+				pm = true
 			}
 			// pass no match but network found so encrypt new pass
 			// reformat line and append to sa
 			networkFound = true
 			hashedp = encryptPass(wd, err)
-			if *err != nil {
-				return false, networkFound
-			}
 			editedLine := knownWifi[0] + "+" + wd.SSID + "+" + hashedp
 			*sa = append(*sa, editedLine)
 		} else {
-			*sa = append(*sa, scanner.Text())
+			*sa = append(*sa, line)
 		}
 	}
 
-	return false, networkFound
+	return pm, networkFound
 }
 
 func savedToTempNetConf(wd *WifiDetails, err *error) bool {
