@@ -76,7 +76,7 @@ func (a *App) wifiSwitchNetwork(w http.ResponseWriter, r *http.Request) {
 	for scanner.Scan() {
 		knownWifi := strings.Split(scanner.Text(), "+")
 		if strings.Trim(knownWifi[0], "\"") == wd.BSSID {
-			hashedp = strings.Trim(knownWifi[3], "\"")
+			hashedp = strings.Trim(knownWifi[2], "\"")
 		}
 	}
 
