@@ -54,7 +54,7 @@ func passMatch(wd *WifiDetails, err *error, sa *[]string) (bool, bool) {
 	}
 	defer func(file *os.File) {
 		*err = file.Close()
-		if err != nil {
+		if *err != nil {
 			log.Debug("[[[[[[[[[ v ]]]]]]]]")
 			log.Fatal(err)
 		}
