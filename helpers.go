@@ -35,3 +35,11 @@ func encryptPass(wd *WifiDetails, err *error) {
 	log.Debugf("Hash is %s", hashed)
 	wd.Password = string(hashed)
 }
+
+func passMatch(wd *WifiDetails, hp string) bool {
+	err := bcrypt.CompareHashAndPassword([]byte(hp), []byte(wd.Password))
+	if err == nil {
+		return true
+	}
+	return false
+}
