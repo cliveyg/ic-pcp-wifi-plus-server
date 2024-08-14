@@ -49,8 +49,6 @@ func (a *App) wifiAction(w http.ResponseWriter, r *http.Request) {
 
 func (a *App) wifiSwitchNetwork(w http.ResponseWriter, r *http.Request) {
 
-	log.Debug("[[[[[[[[[ a ]]]]]]]]")
-
 	pr := WifiPlusResponse{
 		Function: "wifiSwitch",
 		Message:  "Switch wifi networks",
@@ -58,30 +56,22 @@ func (a *App) wifiSwitchNetwork(w http.ResponseWriter, r *http.Request) {
 	wd := WifiDetails{}
 	err := json.NewDecoder(r.Body).Decode(&wd)
 	if err != nil {
-		log.Debug("[[[[[[[[[ y ]]]]]]]]")
 		pr.StatusCode = 400
 		pr.Message = "Incorrect input"
 		pr.Data = Eek{Error: err.Error()}
 		pr.ReturnResponse(w, err)
 		return
 	}
-	log.Debug("[[[[[[[[[ z ]]]]]]]]")
 	// check if sent wifi details match details on file
 	newNet := false
 	connOk := false
 	var sa []string
 	pm, nf := passMatch(&wd, &err, &sa)
 
-	log.Debug("[[[[[[[[[ 111 ]]]]]]]]")
-	log.Debugf("pm[%t] and nf[%t]", pm, nf)
-	log.Debug(sa)
-	log.Debug("Stoopid nils and poniters")
 	if pm && nf {
-		log.Debug("[[[[[[[[[ c ]]]]]]]]")
 		pr.Message = "Network found and passwords match"
 		pr.StatusCode = 418
 	} else if !pm && nf {
-		log.Debug("[[[[[[[[[ d ]]]]]]]]")
 		pr.StatusCode = 403
 		pr.Message = "Network found but password doesn't match"
 	} else {
@@ -95,26 +85,20 @@ func (a *App) wifiSwitchNetwork(w http.ResponseWriter, r *http.Request) {
 	//rc, err = exec.Command("sh", "-c", "cd /mnt/UserData/industrialcool-pcp-wifi-plus/pcp-scripts; nohup ./wp-wifi-switch.sh > /dev/null 2>&1 &").Output()
 	rc, err = exec.Command("sh", "-c", "cd /mnt/UserData/industrialcool-pcp-wifi-plus/pcp-scripts; ./wp-wifi-switch.sh").Output()
 	if err != nil {
-		log.Debug("[[[[[[[[[ 0 ]]]]]]]]")
 		pr.ReturnResponse(w, err)
 		return
 	}
 	sr := ShellResponse{}
 	err = json.Unmarshal(rc, &sr)
 	if err != nil {
-		log.Debug("[[[[[[[[[ 1 ]]]]]]]]")
-		log.Debug(rc)
 		log.Fatal(err)
 	}
-	log.Debug("[[[[[[[[[ b ]]]]]]]]")
-	log.Debug(sr)
 	if sr.Status == 200 {
 		connOk = true
 	}
 
 	// if a new network or existing network but with new pass and connected ok then save to file
 	if (newNet || (nf && !pm)) && connOk && savedToTempNetConf(&wd, &err) {
-		log.Debug("[[[[[[[[[ e ]]]]]]]]")
 		// saved to temp file so overwrite old file with new version
 		if !fileSwitch(&err) {
 			if restoreFromBackup() {
@@ -127,24 +111,20 @@ func (a *App) wifiSwitchNetwork(w http.ResponseWriter, r *http.Request) {
 		}
 
 	} else if (newNet || (nf && !pm)) && connOk {
-		log.Debug("[[[[[[[[[ f ]]]]]]]]")
 		pr.Message = "Connected but unable to save network details to temp file"
 		err = errors.New(pr.Message)
 		pr.ReturnResponse(w, err)
 	} else if !connOk {
-		log.Debug("[[[[[[[[[ g ]]]]]]]]")
-		pr.Message = fmt.Sprintf("Unable to switch to %s wifi network", wd.SSID)
+		pr.Message = fmt.Sprintf("Unable to switch to [%s] wifi network", wd.SSID)
 		pr.ReturnResponse(w, err)
 		return
 	}
-	log.Debug("[[[[[[[[[ h ]]]]]]]]")
 	wd.Password = "********"
 	pr.Data = wd
 	pr.ReturnResponse(w, err)
 }
 
 func (a *App) wifiStopStart(pr *WifiPlusResponse, err *error) {
-	log.Debug("Woop")
 	pr.Function = "wifiStopStart"
 
 }
