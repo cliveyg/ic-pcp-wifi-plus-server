@@ -91,6 +91,11 @@ type ShellSwitchInfo struct {
 	Res interface{} `json:"data,omitempty"`
 }
 
+type ShellResponse struct {
+	Status  int    `json:"status"`
+	Message string `json:"message"`
+}
+
 type SwitcherInfo struct {
 	APMode     string `json:"ap_mode"`
 	APAddress  string `json:"ap_address"`

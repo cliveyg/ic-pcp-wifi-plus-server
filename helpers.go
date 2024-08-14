@@ -79,7 +79,7 @@ func passMatch(wd *WifiDetails, err *error, sa *[]string) (bool, bool) {
 	return false, networkFound
 }
 
-func savedToNewNetConf(wd *WifiDetails, err *error) bool {
+func savedToTempNetConf(wd *WifiDetails, err *error) bool {
 
 	var sa []string
 	passMatch(wd, err, &sa)
@@ -105,39 +105,82 @@ func savedToNewNetConf(wd *WifiDetails, err *error) bool {
 
 func fileSwitch(err *error) bool {
 
-	// delete old version of wifi network conf file
-	*err = os.Remove(os.Getenv("KNOWNWIFIFILE"))
-	if *err != nil {
-		return false
-	}
-	// open new version of file
-	src, fer1 := os.Open(os.Getenv("KNOWNWIFIFILE") + ".temp")
-	if fer1 != nil {
-		*err = fer1
-		return false
-	}
-	defer src.Close()
-
-	// create new file with old filename
-	dst, fer2 := os.Create(os.Getenv("KNOWNWIFIFILE"))
-	if fer2 != nil {
-		*err = fer2
+	// create or overwrite file with ending of .backup
+	dst, fErr1 := os.Create(os.Getenv("KNOWNWIFIFILE") + ".backup")
+	if fErr1 != nil {
+		*err = fErr1
 		return false
 	}
 	defer dst.Close()
 
-	// copy source to destination
-	bytesCopied, fer3 := io.Copy(dst, src)
-	if fer3 != nil {
-		*err = fer3
+	// open original file
+	src, fErr2 := os.Open(os.Getenv("KNOWNWIFIFILE"))
+	if fErr2 != nil {
+		*err = fErr2
 		return false
 	}
-	log.Debugf("Copied %d bytes from temp version to old filename", bytesCopied)
+	defer src.Close()
+
+	// copy source (original file) to destination (.backup)
+	bytesCopied, fErr3 := io.Copy(dst, src)
+	if fErr3 != nil {
+		*err = fErr3
+		return false
+	}
+
+	// open temp file created by savedToTempNetConf
+	src, fErr2 = os.Open(os.Getenv("KNOWNWIFIFILE") + ".temp")
+	if fErr2 != nil {
+		*err = fErr2
+		return false
+	}
+	defer src.Close()
+
+	// truncate orig file
+	dst, fErr1 = os.Create(os.Getenv("KNOWNWIFIFILE"))
+	if fErr1 != nil {
+		*err = fErr1
+		return false
+	}
+	defer dst.Close()
+
+	// copy source (.temp) to destination (original)
+	bytesCopied, fErr3 = io.Copy(dst, src)
+	if fErr3 != nil {
+		*err = fErr3
+		return false
+	}
+	log.Debugf("Copied %d bytes from .temp version to original file", bytesCopied)
 
 	// delete .temp file
-	*err = os.Remove(os.Getenv("KNOWNWIFIFILE"))
+	*err = os.Remove(os.Getenv("KNOWNWIFIFILE") + ".temp")
 	if *err != nil {
 		return false
 	}
+	return true
+}
+
+func restoreFromBackup() bool {
+
+	// truncate original file
+	dst, fErr1 := os.Create(os.Getenv("KNOWNWIFIFILE"))
+	if fErr1 != nil {
+		log.Fatal(fErr1)
+	}
+	defer dst.Close()
+
+	// open backup file
+	src, fErr2 := os.Open(os.Getenv("KNOWNWIFIFILE") + ".backup")
+	if fErr2 != nil {
+		log.Fatal(fErr2)
+	}
+	defer src.Close()
+
+	// copy source (backup) to destination (original)
+	bytesCopied, fErr3 := io.Copy(dst, src)
+	if fErr3 != nil {
+		log.Fatal(fErr3)
+	}
+	log.Debugf("Restored %d bytes from .backup version to original file", bytesCopied)
 	return true
 }
