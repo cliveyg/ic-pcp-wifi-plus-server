@@ -71,6 +71,8 @@ func passMatch(wd *WifiDetails, err *error, sa *[]string) (bool, bool) {
 				// passwords match
 				log.Debug("[[[[[[[[[ s ]]]]]]]]")
 				*sa = append(*sa, scanner.Text())
+				log.Debug("[[[[[[[[[ r ]]]]]]]]")
+				networkFound = true
 				return true, networkFound
 			}
 			// pass no match but network found so encrypt new pass
