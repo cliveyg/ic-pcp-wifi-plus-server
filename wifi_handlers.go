@@ -69,10 +69,13 @@ func (a *App) wifiSwitchNetwork(w http.ResponseWriter, r *http.Request) {
 	// check if sent wifi details match details on file
 	newNet := false
 	connOk := false
-	pm, nf := passMatch(&wd, &err, nil)
+	var sa []string
+	pm, nf := passMatch(&wd, &err, &sa)
 
 	log.Debug("[[[[[[[[[ 111 ]]]]]]]]")
-	log.Debugf("pm[%b] and nf[%b]", pm, nf)
+	log.Debugf("pm[%t] and nf[%t]", pm, nf)
+	log.Debug(sa)
+	log.Debug("Stoopid nils and poniters")
 	if pm && nf {
 		log.Debug("[[[[[[[[[ c ]]]]]]]]")
 		pr.Message = "Network found and passwords match"
