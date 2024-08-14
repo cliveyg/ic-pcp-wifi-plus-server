@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"github.com/gorilla/mux"
 	log "github.com/sirupsen/logrus"
 	"net/http"
@@ -42,6 +43,35 @@ func (a *App) wifiAction(w http.ResponseWriter, r *http.Request) {
 	log.WithFields(log.Fields{"Full response is ": pr}).Debug()
 	pr.ReturnResponse(w, err)
 
+}
+
+func (a *App) wifiSwitchNetwork(w http.ResponseWriter, r *http.Request) {
+	pr := WifiPlusResponse{
+		Function: "wifiSwitch",
+		Message:  "Switch wifi networks",
+	}
+	wd := WifiDetails{}
+	err := json.NewDecoder(r.Body).Decode(&wd)
+	if err != nil {
+		pr.StatusCode = 400
+		pr.Message = "Incorrect input"
+		pr.Data = Eek{Error: err.Error()}
+		pr.ReturnResponse(w, err)
+		return
+	}
+
+	encryptPass(&wd, &err)
+	if err != nil {
+		pr.StatusCode = 400
+		pr.Message = "Unable to encrypt password"
+		pr.Data = Eek{Error: err.Error()}
+		pr.ReturnResponse(w, err)
+		return
+	}
+	pr.StatusCode = 418
+	pr.Data = wd
+
+	pr.ReturnResponse(w, err)
 }
 
 func (a *App) wifiStopStart(pr *WifiPlusResponse, err *error) {

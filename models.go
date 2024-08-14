@@ -81,6 +81,12 @@ type WifiPlusResponse struct {
 	Data       interface{} `json:"data,omitempty"`
 }
 
+type WifiDetails struct {
+	BSSID    string `json:"bssid"`
+	SSID     string `json:"ssid"`
+	Password string `json:"password"`
+}
+
 type ShellSwitchInfo struct {
 	Res interface{} `json:"data,omitempty"`
 }
