@@ -2,6 +2,7 @@ package main
 
 import (
 	log "github.com/sirupsen/logrus"
+	"golang.org/x/crypto/bcrypt"
 	"os/exec"
 	"strings"
 )
@@ -26,4 +27,11 @@ func textToMap(sg string) map[string]string {
 		output[kv[0]] = rs
 	}
 	return output
+}
+
+func encryptPass(wd *WifiDetails, err *error) {
+	var hashed []byte
+	hashed, *err = bcrypt.GenerateFromPassword([]byte(wd.Password), 8)
+	log.Debugf("Hash is %s", hashed)
+	wd.Password = string(hashed)
 }
