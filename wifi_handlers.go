@@ -48,6 +48,9 @@ func (a *App) wifiAction(w http.ResponseWriter, r *http.Request) {
 }
 
 func (a *App) wifiSwitchNetwork(w http.ResponseWriter, r *http.Request) {
+
+	log.Debug("[[[[[[[[[ a ]]]]]]]]")
+
 	pr := WifiPlusResponse{
 		Function: "wifiSwitch",
 		Message:  "Switch wifi networks",
@@ -67,9 +70,11 @@ func (a *App) wifiSwitchNetwork(w http.ResponseWriter, r *http.Request) {
 	connOk := false
 	pm, nf := passMatch(&wd, &err, nil)
 	if pm && nf {
+		log.Debug("[[[[[[[[[ c ]]]]]]]]")
 		pr.Message = "Network found and passwords match"
 		pr.StatusCode = 418
 	} else if !pm && nf {
+		log.Debug("[[[[[[[[[ d ]]]]]]]]")
 		pr.StatusCode = 403
 		pr.Message = "Network found but password doesn't match"
 	} else {
@@ -92,12 +97,15 @@ func (a *App) wifiSwitchNetwork(w http.ResponseWriter, r *http.Request) {
 		log.Debug("[[[[[[[[[ 1 ]]]]]]]]")
 		log.Fatal(err)
 	}
+	log.Debug("[[[[[[[[[ b ]]]]]]]]")
+	log.Debug(sr)
 	if sr.Status == 200 {
 		connOk = true
 	}
 
 	// if a new network or existing network but with new pass and connected ok then save to file
 	if (newNet || (nf && !pm)) && connOk && savedToTempNetConf(&wd, &err) {
+		log.Debug("[[[[[[[[[ e ]]]]]]]]")
 		// saved to temp file so overwrite old file with new version
 		if !fileSwitch(&err) {
 			if restoreFromBackup() {
@@ -110,15 +118,17 @@ func (a *App) wifiSwitchNetwork(w http.ResponseWriter, r *http.Request) {
 		}
 
 	} else if (newNet || (nf && !pm)) && connOk {
+		log.Debug("[[[[[[[[[ f ]]]]]]]]")
 		pr.Message = "Connected but unable to save network details to temp file"
 		err = errors.New(pr.Message)
 		pr.ReturnResponse(w, err)
 	} else if !connOk {
+		log.Debug("[[[[[[[[[ g ]]]]]]]]")
 		pr.Message = fmt.Sprintf("Unable to switch to %s wifi network", wd.SSID)
 		pr.ReturnResponse(w, err)
 		return
 	}
-
+	log.Debug("[[[[[[[[[ h ]]]]]]]]")
 	wd.Password = "********"
 	pr.Data = wd
 	pr.ReturnResponse(w, err)
