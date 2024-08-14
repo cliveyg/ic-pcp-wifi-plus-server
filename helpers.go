@@ -61,6 +61,7 @@ func passMatch(wd *WifiDetails, err *error, sa *[]string) (bool, bool) {
 	log.Debug("[[[[[[[[[ u ]]]]]]]]")
 	scanner := bufio.NewScanner(file)
 	for scanner.Scan() {
+		log.Debug("[[[[[[[[[ t ]]]]]]]]")
 		knownWifi := strings.Split(scanner.Text(), "+")
 		if knownWifi[0] == wd.BSSID {
 			hashedp = knownWifi[2]
@@ -68,6 +69,7 @@ func passMatch(wd *WifiDetails, err *error, sa *[]string) (bool, bool) {
 			log.Debugf("Orig hashed pass from file is [%s]", hashedp)
 			if *err == nil {
 				// passwords match
+				log.Debug("[[[[[[[[[ s ]]]]]]]]")
 				*sa = append(*sa, scanner.Text())
 				return true, networkFound
 			}
