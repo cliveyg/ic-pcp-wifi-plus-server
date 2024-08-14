@@ -35,7 +35,6 @@ func textToMap(sg string) map[string]string {
 func encryptPass(wd *WifiDetails, err *error) string {
 	var hashed []byte
 	hashed, *err = bcrypt.GenerateFromPassword([]byte(wd.Password), 8)
-	log.Debugf("Hash is %s", hashed)
 	return string(hashed)
 }
 
@@ -44,26 +43,21 @@ func passMatch(wd *WifiDetails, err *error, sa *[]string) (bool, bool) {
 	var hashedp string
 	networkFound := false
 	pm := false
-	//var isa []string
 
-	log.Debug("[[[[[[[[[ x ]]]]]]]]")
 	file, ferr := os.Open(os.Getenv("KNOWNWIFIFILE"))
 	if ferr != nil {
-		log.Debug("[[[[[[[[[ w ]]]]]]]]")
 		*err = ferr
 		return false, false
 	}
 	defer func(file *os.File) {
 		*err = file.Close()
 		if *err != nil {
-			log.Debug("[[[[[[[[[ v ]]]]]]]]")
 			log.Fatal(err)
 		}
 	}(file)
-	log.Debug("[[[[[[[[[ u ]]]]]]]]")
+
 	scanner := bufio.NewScanner(file)
 	for scanner.Scan() {
-		log.Debug("[[[[[[[[[ t ]]]]]]]]")
 		line := scanner.Text()
 		knownWifi := strings.Split(line, "+")
 		if knownWifi[0] == wd.BSSID {
@@ -72,9 +66,7 @@ func passMatch(wd *WifiDetails, err *error, sa *[]string) (bool, bool) {
 			log.Debugf("Orig hashed pass from file is [%s]", hashedp)
 			if *err == nil {
 				// passwords match
-				log.Debug("[[[[[[[[[ s ]]]]]]]]")
 				*sa = append(*sa, line)
-				log.Debug("[[[[[[[[[ r ]]]]]]]]")
 				networkFound = true
 				pm = true
 			}
@@ -88,7 +80,6 @@ func passMatch(wd *WifiDetails, err *error, sa *[]string) (bool, bool) {
 			*sa = append(*sa, line)
 		}
 	}
-	log.Debug("[[[[[[[[[ AARGH ]]]]]]]]")
 	return pm, networkFound
 }
 
@@ -96,23 +87,19 @@ func savedToTempNetConf(wd *WifiDetails, err *error) bool {
 
 	var sa []string
 	passMatch(wd, err, &sa)
-	log.Debug("[[[[[[[[[ 3 ]]]]]]]]")
 
 	f, ferr := os.OpenFile(os.Getenv("KNOWNWIFIFILE")+".temp", os.O_CREATE|os.O_WRONLY, 0644)
 	if ferr != nil {
-		log.Debug("[[[[[[[[[ 4 ]]]]]]]]")
 		*err = ferr
 		return false
 	}
 	for _, line := range sa {
 		if _, ferr = f.Write([]byte(line)); err != nil {
-			log.Debug("[[[[[[[[[ 5 ]]]]]]]]")
 			*err = ferr
 			return false
 		}
 	}
 	if ferr = f.Close(); err != nil {
-		log.Debug("[[[[[[[[[ 6 ]]]]]]]]")
 		*err = ferr
 		return false
 	}
@@ -122,7 +109,6 @@ func savedToTempNetConf(wd *WifiDetails, err *error) bool {
 
 func fileSwitch(err *error) bool {
 
-	log.Debug("[[[[[[[[[ 7 ]]]]]]]]")
 	// create or overwrite file with ending of .backup
 	dst, fErr1 := os.Create(os.Getenv("KNOWNWIFIFILE") + ".backup")
 	if fErr1 != nil {

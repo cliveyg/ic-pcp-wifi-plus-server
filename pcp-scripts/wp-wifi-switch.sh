@@ -20,7 +20,7 @@ if [ $DBUG -eq 1 ]; then
     sudo touch $LOG
   fi
   echo "[wp-wifi-switch.sh] ------------------------------" >> $LOG
-  echo '{ "status": 418, "message": "have loggy" }'
+  echo '{ "status": 200, "message": "have loggy" }'
   #echo -n "[wp-wifi-switch.shh] " >> $LOG
   #echo $(/usr/local/etc/init.d/wifi wlan0 stop) >> $LOG
   #echo -n "[wp-wifi-switch.sh] " >> $LOG
