@@ -35,6 +35,7 @@ func textToMap(sg string) map[string]string {
 func encryptPass(wd *WifiDetails, err *error) string {
 	var hashed []byte
 	hashed, *err = bcrypt.GenerateFromPassword([]byte(wd.Password), 8)
+	log.Debugf("Hashed is %s", hashed)
 	return string(hashed)
 }
 
@@ -63,15 +64,15 @@ func passMatch(wd *WifiDetails, err *error, sa *[]string) (bool, bool) {
 		if knownWifi[0] == wd.BSSID {
 			hashedp = knownWifi[2]
 			*err = bcrypt.CompareHashAndPassword([]byte(hashedp), []byte(wd.Password))
-			log.Debugf("Orig hashed pass from file is [%s]", hashedp)
 			if *err == nil {
 				// passwords match
 				*sa = append(*sa, line)
 				networkFound = true
 				pm = true
 			}
-			// pass no match but network found so encrypt new pass
-			// reformat line and append to sa
+			// passwords don't match but network found so encrypt new pass
+			// reformat line and append to sa. also use wd ssid in case this
+			// has changed too
 			networkFound = true
 			hashedp = encryptPass(wd, err)
 			editedLine := knownWifi[0] + "+" + wd.SSID + "+" + hashedp
