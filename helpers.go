@@ -49,7 +49,12 @@ func passMatch(wd *WifiDetails, err *error, sa *[]string) (bool, bool) {
 		*err = ferr
 		return false, false
 	}
-	defer file.Close()
+	defer func(file *os.File) {
+		err := file.Close()
+		if err != nil {
+			log.Fatal(err)
+		}
+	}(file)
 	scanner := bufio.NewScanner(file)
 	for scanner.Scan() {
 		knownWifi := strings.Split(scanner.Text(), "+")
@@ -83,19 +88,23 @@ func savedToTempNetConf(wd *WifiDetails, err *error) bool {
 
 	var sa []string
 	passMatch(wd, err, &sa)
+	log.Debug("[[[[[[[[[ 3 ]]]]]]]]")
 
 	f, ferr := os.OpenFile(os.Getenv("KNOWNWIFIFILE")+".temp", os.O_CREATE|os.O_WRONLY, 0644)
 	if ferr != nil {
+		log.Debug("[[[[[[[[[ 4 ]]]]]]]]")
 		*err = ferr
 		return false
 	}
 	for _, line := range sa {
 		if _, ferr = f.Write([]byte(line)); err != nil {
+			log.Debug("[[[[[[[[[ 5 ]]]]]]]]")
 			*err = ferr
 			return false
 		}
 	}
 	if ferr = f.Close(); err != nil {
+		log.Debug("[[[[[[[[[ 6 ]]]]]]]]")
 		*err = ferr
 		return false
 	}
@@ -105,13 +114,19 @@ func savedToTempNetConf(wd *WifiDetails, err *error) bool {
 
 func fileSwitch(err *error) bool {
 
+	log.Debug("[[[[[[[[[ 7 ]]]]]]]]")
 	// create or overwrite file with ending of .backup
 	dst, fErr1 := os.Create(os.Getenv("KNOWNWIFIFILE") + ".backup")
 	if fErr1 != nil {
 		*err = fErr1
 		return false
 	}
-	defer dst.Close()
+	defer func(dst *os.File) {
+		err := dst.Close()
+		if err != nil {
+			log.Fatal(err)
+		}
+	}(dst)
 
 	// open original file
 	src, fErr2 := os.Open(os.Getenv("KNOWNWIFIFILE"))
@@ -119,7 +134,12 @@ func fileSwitch(err *error) bool {
 		*err = fErr2
 		return false
 	}
-	defer src.Close()
+	defer func(src *os.File) {
+		err := src.Close()
+		if err != nil {
+			log.Fatal(err)
+		}
+	}(src)
 
 	// copy source (original file) to destination (.backup)
 	bytesCopied, fErr3 := io.Copy(dst, src)
@@ -134,7 +154,12 @@ func fileSwitch(err *error) bool {
 		*err = fErr2
 		return false
 	}
-	defer src.Close()
+	defer func(src *os.File) {
+		err := src.Close()
+		if err != nil {
+			log.Fatal(err)
+		}
+	}(src)
 
 	// truncate orig file
 	dst, fErr1 = os.Create(os.Getenv("KNOWNWIFIFILE"))
@@ -142,7 +167,12 @@ func fileSwitch(err *error) bool {
 		*err = fErr1
 		return false
 	}
-	defer dst.Close()
+	defer func(dst *os.File) {
+		err := dst.Close()
+		if err != nil {
+			log.Fatal(err)
+		}
+	}(dst)
 
 	// copy source (.temp) to destination (original)
 	bytesCopied, fErr3 = io.Copy(dst, src)
@@ -167,14 +197,24 @@ func restoreFromBackup() bool {
 	if fErr1 != nil {
 		log.Fatal(fErr1)
 	}
-	defer dst.Close()
+	defer func(dst *os.File) {
+		err := dst.Close()
+		if err != nil {
+			log.Fatal(err)
+		}
+	}(dst)
 
 	// open backup file
 	src, fErr2 := os.Open(os.Getenv("KNOWNWIFIFILE") + ".backup")
 	if fErr2 != nil {
 		log.Fatal(fErr2)
 	}
-	defer src.Close()
+	defer func(src *os.File) {
+		err := src.Close()
+		if err != nil {
+			log.Fatal(err)
+		}
+	}(src)
 
 	// copy source (backup) to destination (original)
 	bytesCopied, fErr3 := io.Copy(dst, src)

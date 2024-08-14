@@ -82,12 +82,14 @@ func (a *App) wifiSwitchNetwork(w http.ResponseWriter, r *http.Request) {
 	pr.Cmd = "nohup ./wp-wifi-switch.sh"
 	rc, err = exec.Command("sh", "-c", "cd /mnt/UserData/industrialcool-pcp-wifi-plus/pcp-scripts; nohup ./wp-wifi-switch.sh > /dev/null 2>&1 &").Output()
 	if err != nil {
+		log.Debug("[[[[[[[[[ 0 ]]]]]]]]")
 		pr.ReturnResponse(w, err)
 		return
 	}
 	sr := ShellResponse{}
 	err = json.Unmarshal(rc, &sr)
 	if err != nil {
+		log.Debug("[[[[[[[[[ 1 ]]]]]]]]")
 		log.Fatal(err)
 	}
 	if sr.Status == 200 {
