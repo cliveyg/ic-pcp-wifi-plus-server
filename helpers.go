@@ -44,6 +44,7 @@ func passMatch(wd *WifiDetails, err *error, sa *[]string) (bool, bool) {
 	var hashedp string
 	networkFound := false
 
+	log.Debug("[[[[[[[[[ x ]]]]]]]]")
 	file, ferr := os.Open(os.Getenv("KNOWNWIFIFILE"))
 	if ferr != nil {
 		*err = ferr
@@ -70,11 +71,11 @@ func passMatch(wd *WifiDetails, err *error, sa *[]string) (bool, bool) {
 			// pass no match but network found so encrypt new pass
 			// reformat line and append to sa
 			networkFound = true
-			hashedp := encryptPass(wd, err)
+			hashedp = encryptPass(wd, err)
 			if *err != nil {
 				return false, networkFound
 			}
-			editedLine := knownWifi[0] + "+" + knownWifi[1] + "+" + hashedp
+			editedLine := knownWifi[0] + "+" + wd.SSID + "+" + hashedp
 			*sa = append(*sa, editedLine)
 		} else {
 			*sa = append(*sa, scanner.Text())

@@ -58,13 +58,14 @@ func (a *App) wifiSwitchNetwork(w http.ResponseWriter, r *http.Request) {
 	wd := WifiDetails{}
 	err := json.NewDecoder(r.Body).Decode(&wd)
 	if err != nil {
+		log.Debug("[[[[[[[[[ y ]]]]]]]]")
 		pr.StatusCode = 400
 		pr.Message = "Incorrect input"
 		pr.Data = Eek{Error: err.Error()}
 		pr.ReturnResponse(w, err)
 		return
 	}
-
+	log.Debug("[[[[[[[[[ z ]]]]]]]]")
 	// check if sent wifi details match details on file
 	newNet := false
 	connOk := false
