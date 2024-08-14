@@ -14,12 +14,17 @@ set +a
 
 LOG=$LOGFILE
 
+ssid=$1
+pass=$2
+
 if [ $DBUG -eq 1 ]; then
 
   if [ ! -f $LOG ]; then
     sudo touch $LOG
   fi
   echo "[wp-wifi-switch.sh] ------------------------------" >> $LOG
+  echo "[wp-wifi-switch.sh] SSID is [$ssid]" >> $LOG
+  echo "[wp-wifi-switch.sh] Pass is [$pass]" >> $LOG
   echo '{ "status": 200, "message": "have loggy" }'
   #echo -n "[wp-wifi-switch.shh] " >> $LOG
   #echo $(/usr/local/etc/init.d/wifi wlan0 stop) >> $LOG

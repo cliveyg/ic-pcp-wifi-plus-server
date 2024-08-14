@@ -83,7 +83,8 @@ func (a *App) wifiSwitchNetwork(w http.ResponseWriter, r *http.Request) {
 	pr.Message = pr.Message + ". Switching networks..."
 	pr.Cmd = "nohup ./wp-wifi-switch.sh"
 	//rc, err = exec.Command("sh", "-c", "cd /mnt/UserData/industrialcool-pcp-wifi-plus/pcp-scripts; nohup ./wp-wifi-switch.sh > /dev/null 2>&1 &").Output()
-	rc, err = exec.Command("sh", "-c", "cd /mnt/UserData/industrialcool-pcp-wifi-plus/pcp-scripts; ./wp-wifi-switch.sh").Output()
+	cl := fmt.Sprintf("./wp-wifi-switch.sh %s %s", wd.SSID, wd.Password)
+	rc, err = exec.Command("sh", "-c", "cd /mnt/UserData/industrialcool-pcp-wifi-plus/pcp-scripts; "+cl).Output()
 	if err != nil {
 		pr.ReturnResponse(w, err)
 		return
