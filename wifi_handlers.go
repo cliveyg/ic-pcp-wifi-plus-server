@@ -1,10 +1,12 @@
 package main
 
 import (
+	"bufio"
 	"encoding/json"
 	"github.com/gorilla/mux"
 	log "github.com/sirupsen/logrus"
 	"net/http"
+	"os"
 	"os/exec"
 	"strings"
 )
@@ -62,22 +64,21 @@ func (a *App) wifiSwitchNetwork(w http.ResponseWriter, r *http.Request) {
 
 	// get known wifi details and match against incoming
 	var hashedp string
-	/*
-		file, ferr := os.Open(os.Getenv("KNOWNWIFIFILE"))
-		if ferr != nil {
-			pr.ReturnResponse(w, err)
-			return
+
+	file, ferr := os.Open(os.Getenv("KNOWNWIFIFILE"))
+	if ferr != nil {
+		pr.ReturnResponse(w, err)
+		return
+	}
+	defer file.Close()
+	scanner := bufio.NewScanner(file)
+	for scanner.Scan() {
+		knownWifi := strings.Split(scanner.Text(), "+")
+		if knownWifi[0] == wd.BSSID {
+			hashedp = knownWifi[3]
 		}
-		defer file.Close()
-		scanner := bufio.NewScanner(file)
-		for scanner.Scan() {
-			knownWifi := strings.Split(scanner.Text(), "+")
-			if knownWifi[0] == wd.BSSID {
-				hashedp = knownWifi[3]
-			}
-		}
-	*/
-	cp := wd.Password
+	}
+
 	encryptPass(&wd, &err)
 	if err != nil {
 		pr.StatusCode = 400
@@ -86,17 +87,15 @@ func (a *App) wifiSwitchNetwork(w http.ResponseWriter, r *http.Request) {
 		pr.ReturnResponse(w, err)
 		return
 	}
-	hashedp = wd.Password
-	// clear pass saved from earlier
-	wd.Password = cp
 
 	if passMatch(&wd, hashedp) {
 		pr.Message = "YARP! :D"
+		pr.StatusCode = 418
 	} else {
 		pr.Message = "NARP! :("
+		pr.StatusCode = 403
 	}
 
-	pr.StatusCode = 418
 	pr.Data = wd
 
 	pr.ReturnResponse(w, err)
