@@ -47,15 +47,18 @@ func passMatch(wd *WifiDetails, err *error, sa *[]string) (bool, bool) {
 	log.Debug("[[[[[[[[[ x ]]]]]]]]")
 	file, ferr := os.Open(os.Getenv("KNOWNWIFIFILE"))
 	if ferr != nil {
+		log.Debug("[[[[[[[[[ w ]]]]]]]]")
 		*err = ferr
 		return false, false
 	}
 	defer func(file *os.File) {
 		err := file.Close()
 		if err != nil {
+			log.Debug("[[[[[[[[[ v ]]]]]]]]")
 			log.Fatal(err)
 		}
 	}(file)
+	log.Debug("[[[[[[[[[ u ]]]]]]]]")
 	scanner := bufio.NewScanner(file)
 	for scanner.Scan() {
 		knownWifi := strings.Split(scanner.Text(), "+")
