@@ -66,4 +66,4 @@ else
 
 fi
 
-echo "{ \"beep\": \"boop\" }"
+#echo "{ \"beep\": \"boop\" }"
