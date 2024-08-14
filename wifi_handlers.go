@@ -74,11 +74,9 @@ func (a *App) wifiSwitchNetwork(w http.ResponseWriter, r *http.Request) {
 	defer file.Close()
 	scanner := bufio.NewScanner(file)
 	for scanner.Scan() {
-		log.Debug("[[[[[[[[ 1 ]]]]]]]")
 		knownWifi := strings.Split(scanner.Text(), "+")
-		if knownWifi[0] == wd.BSSID {
-			log.Debug("[[[[[[[[ 2 ]]]]]]]")
-			hashedp = knownWifi[3]
+		if strings.Trim(knownWifi[0], "\"") == wd.BSSID {
+			hashedp = strings.Trim(knownWifi[3], "\"")
 		}
 	}
 
