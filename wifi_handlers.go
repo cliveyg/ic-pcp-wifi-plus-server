@@ -60,8 +60,24 @@ func (a *App) wifiSwitchNetwork(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	//cp := wd.Password
-	cp := "badpass"
+	// get known wifi details and match against incoming
+	var hashedp string
+	/*
+		file, ferr := os.Open(os.Getenv("KNOWNWIFIFILE"))
+		if ferr != nil {
+			pr.ReturnResponse(w, err)
+			return
+		}
+		defer file.Close()
+		scanner := bufio.NewScanner(file)
+		for scanner.Scan() {
+			knownWifi := strings.Split(scanner.Text(), "+")
+			if knownWifi[0] == wd.BSSID {
+				hashedp = knownWifi[3]
+			}
+		}
+	*/
+	cp := wd.Password
 	encryptPass(&wd, &err)
 	if err != nil {
 		pr.StatusCode = 400
@@ -70,13 +86,11 @@ func (a *App) wifiSwitchNetwork(w http.ResponseWriter, r *http.Request) {
 		pr.ReturnResponse(w, err)
 		return
 	}
-
-	// hashed pass returned from encryptPass
-	hp := wd.Password
+	hashedp = wd.Password
 	// clear pass saved from earlier
 	wd.Password = cp
 
-	if passMatch(&wd, hp) {
+	if passMatch(&wd, hashedp) {
 		pr.Message = "YARP! :D"
 	} else {
 		pr.Message = "NARP! :("
