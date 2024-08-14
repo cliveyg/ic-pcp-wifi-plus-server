@@ -60,7 +60,8 @@ func (a *App) wifiSwitchNetwork(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	cp := wd.Password
+	//cp := wd.Password
+	cp := "badpass"
 	encryptPass(&wd, &err)
 	if err != nil {
 		pr.StatusCode = 400
