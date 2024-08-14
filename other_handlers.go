@@ -12,7 +12,7 @@ import (
 
 // ----------------------------------------------------------------------------
 
-func (a *App) testTings(w http.ResponseWriter, _ *http.Request) {
+func (a *App) testTings(w http.ResponseWriter, r *http.Request) {
 
 	log.Debug("-----------------------------")
 	log.Debug("In testTings")
@@ -24,6 +24,21 @@ func (a *App) testTings(w http.ResponseWriter, _ *http.Request) {
 		StatusCode: 418,
 		Message:    "testing whoami stuff",
 	}
+	wd := WifiDetails{}
+	err := json.NewDecoder(r.Body).Decode(&wd)
+	if err != nil {
+		pr.StatusCode = 400
+		pr.Message = "Incorrect input"
+		pr.Data = Eek{Error: err.Error()}
+		pr.ReturnResponse(w, err)
+		return
+	}
+
+	hash := encryptPass(&wd, &err)
+
+	wd.Password = hash
+	pr.Data = wd
+	pr.ReturnResponse(w, err)
 	/*
 		pr.Cmd = "nohup ./wp-switcher.sh"
 		//r, err := exec.Command("sh", "-c", "cd /mnt/UserData/industrialcool-pcp-wifi-plus/pcp-scripts; nohup ./wp-switcher.sh > /dev/null 2>&1 &").Output()
@@ -35,23 +50,26 @@ func (a *App) testTings(w http.ResponseWriter, _ *http.Request) {
 		}
 
 	*/
-	pr.Cmd = "./wifi-plus.sh wp_test"
-	rc, err := exec.Command("sh", "-c", "cd cgi-bin && ./wifi-plus.sh wp_test").Output()
-	if err != nil {
-		log.Debug("[[[[[ 0 ]]]]]")
-		pr.ReturnResponse(w, err)
-		return
-	}
-	log.Debugf("r is [%s]", string(rc))
-	src := `{ "mess": "` + strings.TrimSpace(string(rc)) + `"}`
-	var b map[string]interface{}
-	err = json.Unmarshal([]byte(src), &b)
-	if err != nil {
-		log.Debug("[[[[[ 1 ]]]]]")
-		log.Fatal(err)
-	}
-	pr.Data = b
-	pr.ReturnResponse(w, nil)
+	/*
+		pr.Cmd = "./wifi-plus.sh wp_test"
+		rc, err := exec.Command("sh", "-c", "cd cgi-bin && ./wifi-plus.sh wp_test").Output()
+		if err != nil {
+			log.Debug("[[[[[ 0 ]]]]]")
+			pr.ReturnResponse(w, err)
+			return
+		}
+		log.Debugf("r is [%s]", string(rc))
+		src := `{ "mess": "` + strings.TrimSpace(string(rc)) + `"}`
+		var b map[string]interface{}
+		err = json.Unmarshal([]byte(src), &b)
+		if err != nil {
+			log.Debug("[[[[[ 1 ]]]]]")
+			log.Fatal(err)
+		}
+		pr.Data = b
+		pr.ReturnResponse(w, nil)
+
+	*/
 	/*
 		r := `{"boopy": "beep"}`
 		var b map[string]interface{}

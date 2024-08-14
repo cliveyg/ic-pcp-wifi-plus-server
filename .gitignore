@@ -27,5 +27,6 @@
 !confs
 !confs/hostapd.conf
 !confs/known-wifi-networks.conf
+!confs/wpa_supplicant.conf
 !wifiplus
 !beep
