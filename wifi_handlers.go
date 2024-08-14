@@ -102,6 +102,7 @@ func (a *App) wifiSwitchNetwork(w http.ResponseWriter, r *http.Request) {
 	err = json.Unmarshal(rc, &sr)
 	if err != nil {
 		log.Debug("[[[[[[[[[ 1 ]]]]]]]]")
+		log.Debug(rc)
 		log.Fatal(err)
 	}
 	log.Debug("[[[[[[[[[ b ]]]]]]]]")
