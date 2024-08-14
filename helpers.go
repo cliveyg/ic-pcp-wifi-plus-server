@@ -90,6 +90,7 @@ func passMatch(wd *WifiDetails, err *error, sa *[]string) (bool, bool) {
 	}
 	log.Debug("[[[[[[[[[ AARGH ]]]]]]]]")
 	*sa = isa
+	log.Debug("[[[[[[[[[ AARGH2 ]]]]]]]]")
 	return pm, networkFound
 }
 
