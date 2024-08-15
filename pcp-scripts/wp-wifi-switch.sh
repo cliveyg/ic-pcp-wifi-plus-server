@@ -14,7 +14,7 @@ set +a
 
 LOG=$LOGFILE
 
-. /var/www/pcp-functions
+. /var/www/cgi-bin/pcp-functions
 
 ssid=$1
 pass=$2
@@ -30,7 +30,6 @@ if [ $DBUG -eq 1 ]; then
   echo "[wp-wifi-switch.sh] SSID is [$ssid]" >> $LOG
   echo "[wp-wifi-switch.sh] Pass is [$pass]" >> $LOG
   #sudo cp /usr/local/etc/pcp/wpa_supplicant.conf /usr/local/etc/pcp/wpa_supplicant.conf~
-  #echo "#test" >> /usr/local/etc/pcp/wpa_supplicant.conf
   #sudo cp /mnt/UserData/industrialcool-pcp-wifi-plus/confs/wpa_supplicant.conf /usr/local/etc/pcp/wpa_supplicant.conf
   #sudo sed -i "s/90909090909090909090909090909/$ssid/g" /usr/local/etc/pcp/wpa_supplicant.conf
   #sudo sed -i "s/\+\+/$pass/g" /usr/local/etc/pcp/wpa_supplicant.conf
