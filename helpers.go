@@ -35,7 +35,7 @@ func textToMap(sg string) map[string]string {
 func encryptPass(wd *WifiDetails, err *error) string {
 	var hashed []byte
 	hashed, *err = bcrypt.GenerateFromPassword([]byte(wd.Password), 8)
-	log.Debugf("Hashed is %s", hashed)
+	//log.Debugf("Hashed is %s", hashed)
 	return string(hashed)
 }
 

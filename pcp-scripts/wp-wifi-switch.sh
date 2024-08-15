@@ -61,32 +61,19 @@ if [ $DBUG -eq 1 ]; then
   #sudo sed -i "s/\+\+/$pass/g" /usr/local/etc/pcp/wpa_supplicant.conf
   #sudo chown root:root /usr/local/etc/pcp/wpa_supplicant.conf
 
+  sleep 2
   # backup stuff
   echo -n "[wp-wifi-switch.sh] backup status: " >> $LOG
   if wp_backup; then
     echo "success!" >> $LOG
+    echo '{ "status": 200, "message": "the good ting" }'
   else
     echo "fail :(" >> $LOG
+    echo '{ "status": 500, "message": "bad stuff" }'
   fi
-
-  #sudo wpa_cli -i wlan0 reconfigure
-  sleep 3
-  echo '{ "status": 200, "message": "have loggy" }'
 
 else
   echo '{ "status": 404, "message": "no loggy" }'
-  #/usr/local/etc/init.d/wifi wlan0 stop
-  #mount /dev/mmcblk0p1
-  #sudo cp /mnt/mmcblk0p1/used_wpa_supplicant.conf /var/run/wpa_supplicant.conf
-  #echo "ctrl_interface=/var/run/wpa_supplicant
-  #ctrl_interface_group=staff
-  #update_config=1" > /opt/wpa.cfg
-  #sudo wpa_supplicant -Dwext -iwlan0 -c/opt/wpa.cfg -B
-  #sleep 3
-  #sudo /usr/local/etc/init.d/wifi wlan0 stop
-  #sudo /usr/local/etc/init.d/wifi wlan0 start
-  #cd /mnt/UserData/industrialcool-pcp-wifi-plus/pcp-scripts
-  #./wifi-plus-startup.sh
 
 fi
 
