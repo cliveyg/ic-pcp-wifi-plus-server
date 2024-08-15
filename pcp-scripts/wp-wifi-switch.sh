@@ -30,7 +30,7 @@ if [ $DBUG -eq 1 ]; then
   sudo cp /usr/local/etc/pcp/wpa_supplicant.conf /usr/local/etc/pcp/wpa_supplicant.conf~
   #echo "#test" >> /usr/local/etc/pcp/wpa_supplicant.conf
   sudo cp /mnt/UserData/industrialcool-pcp-wifi-plus/confs/wpa_supplicant.conf /usr/local/etc/pcp/wpa_supplicant.conf
-  sudo sed -i "s/\+WWW\+/$ssid/g" /usr/local/etc/pcp/wpa_supplicant.conf
+  sudo sed -i "s/90909090909090909090909090909/$ssid/g" /usr/local/etc/pcp/wpa_supplicant.conf
   sudo sed -i "s/\+\+/$pass/g" /usr/local/etc/pcp/wpa_supplicant.conf
   sudo chown root:root /usr/local/etc/pcp/wpa_supplicant.conf
   echo '{ "status": 200, "message": "have loggy" }'
