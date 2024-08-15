@@ -23,11 +23,11 @@ wp_backup() {
   # basically a copy of pcp_backup() without pcp bits.
 
   # delete any previous backup_done file
-  [ -e /tmp/backup_done ] && sudo rm -f /tmp/backup_done
+  [ -e /tmp/backup_done ] && sudo rm -f /tmp/backup_done >/dev/null 2>&1
 
   # do a backup - filetool.sh backs up files in .filetool.lst
-  sudo filetool.sh -b
-  sync > /dev/null 2>&1
+  sudo filetool.sh -b >/dev/null 2>&1
+  sync > /dev/null 2>&1 >/dev/null 2>&1
 
   # if backup_status file exists and is non-zero in size, then an error has occurred
   if [ -s /tmp/backup_status ]; then
