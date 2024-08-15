@@ -15,6 +15,8 @@ set +a
 . /var/www/cgi-bin/pcp-functions
 . /var/www/cgi-bin/pcp-wifi-functions
 
+arg1=$1
+
 # TODO:
 # for some reason this particular script doesn't get the log location
 # from the .env vars. all other envs appear without a problem...
@@ -52,7 +54,7 @@ fi
 
 
 # turning wifi off
-echo '{ "status": 501, "message": "not implemented yet [1]" }'
+#echo '{ "status": 501, "message": "not implemented yet [1]" }'
 #pcp_write_var_to_config WIFI "off"
 #/usr/local/etc/init.d/wifi wlan0 stop
 #pcp_wifi_unload_wifi_extns "text"
