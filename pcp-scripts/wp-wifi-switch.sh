@@ -33,6 +33,8 @@ if [ $DBUG -eq 1 ]; then
   sudo sed -i "s/90909090909090909090909090909/$ssid/g" /usr/local/etc/pcp/wpa_supplicant.conf
   sudo sed -i "s/\+\+/$pass/g" /usr/local/etc/pcp/wpa_supplicant.conf
   sudo chown root:root /usr/local/etc/pcp/wpa_supplicant.conf
+  sudo wpa_cli -i wlan0 reconfigure
+  sleep 3
   echo '{ "status": 200, "message": "have loggy" }'
   #echo -n "[wp-wifi-switch.shh] " >> $LOG
   #echo $(/usr/local/etc/init.d/wifi wlan0 stop) >> $LOG
