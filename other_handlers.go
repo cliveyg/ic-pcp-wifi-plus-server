@@ -175,7 +175,6 @@ func (a *App) wpSwitcher(w http.ResponseWriter, r *http.Request) {
 	log.Debug(string(rc))
 	err = json.Unmarshal(rc, &ssi)
 	if err != nil {
-		log.Debug("[[[[ 2 ]]]]")
 		log.Fatal(err)
 	}
 

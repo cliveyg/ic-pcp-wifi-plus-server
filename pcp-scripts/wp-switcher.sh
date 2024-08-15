@@ -38,6 +38,7 @@ if [ $DBUG -eq 1 ]; then
   if [ $arg1 = "towap" ]; then
     # get all wap stuff set up
     pcp_write_var_to_config APMODE "no"
+    echo '{ "status": 200, "message": "woop" }'
     #sudo -u tc pcp-load -i pcp-apmode.tcz
     # turn wifi off
 
