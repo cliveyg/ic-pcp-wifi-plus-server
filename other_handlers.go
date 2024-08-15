@@ -156,6 +156,8 @@ func (a *App) wpSwitcher(w http.ResponseWriter, r *http.Request) {
 		//rc, err = exec.Command("sh", "-c", "cd /mnt/UserData/industrialcool-pcp-wifi-plus/pcp-scripts; nohup ./wp-switcher.sh towap").Output()
 		rc, err = exec.Command("sh", "-c", "cd /mnt/UserData/industrialcool-pcp-wifi-plus/pcp-scripts; ./wp-switcher.sh towap").Output()
 		if err != nil {
+			log.Debug("[[[[ 0 ]]]]")
+			log.Debug(rc)
 			pr.ReturnResponse(w, err)
 			return
 		}
