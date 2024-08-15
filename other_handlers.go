@@ -153,7 +153,8 @@ func (a *App) wpSwitcher(w http.ResponseWriter, r *http.Request) {
 		// switch to wap
 		pr.Message = "Switching to wap"
 		pr.Cmd = "nohup ./wp-switcher.sh towap"
-		rc, err = exec.Command("sh", "-c", "cd /mnt/UserData/industrialcool-pcp-wifi-plus/pcp-scripts; nohup ./wp-switcher.sh towap").Output()
+		//rc, err = exec.Command("sh", "-c", "cd /mnt/UserData/industrialcool-pcp-wifi-plus/pcp-scripts; nohup ./wp-switcher.sh towap").Output()
+		rc, err = exec.Command("sh", "-c", "cd /mnt/UserData/industrialcool-pcp-wifi-plus/pcp-scripts; ./wp-switcher.sh towap").Output()
 		if err != nil {
 			pr.ReturnResponse(w, err)
 			return

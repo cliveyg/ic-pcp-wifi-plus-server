@@ -21,26 +21,26 @@ set +a
 # other scripts that use the same mechanism and have the same permissions
 # are able to see the log location - aaargh. will take a deeper look after
 # the backend is feature complete
-LOGGY=/var/log/wifiplus.log
+LOG=/var/log/wifiplus.log
 
 
 if [ $DBUG -eq 1 ]; then
 
-  if [ -f $LOGGY ]; then
-    echo "[wp-switcher.sh  ] --------------- running --------------------" >> $LOGGY
-  else
-    sudo touch $LOGGY
-    echo "[wp-switcher.sh] --------------- running --------------------" >> $LOGGY
+  if [ ! -f $LOG ]; then
+    sudo touch $LOG
   fi
+    
+  echo "[wp-switcher.sh] --------------- running --------------------" >> $LOG
+  echo "[wp-switcher.sh] " >> $LOG
 
   if [ $arg1 = "towap" ]; then
     # get all wap stuff set up
-    #pcp_write_var_to_config APMODE "yes"
+    pcp_write_var_to_config APMODE "no"
     #sudo -u tc pcp-load -i pcp-apmode.tcz
     # turn wifi off
 
   elif [ $arg1 = "towifi" ]; then
-
+    echo "[wp-switcher.sh] TO WAP MODE" >> $LOG
   else
     echo '{ "status": 400, "message": "action not valid" }'
   fi
