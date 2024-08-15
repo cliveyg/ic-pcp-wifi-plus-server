@@ -34,8 +34,8 @@ if [ $DBUG -eq 1 ]; then
   #sudo chown root:root /usr/local/etc/pcp/wpa_supplicant.conf
 
   # backup stuff
-  echo -n "[wp-wifi-switch.sh] backup status: " >> $LOG
-  echo "$(wp_backup)" >> $LOG
+  #echo -n "[wp-wifi-switch.sh] backup status: " >> $LOG
+  wp_backup
 
   #sudo wpa_cli -i wlan0 reconfigure
   sleep 3
