@@ -35,8 +35,7 @@ if [ $DBUG -eq 1 ]; then
 
   # backup stuff
   echo -n "[wp-wifi-switch.sh] backup status: " >> $LOG
-  echo $(wp_backup) >> $LOG
-
+  echo "$(wp_backup)" >> $LOG
 
   #sudo wpa_cli -i wlan0 reconfigure
   sleep 3
