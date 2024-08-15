@@ -35,7 +35,7 @@ if [ $DBUG -eq 1 ]; then
 
   # backup stuff
   echo -n "[wp-wifi-switch.sh] backup status: " >> $LOG
-  if [ wp_backup -eq 0 ]; then
+  if [ $(wp_backup) -eq 0 ]; then
     echo "success!" >> $LOG
   else
     echo "fail :(" >> $LOG
@@ -74,7 +74,8 @@ wp_backup() {
 
   # if backup_status file exists and is non-zero in size, then an error has occurred
   if [ -s /tmp/backup_status ]; then
-    cat /tmp/backup_status
+    echo "BAD JUJU" >> $LOG
+    return 1
   fi
 
   # if backup_done exists, then the backup was successful
