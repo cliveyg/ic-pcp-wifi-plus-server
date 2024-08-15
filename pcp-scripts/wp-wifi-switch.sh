@@ -12,6 +12,9 @@ set -a
 . /var/www/.env
 set +a
 
+. /var/www/cgi-bin/pcp-functions
+. /var/www/cgi-bin/pcp-wifi-functions
+
 LOG=$LOGFILE
 
 ssid=$1
@@ -25,6 +28,8 @@ if [ $DBUG -eq 1 ]; then
   echo "[wp-wifi-switch.sh] ------------------------------" >> $LOG
   echo "[wp-wifi-switch.sh] SSID is [$ssid]" >> $LOG
   echo "[wp-wifi-switch.sh] Pass is [$pass]" >> $LOG
+  sudo cp /usr/local/etc/pcp/wpa_supplicant.conf /usr/local/etc/pcp/wpa_supplicant.conf~
+  sudo echo "#test" >> /usr/local/etc/pcp/wpa_supplicant.conf
   echo '{ "status": 200, "message": "have loggy" }'
   #echo -n "[wp-wifi-switch.shh] " >> $LOG
   #echo $(/usr/local/etc/init.d/wifi wlan0 stop) >> $LOG
