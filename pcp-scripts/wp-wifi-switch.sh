@@ -34,7 +34,7 @@ if [ $DBUG -eq 1 ]; then
   #sudo sed -i "s/90909090909090909090909090909/$ssid/g" /usr/local/etc/pcp/wpa_supplicant.conf
   #sudo sed -i "s/\+\+/$pass/g" /usr/local/etc/pcp/wpa_supplicant.conf
   #sudo chown root:root /usr/local/etc/pcp/wpa_supplicant.conf
-  pcp_backup "text"
+  echo $(sudo -u tc pcp_backup "text") >> $LOG
   #sudo wpa_cli -i wlan0 reconfigure
   sleep 3
   echo '{ "status": 200, "message": "have loggy" }'
