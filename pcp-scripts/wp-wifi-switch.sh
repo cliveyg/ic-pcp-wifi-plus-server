@@ -12,9 +12,6 @@ set -a
 . /var/www/.env
 set +a
 
-. /var/www/cgi-bin/pcp-functions
-. /var/www/cgi-bin/pcp-wifi-functions
-
 LOG=$LOGFILE
 
 ssid=$1
