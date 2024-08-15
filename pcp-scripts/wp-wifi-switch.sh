@@ -20,7 +20,7 @@ pass=$2
 #-------------------------------- subroutines --------------------------------#
 
 wp_backup() {
-  # basically a copy of pcp_backup() without pcp bits
+  # basically a copy of pcp_backup() without pcp bits.
 
   # delete any previous backup_done file
   [ -e /tmp/backup_done ] && sudo rm -f /tmp/backup_done
@@ -31,16 +31,13 @@ wp_backup() {
 
   # if backup_status file exists and is non-zero in size, then an error has occurred
   if [ -s /tmp/backup_status ]; then
-    echo "BAD JUJU" >> $LOG
     return 1
   fi
 
   # if backup_done exists, then the backup was successful
   if [ -f /tmp/backup_done ]; then
-    echo "Yarp" >> $LOG
     return 0
   else
-    echo "Narp" >> $LOG
     return 1
   fi
 }
@@ -54,7 +51,7 @@ if [ $DBUG -eq 1 ]; then
     sudo touch $LOG
   fi
   echo "[wp-wifi-switch.sh] ------------------------------" >> $LOG
-  echo -n "[wp-wifi-switch.sh] WHOAMI: " >> $LOG
+  echo -n "[wp-wifi-switch.sh] whoami: " >> $LOG
   echo $(whoami) >> $LOG
   echo "[wp-wifi-switch.sh] SSID is [$ssid]" >> $LOG
   echo "[wp-wifi-switch.sh] Pass is [$pass]" >> $LOG
