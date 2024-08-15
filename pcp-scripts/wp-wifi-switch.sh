@@ -17,6 +17,37 @@ LOG=$LOGFILE
 ssid=$1
 pass=$2
 
+#-------------------------------- subroutines --------------------------------#
+
+wp_backup() {
+  # basically a copy of pcp_backup() without pcp bits
+
+  # delete any previous backup_done file
+  [ -e /tmp/backup_done ] && sudo rm -f /tmp/backup_done
+
+  # do a backup - filetool.sh backs up files in .filetool.lst
+  sudo filetool.sh -b
+  sync > /dev/null 2>&1
+
+  # if backup_status file exists and is non-zero in size, then an error has occurred
+  if [ -s /tmp/backup_status ]; then
+    echo "BAD JUJU" >> $LOG
+    return 1
+  fi
+
+  # if backup_done exists, then the backup was successful
+  if [ -f /tmp/backup_done ]; then
+    echo "Yarp" >> $LOG
+    return 0
+  else
+    echo "Narp" >> $LOG
+    return 1
+  fi
+}
+
+#------------------------------- main program --------------------------------#
+
+
 if [ $DBUG -eq 1 ]; then
 
   if [ ! -f $LOG ]; then
@@ -62,30 +93,6 @@ else
 
 fi
 
-wp_backup() {
-  # basically a copy of pcp_backup() without pcp bits
 
-  # delete any previous backup_done file
-  [ -e /tmp/backup_done ] && sudo rm -f /tmp/backup_done
-
-  # do a backup - filetool.sh backs up files in .filetool.lst
-  sudo filetool.sh -b
-  sync > /dev/null 2>&1
-
-  # if backup_status file exists and is non-zero in size, then an error has occurred
-  if [ -s /tmp/backup_status ]; then
-    echo "BAD JUJU" >> $LOG
-    return 1
-  fi
-
-  # if backup_done exists, then the backup was successful
-  if [ -f /tmp/backup_done ]; then
-    echo "Yarp" >> $LOG
-    return 0
-  else
-    echo "Narp" >> $LOG
-    return 1
-  fi
-}
 
 #echo "{ \"beep\": \"boop\" }"
