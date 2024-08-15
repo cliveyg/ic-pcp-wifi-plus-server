@@ -29,6 +29,10 @@ if [ $DBUG -eq 1 ]; then
   echo "[wp-wifi-switch.sh] Pass is [$pass]" >> $LOG
   sudo cp /usr/local/etc/pcp/wpa_supplicant.conf /usr/local/etc/pcp/wpa_supplicant.conf~
   #echo "#test" >> /usr/local/etc/pcp/wpa_supplicant.conf
+  sudo cp /mnt/UserData/industrialcool-pcp-wifi-plus/confs/wpa_supplicant.conf /usr/local/etc/pcp/wpa_supplicant.conf
+  sudo sed -i 's/\+WWWWWWW\+/$ssid/g' /usr/local/etc/pcp/wpa_supplicant.conf
+  sudo sed -i 's/\+\+/$pass/g' /usr/local/etc/pcp/wpa_supplicant.conf
+  sudo chown root:root /usr/local/etc/pcp/wpa_supplicant.conf
   echo '{ "status": 200, "message": "have loggy" }'
   #echo -n "[wp-wifi-switch.shh] " >> $LOG
   #echo $(/usr/local/etc/init.d/wifi wlan0 stop) >> $LOG
