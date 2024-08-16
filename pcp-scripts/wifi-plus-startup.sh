@@ -43,6 +43,7 @@ if [ -f /usr/local/etc/pcp/dnsmasq.conf ]; then
 fi
 if [ -f /usr/local/etc/pcp/hostapd.conf ]; then
   sudo chown tc:staff /usr/local/etc/pcp/hostapd.conf
+  sudo chmod 644 /usr/local/etc/pcp/hostapd.conf
 fi
 
 if sudo cp /mnt/UserData/industrialcool-pcp-wifi-plus/wifiplus /var/www/wifiplus &&

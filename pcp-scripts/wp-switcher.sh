@@ -36,14 +36,21 @@ if [ $DBUG -eq 1 ]; then
   echo "[wp-switcher.sh] " >> $LOG
 
   if [ $arg1 = "towap" ]; then
-    # get all wap stuff set up
-    pcp_write_var_to_config APMODE "no"
-    echo '{ "status": 200, "message": "woop" }'
-    #sudo -u tc pcp-load -i pcp-apmode.tcz
+    echo '{ "status": 202, "message": "Attempting to switch to wap" }'
     # turn wifi off
+    pcp_write_var_to_config WIFI "off"
+    /usr/local/etc/init.d/wifi wlan0 stop
+    # get all wap stuff set up
+    pcp_write_var_to_config APMODE "yes"
+    sudo -u tc pcp-load -i pcp-apmode.tcz
+    sudo /usr/local/etc/init.d/pcp-apmode start
+    sleep 2
+    pcp_backup "text"
+    #echo '{ "status": 202, "message": "Attempting to switch to wap" }'
 
   elif [ $arg1 = "towifi" ]; then
     echo "[wp-switcher.sh] TO WAP MODE" >> $LOG
+    echo '{ "status": 202, "message": "Attempting to switch to wifi" }'
   else
     echo '{ "status": 400, "message": "action not valid" }'
   fi
