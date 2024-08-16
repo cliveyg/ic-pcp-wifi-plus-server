@@ -57,6 +57,7 @@ if [ $DBUG -eq 1 ]; then
 
   elif [ $arg1 = "towifi" ]; then
     echo "[wp-switcher.sh] TO WIFI MODE" >> $LOG
+    [ -f "/usr/local/etc/pcp/wpa_supplicant.conf" ]
 
     echo '{ "status": 202, "message": "Attempting to switch to wifi" }'
     # turn wifi on in config
@@ -66,11 +67,9 @@ if [ $DBUG -eq 1 ]; then
     sudo /usr/local/etc/init.d/pcp-apmode stop
     sleep 2
     # start wifi
-    [ -f "/usr/local/etc/pcp/wpa_supplicant.conf" ] && sudo mv "/usr/local/etc/pcp/wpa_supplicant.conf~" /tmp/
-
+    [  ! -f "/usr/local/etc/pcp/wpa_supplicant.conf" ] && exit 1
     pcp_backup "text"
-
-    cd /mnt/UserData/industrialcool-pcp-wifi-plus/pcp-scripts
+    ./wp-wifi-refresh.sh
     ./wifi-plus-startup.sh
   else
     echo '{ "status": 400, "message": "action not valid" }'
