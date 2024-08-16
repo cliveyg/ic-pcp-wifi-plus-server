@@ -53,7 +53,6 @@ if [ $DBUG -eq 1 ]; then
     pcp_backup "text"
     cd /mnt/UserData/industrialcool-pcp-wifi-plus/pcp-scripts
     ./wifi-plus-startup.sh
-    #kill -9 $(pidof dnsmasq)
 
     #if [ $(whoami) = "root" ]; then
     #  sudo -u tc echo "root sudoing echo as user tc"
