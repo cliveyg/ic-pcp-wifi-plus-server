@@ -42,6 +42,7 @@ if [ -f /usr/local/etc/pcp/dnsmasq.conf ]; then
   sudo chown tc:staff /usr/local/etc/pcp/dnsmasq.conf
 fi
 if [ -f /usr/local/etc/pcp/hostapd.conf ]; then
+  echo "Copying wifiplus pcp_hosts to /usr/local/etc/pcp/pcp_hosts"
   cp /mnt/UserData/industrialcool-pcp-wifi-plus/confs/pcp_hosts /usr/local/etc/pcp/pcp_hosts
   sudo chown root:root /usr/local/etc/pcp/pcp_hosts
   sudo chmod 644 /usr/local/etc/pcp/pcp_hosts
