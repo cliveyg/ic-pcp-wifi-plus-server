@@ -42,12 +42,19 @@ if [ $DBUG -eq 1 ]; then
     /usr/local/etc/init.d/wifi wlan0 stop
     # get all wap stuff set up
     pcp_write_var_to_config APMODE "yes"
+
+    cp /mnt/UserData/industrialcool-pcp-wifi-plus/confs/pcp_hosts /usr/local/etc/pcp/pcp_hosts
+    sudo chown root:root /usr/local/etc/pcp/pcp_hosts
+    sudo chmod 644 /usr/local/etc/pcp/pcp_hosts
+
     sudo -u tc pcp-load -i pcp-apmode.tcz
     sudo /usr/local/etc/init.d/pcp-apmode start
     sleep 2
     pcp_backup "text"
     cd /mnt/UserData/industrialcool-pcp-wifi-plus/pcp-scripts
     ./wifi-plus-startup.sh
+    #kill -9 $(pidof dnsmasq)
+
     #if [ $(whoami) = "root" ]; then
     #  sudo -u tc echo "root sudoing echo as user tc"
     #else
