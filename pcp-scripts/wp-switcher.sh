@@ -25,7 +25,6 @@ arg1=$1
 # the backend is feature complete
 LOG=/var/log/wifiplus.log
 
-
 if [ $DBUG -eq 1 ]; then
 
   if [ ! -f $LOG ]; then
@@ -36,6 +35,7 @@ if [ $DBUG -eq 1 ]; then
   echo "[wp-switcher.sh] " >> $LOG
 
   if [ $arg1 = "towap" ]; then
+    echo "[wp-switcher.sh] TO WAP MODE" >> $LOG
     echo '{ "status": 202, "message": "Attempting to switch to wap" }'
     # turn wifi off
     pcp_write_var_to_config WIFI "off"
@@ -46,11 +46,32 @@ if [ $DBUG -eq 1 ]; then
     sudo /usr/local/etc/init.d/pcp-apmode start
     sleep 2
     pcp_backup "text"
+    cd /mnt/UserData/industrialcool-pcp-wifi-plus/pcp-scripts
+    ./wifi-plus-startup.sh
+    #if [ $(whoami) = "root" ]; then
+    #  sudo -u tc echo "root sudoing echo as user tc"
+    #else
+    #  sudo echo "tc sudoing echo as normal"
+    #fi
     #echo '{ "status": 202, "message": "Attempting to switch to wap" }'
 
   elif [ $arg1 = "towifi" ]; then
-    echo "[wp-switcher.sh] TO WAP MODE" >> $LOG
+    echo "[wp-switcher.sh] TO WIFI MODE" >> $LOG
+
     echo '{ "status": 202, "message": "Attempting to switch to wifi" }'
+    # turn wifi on in config
+    pcp_write_var_to_config WIFI "on"
+    # stop wap stuff
+    pcp_write_var_to_config APMODE "no"
+    sudo /usr/local/etc/init.d/pcp-apmode stop
+    sleep 2
+    # start wifi
+    [ -f "/usr/local/etc/pcp/wpa_supplicant.conf" ] && sudo mv "/usr/local/etc/pcp/wpa_supplicant.conf~" /tmp/
+
+    pcp_backup "text"
+
+    cd /mnt/UserData/industrialcool-pcp-wifi-plus/pcp-scripts
+    ./wifi-plus-startup.sh
   else
     echo '{ "status": 400, "message": "action not valid" }'
   fi
