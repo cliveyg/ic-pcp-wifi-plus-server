@@ -135,7 +135,7 @@ func (a *App) wpSwitcher(w http.ResponseWriter, r *http.Request) {
 	if _, err := os.Stat(os.Getenv("PCPSH")); err == nil {
 		pcpInitdFileExists = true
 	}
-	if si.APMode == "on" && pcpInitdFileExists {
+	if si.APMode == "yes" && pcpInitdFileExists {
 		wapRunning = true
 	}
 
