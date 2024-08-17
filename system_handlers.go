@@ -93,24 +93,17 @@ func (a *App) sysStatus(pr *WifiPlusResponse, err *error) {
 		log.Error(*err)
 		return
 	}
-	log.Debug("RC is:")
-	log.Debug(string(rc))
+
 	ss := SysStatus{}
 	*err = json.Unmarshal(rc, &ss)
-	log.Debug("SysStatus is:")
-	log.Debug(ss)
 	if *err != nil {
 		log.Error(*err)
 		return
 	}
-	//pr.Data = ss
-	if ss.WAP == "" && ss.Wifi != "" {
-		pr.Message = ss.Wifi
-	} else if ss.WAP != "" && ss.Wifi == "" {
-		pr.Message = ss.WAP
-	} else {
-		pr.Message = "Unknown wap/wifi"
-	}
+
+	pr.StatusCode = ss.Ping
+	pr.Data = ss
+	pr.Message = "System status"
 }
 
 func (a *App) sysPCPConfig(pr *WifiPlusResponse, hm string, err *error, sr *string) {
