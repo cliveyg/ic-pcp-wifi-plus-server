@@ -103,9 +103,14 @@ func (a *App) sysStatus(pr *WifiPlusResponse, err *error) {
 		log.Error(*err)
 		return
 	}
-	pr.Data = ss
-	pr.Message = "System status"
-	return
+	//pr.Data = ss
+	if ss.WAP == "" && ss.Wifi != "" {
+		pr.Message = ss.Wifi
+	} else if ss.WAP != "" && ss.Wifi == "" {
+		pr.Message = ss.WAP
+	} else {
+		pr.Message = "Unknown wap/wifi"
+	}
 }
 
 func (a *App) sysPCPConfig(pr *WifiPlusResponse, hm string, err *error, sr *string) {
