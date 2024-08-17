@@ -49,26 +49,33 @@ wp_status() {
 
   case $(/usr/local/etc/init.d/wifi wlan0 status | grep "supplicant running") in
     "wpa_supplicant running for wlan0")
+      echo "[wifi-plus.sh] wp_status : 0" >> $LOG
       if [ $(echo $WIFI) = "on" ]; then
+        echo "[wifi-plus.sh] wp_status : 1" >> $LOG
         wm="Running in wifi mode"
       fi
     ;;
     *)
+        echo "[wifi-plus.sh] wp_status : 01" >> $LOG
         wm="narp"
     ;;
   esac
 
   case $(/usr/local/etc/init.d/pcp-apmode status | grep "Not all processes running") in
     "wpa_supplicant running for wlan0")
+      echo "[wifi-plus.sh] wp_status : 2" >> $LOG
       if [ $(echo $APMODE) = "yes" ]; then
+        echo "[wifi-plus.sh] wp_status : 3" >> $LOG
         wpm="Running in wap mode"
       fi
     ;;
     *)
+        echo "[wifi-plus.sh] wp_status : 4" >> $LOG
         wpm="narp"
     ;;
   esac
 
+  echo "[wifi-plus.sh] wp_status : 5" >> $LOG
   echo "{ \"wifi\": \"$wm\", \"wap\": \"$wpm\", \"ping\": $arg1 }"
 }
 
