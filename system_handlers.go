@@ -95,6 +95,8 @@ func (a *App) sysStatus(pr *WifiPlusResponse, err *error) {
 		log.Error(e2)
 		return
 	}
+	log.Debug("RC is:")
+	log.Debug(string(rc))
 	ss := SysStatus{}
 	*err = json.Unmarshal(rc, &ss)
 	if *err != nil {
