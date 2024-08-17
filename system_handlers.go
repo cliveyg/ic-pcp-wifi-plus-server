@@ -90,11 +90,17 @@ func (a *App) sysStatus(pr *WifiPlusResponse, err *error) {
 	pr.Cmd = "wifi-plus.sh wp_status 200"
 	rc, *err = exec.Command("sh", "-c", "cd cgi-bin && ./wifi-plus.sh wp_status 200").Output()
 	if *err != nil {
+		e2 := *err
+		log.Debug("eek1")
+		log.Error(e2)
 		return
 	}
 	ss := SysStatus{}
 	*err = json.Unmarshal(rc, &ss)
 	if *err != nil {
+		e2 := *err
+		log.Debug("eek2")
+		log.Error(e2)
 		return
 	}
 	pr.Data = ss
