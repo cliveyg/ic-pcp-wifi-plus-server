@@ -6,8 +6,6 @@ import (
 	log "github.com/sirupsen/logrus"
 	"net/http"
 	"os/exec"
-	"strconv"
-	"strings"
 	"time"
 )
 
@@ -88,19 +86,19 @@ func (a *App) sysReboot(w http.ResponseWriter, pr *WifiPlusResponse) {
 
 func (a *App) sysStatus(pr *WifiPlusResponse, err *error) {
 
-	var rcInt int
 	var rc []byte
 	pr.Cmd = "wifi-plus.sh wp_status 200"
 	rc, *err = exec.Command("sh", "-c", "cd cgi-bin && ./wifi-plus.sh wp_status 200").Output()
 	if *err != nil {
 		return
 	}
-	rcInt, *err = strconv.Atoi(strings.TrimSpace(string(rc)))
+	ss := SysStatus{}
+	*err = json.Unmarshal(rc, &ss)
 	if *err != nil {
 		return
 	}
-	pr.StatusCode = rcInt
-	pr.Message = "System running"
+	pr.Data = ss
+	pr.Message = "System status"
 
 }
 
