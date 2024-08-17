@@ -76,8 +76,8 @@ wp_status() {
   esac
 
   echo "[wifi-plus.sh] wp_status : 5" >> $LOG
-  echo "{ \"wifi\": \"$wm\", \"wap\": \"$wpm\", \"ping\": \"$arg1\" }" >> LOG
-  echo "{ \"wifi\": \"$wm\", \"wap\": \"$wpm\", \"ping\": \"$arg1\" }"
+  echo "{ \"wifi\": \"$wm\", \"wap\": \"$wpm\", \"ping\": $arg1 }" >> LOG
+  echo "{ \"wifi\": \"$wm\", \"wap\": \"$wpm\", \"ping\": $arg1 }"
 }
 
 #-----------------------------------------------------------------------------#
