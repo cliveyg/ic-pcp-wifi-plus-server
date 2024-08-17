@@ -91,6 +91,12 @@ type ShellSwitchInfo struct {
 	Res interface{} `json:"data,omitempty"`
 }
 
+type SysStatus struct {
+	Wifi string `json:"wifi"`
+	WAP  string `json:"wap"`
+	Ping int    `json:"ping"`
+}
+
 type ShellResponse struct {
 	Status  int    `json:"status"`
 	Message string `json:"message"`
