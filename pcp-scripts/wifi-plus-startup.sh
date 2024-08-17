@@ -46,6 +46,10 @@ if [ -f /usr/local/etc/pcp/hostapd.conf ]; then
   cp /mnt/UserData/industrialcool-pcp-wifi-plus/confs/pcp_hosts /usr/local/etc/pcp/pcp_hosts
   sudo chown root:root /usr/local/etc/pcp/pcp_hosts
   sudo chmod 644 /usr/local/etc/pcp/pcp_hosts
+  if [ $(pidof dnsmasq) ]; then
+    sudo kill -9 $(pidof dnsmasq)
+    sudo dnsmasq -C /usr/local/etc/pcp/dnsmasq.conf
+  fi
 
   sudo chown tc:staff /usr/local/etc/pcp/hostapd.conf
   sudo chmod 644 /usr/local/etc/pcp/hostapd.conf
