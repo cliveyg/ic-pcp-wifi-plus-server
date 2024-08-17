@@ -90,9 +90,7 @@ func (a *App) sysStatus(pr *WifiPlusResponse, err *error) {
 	pr.Cmd = "wifi-plus.sh wp_status 200"
 	rc, *err = exec.Command("sh", "-c", "cd cgi-bin && ./wifi-plus.sh wp_status 200").Output()
 	if *err != nil {
-		e2 := *err
-		log.Debug("eek1")
-		log.Error(e2)
+		log.Error(*err)
 		return
 	}
 	log.Debug("RC is:")
@@ -102,14 +100,12 @@ func (a *App) sysStatus(pr *WifiPlusResponse, err *error) {
 	log.Debug("SysStatus is:")
 	log.Debug(ss)
 	if *err != nil {
-		e2 := *err
-		log.Debug("eek2")
-		log.Error(e2)
+		log.Error(*err)
 		return
 	}
 	pr.Data = ss
 	pr.Message = "System status"
-
+	return
 }
 
 func (a *App) sysPCPConfig(pr *WifiPlusResponse, hm string, err *error, sr *string) {
