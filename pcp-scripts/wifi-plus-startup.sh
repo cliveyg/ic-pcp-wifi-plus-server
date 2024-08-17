@@ -76,6 +76,8 @@ if sudo cp /mnt/UserData/industrialcool-pcp-wifi-plus/wifiplus /var/www/wifiplus
     echo "Testing connection..."
     sleep 1
     rc=$(curl -s -o /dev/null -w "%{http_code}" http://"$ICHOST""$PORT"/system/status)
+
+
     if [ "$rc" = "200" ]; then
       echo "[$rc OK] API up and running :)"
       exit 0
