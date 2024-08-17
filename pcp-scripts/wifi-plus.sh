@@ -46,7 +46,30 @@ wp_status() {
   if [ $DBUG -eq 1 ]; then
     echo "[wifi-plus.sh] wp_status : Debug is on. Successful write to logfile" >> $LOG
   fi
-  echo "$arg1"
+
+  case $(/usr/local/etc/init.d/wifi wlan0 status | grep "supplicant running") in
+    "wpa_supplicant running for wlan0")
+      if [ $(echo $WIFI) = "on" ]; then
+        wm="Running in wifi mode"
+      fi
+    ;;
+    *)
+        wm="narp"
+    ;;
+  esac
+
+  case $(/usr/local/etc/init.d/pcp-apmode status | grep "Not all processes running") in
+    "wpa_supplicant running for wlan0")
+      if [ $(echo $APMODE) = "yes" ]; then
+        wpm="Running in wap mode"
+      fi
+    ;;
+    *)
+        wpm="narp"
+    ;;
+  esac
+
+  echo "{ \"wifi\": \"$wm\", \"wap\": \"$wpm\", \"ping\": \"$arg1\" }"
 }
 
 #-----------------------------------------------------------------------------#

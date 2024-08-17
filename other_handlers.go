@@ -14,9 +14,6 @@ import (
 
 func (a *App) testTings(w http.ResponseWriter, r *http.Request) {
 
-	log.Debug("-----------------------------")
-	log.Debug("In testTings")
-
 	pr := WifiPlusResponse{
 		Function:   "testTings",
 		Cmd:        "whatevs",
@@ -39,52 +36,9 @@ func (a *App) testTings(w http.ResponseWriter, r *http.Request) {
 	wd.Password = hash
 	pr.Data = wd
 	pr.ReturnResponse(w, err)
-	/*
-		pr.Cmd = "nohup ./wp-switcher.sh"
-		//r, err := exec.Command("sh", "-c", "cd /mnt/UserData/industrialcool-pcp-wifi-plus/pcp-scripts; nohup ./wp-switcher.sh > /dev/null 2>&1 &").Output()
-		r, err := exec.Command("sh", "-c", "cd /mnt/UserData/industrialcool-pcp-wifi-plus/pcp-scripts; ./wp-switcher.sh").Output()
-		if err != nil {
-			log.Debug("(((((( 1 ))))))")
-			pr.ReturnResponse(w, err)
-			return
-		}
-
-	*/
-	/*
-		pr.Cmd = "./wifi-plus.sh wp_test"
-		rc, err := exec.Command("sh", "-c", "cd cgi-bin && ./wifi-plus.sh wp_test").Output()
-		if err != nil {
-			log.Debug("[[[[[ 0 ]]]]]")
-			pr.ReturnResponse(w, err)
-			return
-		}
-		log.Debugf("r is [%s]", string(rc))
-		src := `{ "mess": "` + strings.TrimSpace(string(rc)) + `"}`
-		var b map[string]interface{}
-		err = json.Unmarshal([]byte(src), &b)
-		if err != nil {
-			log.Debug("[[[[[ 1 ]]]]]")
-			log.Fatal(err)
-		}
-		pr.Data = b
-		pr.ReturnResponse(w, nil)
-
-	*/
-	/*
-		r := `{"boopy": "beep"}`
-		var b map[string]interface{}
-		err := json.Unmarshal([]byte(r), &b)
-		if err != nil {
-			log.Fatal()
-		}
-		pr.Data = b
-		pr.ReturnResponse(w, nil)
-	*/
 }
 
 func (a *App) wpSwitcher(w http.ResponseWriter, r *http.Request) {
-
-	log.Debug("wpSwitcher - attempting to switch between wifi and wap")
 
 	pr := WifiPlusResponse{
 		Function:   "wpSwitcher",
@@ -171,8 +125,6 @@ func (a *App) wpSwitcher(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	log.Debug("[[[[ 1 ]]]]")
-	log.Debug(string(rc))
 	err = json.Unmarshal(rc, &ssi)
 	if err != nil {
 		log.Fatal(err)
