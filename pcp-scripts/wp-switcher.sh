@@ -43,13 +43,26 @@ if [ $DBUG -eq 1 ]; then
     # get all wap stuff set up
     pcp_write_var_to_config APMODE "yes"
 
-    cp /mnt/UserData/industrialcool-pcp-wifi-plus/confs/pcp_hosts /usr/local/etc/pcp/pcp_hosts
-    sudo chown root:root /usr/local/etc/pcp/pcp_hosts
-    sudo chmod 644 /usr/local/etc/pcp/pcp_hosts
-
     sudo -u tc pcp-load -i pcp-apmode.tcz
     sudo /usr/local/etc/init.d/pcp-apmode start
     sleep 2
+
+    cp /mnt/UserData/industrialcool-pcp-wifi-plus/confs/pcp_hosts /usr/local/etc/pcp/pcp_hosts
+    sudo chown root:root /usr/local/etc/pcp/pcp_hosts
+    sudo chmod 644 /usr/local/etc/pcp/pcp_hosts
+    if [ $(pidof dnsmasq) ]; then
+      pid=$(pidof dnsmasq)
+      echo "[1] DNSMASQ PID: $(pidof dnsmasq)" >> $LOG
+      if [ $(sudo kill -9 $pid) ]; then
+        echo "killed it" >> $LOG
+        sleep 2
+        sudo dnsmasq -C /usr/local/etc/pcp/dnsmasq.conf
+        echo "should be running again" >> $LOG
+        sleep 2
+        echo "[2] DNSMASQ PID: $(pidof dnsmasq)" >> $LOG
+      fi
+    fi
+
     pcp_backup "text"
     cd /mnt/UserData/industrialcool-pcp-wifi-plus/pcp-scripts
     ./wifi-plus-startup.sh
@@ -63,8 +76,8 @@ if [ $DBUG -eq 1 ]; then
 
   elif [ $arg1 = "towifi" ]; then
     echo "[wp-switcher.sh] TO WIFI MODE" >> $LOG
-    [ -f "/usr/local/etc/pcp/wpa_supplicant.conf" ]
-
+    [  ! -f "/usr/local/etc/pcp/wpa_supplicant.conf" ] && exit 1
+    # before we can do this we need to check we have a wpa_supp file
     echo '{ "status": 202, "message": "Attempting to switch to wifi" }'
     # turn wifi on in config
     pcp_write_var_to_config WIFI "on"
@@ -73,7 +86,7 @@ if [ $DBUG -eq 1 ]; then
     sudo /usr/local/etc/init.d/pcp-apmode stop
     sleep 2
     # start wifi
-    [  ! -f "/usr/local/etc/pcp/wpa_supplicant.conf" ] && exit 1
+
     pcp_backup "text"
     ./wp-wifi-refresh.sh
     ./wifi-plus-startup.sh

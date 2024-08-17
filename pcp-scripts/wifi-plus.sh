@@ -58,7 +58,7 @@ wp_status() {
     ;;
   esac
 
-  case $(/usr/local/etc/init.d/pcp-apmode status | grep "Not all processes running") in
+  case $(/usr/local/etc/init.d/pcp-apmode status | grep -v "Not all processes running") in
     "wpa_supplicant running for wlan0")
       if [ $(echo $APMODE) = "yes" ]; then
         wpm="Running in wap mode"
