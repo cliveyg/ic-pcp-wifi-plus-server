@@ -58,7 +58,7 @@ wp_status() {
     ;;
   esac
 
-  if [ $(ps -ef | grep /usr/local/bin/pcp-apmode | grep -v grep | awk '{ print $0 }') ]; then
+  if [ pidof pcp-apmode && pidof hostapd ]; then
       if [ $(echo $APMODE) = "yes" ]; then
         wpm="Running in wap mode"
       fi
