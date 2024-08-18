@@ -59,8 +59,10 @@ if [ $DBUG -eq 1 ]; then
     cp /mnt/UserData/industrialcool-pcp-wifi-plus/confs/pcp_hosts /usr/local/etc/pcp/pcp_hosts
     sudo chown root:root /usr/local/etc/pcp/pcp_hosts
     sudo chmod 644 /usr/local/etc/pcp/pcp_hosts
-  echo "[wp-switcher.sh]  cat of my pcp_hosts:" >> $LOG
-  echo "$(cat /usr/local/etc/pcp/pcp_hosts)" >> LOG
+
+    echo "[wp-switcher.sh]  cat of my pcp_hosts:" >> $LOG
+    echo "$(sudo cat /usr/local/etc/pcp/pcp_hosts)" >> LOG
+
     if [ ! $(sudo dnsmasq -C /usr/local/etc/pcp/dnsmasq.conf) ]; then
       echo "[wp-switcher.sh] DNSMASQ PID: $(pidof dnsmasq)" >> $LOG
       #sudo /usr/local/etc/init.d/pcp-apmode restart
@@ -80,7 +82,7 @@ if [ $DBUG -eq 1 ]; then
       sleep 4
       echo "[wp-switcher.sh] DNSMASQ PID: $(pidof dnsmasq)" >> $LOG
       echo "[wp-switcher.sh]  cat after of pcp_hosts:" >> LOG
-      echo "$(cat /usr/local/etc/pcp/pcp_hosts)" >> LOG
+      echo "$(sudo cat /usr/local/etc/pcp/pcp_hosts)" >> LOG
     fi
 
     pcp_backup "text"
@@ -98,6 +100,7 @@ if [ $DBUG -eq 1 ]; then
     #echo '{ "status": 202, "message": "Attempting to switch to wap" }'
 
   elif [ $arg1 = "towifi" ]; then
+
     echo "[wp-switcher.sh] TO WIFI MODE" >> $LOG
     [  ! -f "/usr/local/etc/pcp/wpa_supplicant.conf" ] && exit 1
     # before we can do this we need to check we have a wpa_supp file

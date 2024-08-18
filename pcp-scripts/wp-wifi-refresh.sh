@@ -25,7 +25,7 @@ if [ $DBUG -eq 1 ]; then
   echo -n "[wp-wifi-refresh.sh] " >> $LOG
   echo $(mount /dev/mmcblk0p1) >> $LOG
   echo -n "[wp-wifi-refresh.sh] " >> $LOG
-  echo $(sudo mv /mnt/mmcblk0p1/used_wpa_supplicant.conf /var/run/wpa_supplicant.conf)
+  echo $(sudo cp /mnt/mmcblk0p1/used_wpa_supplicant.conf /var/run/wpa_supplicant.conf)
   echo "ctrl_interface=/var/run/wpa_supplicant
   ctrl_interface_group=staff
   update_config=1" > /opt/wpa.cfg
