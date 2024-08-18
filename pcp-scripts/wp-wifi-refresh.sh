@@ -42,7 +42,9 @@ if [ $DBUG -eq 1 ]; then
   echo $(sudo /usr/local/etc/init.d/wifi wlan0 stop) >> $LOG
   echo -n "[wp-wifi-refresh.sh] Starting wifi " >> $LOG
   echo $(sudo /usr/local/etc/init.d/wifi wlan0 start) >> $LOG
+  echo -n "[wp-wifi-refresh.sh] Wifi started " >> $LOG
   cd /mnt/UserData/industrialcool-pcp-wifi-plus/pcp-scripts
+  echo -n "[wp-wifi-refresh.sh] Starting wifi-plus-startup.sh " >> $LOG
   ./wifi-plus-startup.sh
   if [ $(pidof wifiplus) != "" ]; then
     echo "[wp-wifi-refresh.sh] wifiplus exe running" >> $LOG
