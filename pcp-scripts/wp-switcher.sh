@@ -142,7 +142,7 @@ if [ $DBUG -eq 1 ]; then
 
     pcp_backup "text"
     echo "[wp-switcher.sh] Refreshing the wifi..." >> $LOG
-    ./wp-wifi-refresh.sh
+    sudo ./wp-wifi-refresh.sh
     #./wifi-plus-startup.sh
   else
     echo '{ "status": 400, "message": "action not valid" }'

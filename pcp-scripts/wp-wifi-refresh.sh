@@ -12,7 +12,7 @@ set -a
 . /var/www/.env
 set +a
 
-LOG=$LOGFILE
+LOG=/var/log/wifiplus.log
 
 if [ $DBUG -eq 1 ]; then
 
@@ -56,6 +56,7 @@ if [ $DBUG -eq 1 ]; then
     else
       echo "[wp-wifi-refresh.sh] wifiplus still exe not running :(" >> $LOG
     fi
+  fi
 else
 
   /usr/local/etc/init.d/wifi wlan0 stop
