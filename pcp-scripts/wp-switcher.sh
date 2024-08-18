@@ -53,27 +53,13 @@ if [ $DBUG -eq 1 ]; then
     sleep 2
 
     echo "[wp-switcher.sh] copying and permissions for pcp_hosts" >> $LOG
-    cp /mnt/UserData/industrialcool-pcp-wifi-plus/confs/pcp_hosts /usr/local/etc/pcp/pcp_hosts
-    sudo chown root:root /usr/local/etc/pcp/pcp_hosts
-    sudo chmod 644 /usr/local/etc/pcp/pcp_hosts
-    echo "[wp-switcher.sh] checking pid: [$(pidof dnsmasq)]" >> $LOG
-    if [ $(pidof dnsmasq) ]; then
-      pid=$(pidof dnsmasq)
-      echo "[wp-switcher.sh] PID FOUND" >> $LOG
-      #if [ $(sudo kill -9 $pid) ]; then
-      #  echo "Killed dnsmasq process" >> $LOG
-      #  sleep 2
-      #  sudo dnsmasq -C /usr/local/etc/pcp/dnsmasq.conf
-      #  echo "Create new process using new pcp_hosts file" >> $LOG
-      #  sleep 2
-      #  echo "[2] DNSMASQ PID: $(pidof dnsmasq)" >> $LOG
-      #fi
-    fi
+
+    [ ! $(sudo ./wp-test.sh) ] && $(echo "[wp-switcher.sh] Bad JuJu" >> $LOG) && exit 1
 
     pcp_backup "text"
     cd /mnt/UserData/industrialcool-pcp-wifi-plus/pcp-scripts
     ./wifi-plus-startup.sh
-    ./wp-test.sh
+    #./wp-test.sh
 
     #if [ $(whoami) = "root" ]; then
     #  sudo -u tc echo "root sudoing echo as user tc"
