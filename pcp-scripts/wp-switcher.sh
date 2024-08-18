@@ -35,6 +35,11 @@ if [ $DBUG -eq 1 ]; then
   echo "[wp-switcher.sh] " >> $LOG
 
   if [ $arg1 = "towap" ]; then
+
+    #-------------------------------------------------------------#
+    # wap mode
+    #-------------------------------------------------------------#
+
     echo "[wp-switcher.sh] TO WAP MODE" >> $LOG
     echo '{ "status": 202, "message": "Attempting to switch to wap" }'
     # turn wifi off
@@ -101,23 +106,42 @@ if [ $DBUG -eq 1 ]; then
 
   elif [ $arg1 = "towifi" ]; then
 
+    #-------------------------------------------------------------#
+    # wifi mode
+    #-------------------------------------------------------------#
+
     echo "[wp-switcher.sh] TO WIFI MODE" >> $LOG
-    [  ! -f "/usr/local/etc/pcp/wpa_supplicant.conf" ] && exit 1
+    if [ ! -f "/usr/local/etc/pcp/wpa_supplicant.conf" ]; then
+      echo "[wp-switcher.sh] no wpa_supplicant.conf found at /usr/local/etc/pcp/" >> $LOG
+      mount /dev/mmcblk0p1
+      if [ ! -f "/mnt/mmcblk0p1/used_wpa_supplicant.conf" ]; then
+        echo '{ "status": 404, "message": "No wpa_supplicant.conf files found" }'
+        return 0
+      else
+        sudo cp /mnt/mmcblk0p1/used_wpa_supplicant.conf /usr/local/etc/pcp/wpa_supplicant.conf
+      fi
+    fi
+
     # before we can do this we need to check we have a wpa_supp file
     echo '{ "status": 202, "message": "Attempting to switch to wifi" }'
+
+    echo "[wp-switcher.sh] write to config file" >> $LOG
     # turn wifi on in config
     pcp_write_var_to_config WIFI "on"
     pcp_backup "text"
     # stop wap stuff
     pcp_write_var_to_config APMODE "no"
     pcp_backup "text"
+    echo "[wp-switcher.sh] Stopping ap mode" >> $LOG
     sudo /usr/local/etc/init.d/pcp-apmode stop
     sleep 2
     # start wifi
+    echo "[wp-switcher.sh] Loading wifi extensions" >> $LOG
     pcp_wifi_load_wifi_extns
     pcp_wifi_load_wifi_firmware_extns
 
     pcp_backup "text"
+    echo "[wp-switcher.sh] Refreshing the wifi..." >> $LOG
     ./wp-wifi-refresh.sh
     #./wifi-plus-startup.sh
   else
