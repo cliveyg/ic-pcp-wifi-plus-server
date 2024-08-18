@@ -54,10 +54,10 @@ if [ $DBUG -eq 1 ]; then
       pid=$(pidof dnsmasq)
       echo "[1] DNSMASQ PID: $(pidof dnsmasq)" >> $LOG
       if [ $(sudo kill -9 $pid) ]; then
-        echo "killed it" >> $LOG
+        echo "Killed dnsmasq process" >> $LOG
         sleep 2
         sudo dnsmasq -C /usr/local/etc/pcp/dnsmasq.conf
-        echo "should be running again" >> $LOG
+        echo "Create new process using new pcp_hosts file" >> $LOG
         sleep 2
         echo "[2] DNSMASQ PID: $(pidof dnsmasq)" >> $LOG
       fi
@@ -86,10 +86,12 @@ if [ $DBUG -eq 1 ]; then
     sudo /usr/local/etc/init.d/pcp-apmode stop
     sleep 2
     # start wifi
+    pcp_wifi_load_wifi_extns
+    pcp_wifi_load_wifi_firmware_extns
 
     pcp_backup "text"
     ./wp-wifi-refresh.sh
-    ./wifi-plus-startup.sh
+    #./wifi-plus-startup.sh
   else
     echo '{ "status": 400, "message": "action not valid" }'
   fi

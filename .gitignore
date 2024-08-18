@@ -29,5 +29,6 @@
 !confs/known-wifi-networks.conf
 !confs/wpa_supplicant.conf
 !confs/pcp_hosts
+!confs/wpa.cfg
 !wifiplus
 !beep
