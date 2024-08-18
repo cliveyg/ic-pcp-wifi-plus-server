@@ -35,19 +35,27 @@ if [ $DBUG -eq 1 ]; then
   else
     echo -n "[wp-wifi-refresh.sh] Failed to create opt.cfg file!" >> $LOG
   fi
-  echo -n "[wp-wifi-refresh.sh] " >> $LOG
+  echo -n "[wp-wifi-refresh.sh] Starting wpa_supplicant... " >> $LOG
   echo $(sudo wpa_supplicant -Dwext -iwlan0 -c/opt/wpa.cfg -B) >> $LOG
   sleep 3
-  echo -n "[wp-wifi-refresh.sh] " >> $LOG
+  echo -n "[wp-wifi-refresh.sh] Stopping wifi " >> $LOG
   echo $(sudo /usr/local/etc/init.d/wifi wlan0 stop) >> $LOG
-  echo -n "[wp-wifi-refresh.sh] " >> $LOG
+  echo -n "[wp-wifi-refresh.sh] Starting wifi " >> $LOG
   echo $(sudo /usr/local/etc/init.d/wifi wlan0 start) >> $LOG
   cd /mnt/UserData/industrialcool-pcp-wifi-plus/pcp-scripts
   ./wifi-plus-startup.sh
   if [ $(pidof wifiplus) != "" ]; then
     echo "[wp-wifi-refresh.sh] wifiplus exe running" >> $LOG
-  fi
-
+  else
+    echo "[wp-wifi-refresh.sh] wifiplus exe not running!" >> $LOG
+    echo "[wp-wifi-refresh.sh] Attempting to start again..." >> $LOG
+    ./wifi-plus-startup.sh
+    sleep 3
+    if [ $(pidof wifiplus) != "" ]; then
+        echo "[wp-wifi-refresh.sh] wifiplus exe running!" >> $LOG
+    else
+      echo "[wp-wifi-refresh.sh] wifiplus still exe not running :(" >> $LOG
+    fi
 else
 
   /usr/local/etc/init.d/wifi wlan0 stop
