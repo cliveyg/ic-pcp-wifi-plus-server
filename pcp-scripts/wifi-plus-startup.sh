@@ -2,7 +2,7 @@
 
 # getting env settings from .env
 set -a
-. /mnt/UserData/industrialcool-pcp-wifi-plus/.env
+. /mnt/UserData/ic-pcp-wifi-plus-server/.env
 set +a
 
 echo "------------------------------------------------------------------------"
@@ -10,8 +10,8 @@ echo "--------------------------- wifi-plus ----------------------------------"
 echo "------------------------------------------------------------------------"
 echo "Starting wifi-plus-startup script..."
 echo "Copying go binary and script files to web folders..."
-sudo chmod 777 /mnt/UserData/industrialcool-pcp-wifi-plus/pcp-scripts/wifi-plus.sh
-if sudo cp /mnt/UserData/industrialcool-pcp-wifi-plus/pcp-scripts/wifi-plus.sh /var/www/cgi-bin/wifi-plus.sh; then
+sudo chmod 777 /mnt/UserData/ic-pcp-wifi-plus-server/pcp-scripts/wifi-plus.sh
+if sudo cp /mnt/UserData/ic-pcp-wifi-plus-server/pcp-scripts/wifi-plus.sh /var/www/cgi-bin/wifi-plus.sh; then
   sudo chown tc:staff /var/www/cgi-bin/wifi-plus.sh
   echo "Successfully copied wifi-plus shell script to cgi-bin"
 else
@@ -37,13 +37,13 @@ else
 fi
 
 echo "Copying wifiplus hostapd.conf to /usr/local/etc/pcp/"
-cp /mnt/UserData/industrialcool-pcp-wifi-plus/confs/hostapd.conf /usr/local/etc/pcp/hostapd.conf
+cp /mnt/UserData/ic-pcp-wifi-plus-server/confs/hostapd.conf /usr/local/etc/pcp/hostapd.conf
 if [ -f /usr/local/etc/pcp/dnsmasq.conf ]; then
   sudo chown tc:staff /usr/local/etc/pcp/dnsmasq.conf
 fi
 if [ -f /usr/local/etc/pcp/hostapd.conf ]; then
   echo "Copying wifiplus pcp_hosts to /usr/local/etc/pcp/pcp_hosts"
-  cp /mnt/UserData/industrialcool-pcp-wifi-plus/confs/pcp_hosts /usr/local/etc/pcp/pcp_hosts
+  cp /mnt/UserData/ic-pcp-wifi-plus-server/confs/pcp_hosts /usr/local/etc/pcp/pcp_hosts
   sudo chown root:root /usr/local/etc/pcp/pcp_hosts
   sudo chmod 644 /usr/local/etc/pcp/pcp_hosts
   if [ $(pidof dnsmasq) ]; then
@@ -56,8 +56,8 @@ if [ -f /usr/local/etc/pcp/hostapd.conf ]; then
   sudo chmod 644 /usr/local/etc/pcp/hostapd.conf
 fi
 
-if sudo cp /mnt/UserData/industrialcool-pcp-wifi-plus/wifiplus /var/www/wifiplus &&
-   sudo cp /mnt/UserData/industrialcool-pcp-wifi-plus/.env /var/www/.env; then
+if sudo cp /mnt/UserData/ic-pcp-wifi-plus-server/wifiplus /var/www/wifiplus &&
+   sudo cp /mnt/UserData/ic-pcp-wifi-plus-server/.env /var/www/.env; then
 
   echo "Successfully copied wifi-plus binary to webroot"
   echo "Creating logfile in [$LOGFILE]..."

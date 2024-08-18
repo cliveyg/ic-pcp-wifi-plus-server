@@ -62,7 +62,7 @@ func (a *App) wapRestartDNS(pr *WifiPlusResponse, err *error) {
 	pr.Function = "wapRestartDNS"
 
 	var rc []byte
-	rc, *err = exec.Command("sh", "-c", "cd /mnt/UserData/industrialcool-pcp-wifi-plus/pcp-scripts && sudo ./wp-dns-restart.sh").Output()
+	rc, *err = exec.Command("sh", "-c", "cd /mnt/UserData/ic-pcp-wifi-plus-server/pcp-scripts && sudo ./wp-dns-restart.sh").Output()
 	if *err != nil {
 		return
 	}

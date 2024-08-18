@@ -17,7 +17,7 @@ LOG=/var/log/wifiplus.log
 
 #-------------------------------- subroutines --------------------------------#
 
-cp /mnt/UserData/industrialcool-pcp-wifi-plus/confs/pcp_hosts /usr/local/etc/pcp/pcp_hosts
+cp /mnt/UserData/ic-pcp-wifi-plus-server/confs/pcp_hosts /usr/local/etc/pcp/pcp_hosts
 sudo chown root:root /usr/local/etc/pcp/pcp_hosts
 sudo chmod 644 /usr/local/etc/pcp/pcp_hosts
 

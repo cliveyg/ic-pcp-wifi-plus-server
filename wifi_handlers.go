@@ -82,9 +82,9 @@ func (a *App) wifiSwitchNetwork(w http.ResponseWriter, r *http.Request) {
 	pr.StatusCode = 200
 	pr.Message = pr.Message + ". Switching networks..."
 	pr.Cmd = "nohup ./wp-wifi-switch.sh"
-	//rc, err = exec.Command("sh", "-c", "cd /mnt/UserData/industrialcool-pcp-wifi-plus/pcp-scripts; nohup ./wp-wifi-switch.sh > /dev/null 2>&1 &").Output()
+	//rc, err = exec.Command("sh", "-c", "cd /mnt/UserData/ic-pcp-wifi-plus-server/pcp-scripts; nohup ./wp-wifi-switch.sh > /dev/null 2>&1 &").Output()
 	cl := fmt.Sprintf("./wp-wifi-switch.sh %s %s", wd.SSID, wd.Password)
-	rc, err = exec.Command("sh", "-c", "cd /mnt/UserData/industrialcool-pcp-wifi-plus/pcp-scripts; "+cl).Output()
+	rc, err = exec.Command("sh", "-c", "cd /mnt/UserData/ic-pcp-wifi-plus-server/pcp-scripts; "+cl).Output()
 	if err != nil {
 		pr.ReturnResponse(w, err)
 		return
@@ -203,7 +203,7 @@ func (a *App) wifiRestart(w http.ResponseWriter, pr *WifiPlusResponse) {
 	pr.StatusCode = 202
 	pr.Message = "Now we wait..."
 	pr.Cmd = "nohup ./wp-wifi-refresh.sh"
-	_, err := exec.Command("sh", "-c", "cd /mnt/UserData/industrialcool-pcp-wifi-plus/pcp-scripts; nohup ./wp-wifi-refresh.sh > /dev/null 2>&1 &").Output()
+	_, err := exec.Command("sh", "-c", "cd /mnt/UserData/ic-pcp-wifi-plus-server/pcp-scripts; nohup ./wp-wifi-refresh.sh > /dev/null 2>&1 &").Output()
 	if err != nil {
 		pr.ReturnResponse(w, err)
 	}
