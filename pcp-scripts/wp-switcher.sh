@@ -71,7 +71,9 @@ if [ $DBUG -eq 1 ]; then
 
     pcp_backup "text"
     cd /mnt/UserData/industrialcool-pcp-wifi-plus/pcp-scripts
+    echo "[wp-switcher.sh] Run  wifi-plus-startup.sh" >> $LOG
     ./wifi-plus-startup.sh
+    echo "[wp-switcher.sh] wifiplus PID: $(pidof wifiplus)" >> $LOG
     #./wp-test.sh
 
     #if [ $(whoami) = "root" ]; then
