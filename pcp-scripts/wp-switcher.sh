@@ -61,7 +61,7 @@ if [ $DBUG -eq 1 ]; then
 
     #[ ! $(sudo ./wp-dns-restart.sh) ] && $(echo "[wp-switcher.sh] Bad JuJu" >> $LOG) && exit 1
 
-    cp /mnt/UserData/industrialcool-pcp-wifi-plus/confs/pcp_hosts /usr/local/etc/pcp/pcp_hosts
+    cp /mnt/UserData/ic-pcp-wifi-plus-server/confs/pcp_hosts /usr/local/etc/pcp/pcp_hosts
     sudo chown root:root /usr/local/etc/pcp/pcp_hosts
     sudo chmod 644 /usr/local/etc/pcp/pcp_hosts
 
@@ -91,10 +91,10 @@ if [ $DBUG -eq 1 ]; then
     fi
 
     pcp_backup "text"
-    cd /mnt/UserData/industrialcool-pcp-wifi-plus/pcp-scripts
+    cd /mnt/UserData/ic-pcp-wifi-plus-server/pcp-scripts
     echo "[wp-switcher.sh] Run  wifi-plus-startup.sh" >> $LOG
-    #cd /mnt/UserData/industrialcool-pcp-wifi-plus/pcp-scripts
-    echo  "$(cd /mnt/UserData/industrialcool-pcp-wifi-plus/pcp-scripts; ./wifi-plus-startup.sh)" >> LOG
+    #cd /mnt/UserData/ic-pcp-wifi-plus-server/pcp-scripts
+    echo  "$(cd /mnt/UserData/ic-pcp-wifi-plus-server/pcp-scripts; ./wifi-plus-startup.sh)" >> LOG
     echo "[wp-switcher.sh] wifiplus PID: $(pidof wifiplus)" >> $LOG
 
     #if [ $(whoami) = "root" ]; then

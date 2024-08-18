@@ -109,8 +109,8 @@ wp_fetch_wap_config() {
 
   if [ -f /usr/local/etc/pcp/hostapd.conf ]; then
     filename="/usr/local/etc/pcp/hostapd.conf"
-  elif [ -f /mnt/UserData/industrialcool-pcp-wifi-plus/pcp-scripts/hostapd.conf ]; then
-    filename=/mnt/UserData/industrialcool-pcp-wifi-plus/pcp-scripts/hostapd.conf
+  elif [ -f /mnt/UserData/ic-pcp-wifi-plus-server/pcp-scripts/hostapd.conf ]; then
+    filename=/mnt/UserData/ic-pcp-wifi-plus-server/pcp-scripts/hostapd.conf
   else
     echo '{ "status": 404, "error": "hostapd.conf file not found" }'
     exit 0
@@ -178,7 +178,7 @@ wp_wap_add() {
     pcp_backup "text"
 
     sudo chown tc:staff /usr/local/etc/pcp/dnsmasq.conf
-    cp /mnt/UserData/industrialcool-pcp-wifi-plus/confs/hostapd.conf /usr/local/etc/pcp/hostapd.conf
+    cp /mnt/UserData/ic-pcp-wifi-plus-server/confs/hostapd.conf /usr/local/etc/pcp/hostapd.conf
     sudo chown tc:staff /usr/local/etc/pcp/hostapd.conf
   else
     echo '{"status": "500", "message": "Failed to download ap mode file."}'

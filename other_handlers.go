@@ -107,8 +107,8 @@ func (a *App) wpSwitcher(w http.ResponseWriter, r *http.Request) {
 		// switch to wap
 		pr.Message = "Switching to wap"
 		pr.Cmd = "nohup ./wp-switcher.sh towap"
-		//rc, err = exec.Command("sh", "-c", "cd /mnt/UserData/industrialcool-pcp-wifi-plus/pcp-scripts; nohup ./wp-switcher.sh towap").Output()
-		rc, err = exec.Command("sh", "-c", "cd /mnt/UserData/industrialcool-pcp-wifi-plus/pcp-scripts; ./wp-switcher.sh towap").Output()
+		//rc, err = exec.Command("sh", "-c", "cd /mnt/UserData/ic-pcp-wifi-plus-server/pcp-scripts; nohup ./wp-switcher.sh towap").Output()
+		rc, err = exec.Command("sh", "-c", "cd /mnt/UserData/ic-pcp-wifi-plus-server/pcp-scripts; ./wp-switcher.sh towap").Output()
 		if err != nil {
 			pr.ReturnResponse(w, err)
 			return
@@ -118,7 +118,7 @@ func (a *App) wpSwitcher(w http.ResponseWriter, r *http.Request) {
 		// switch to wifi
 		pr.Message = "Switching to wifi"
 		pr.Cmd = "nohup ./wp-switcher.sh towifi"
-		rc, err = exec.Command("sh", "-c", "cd /mnt/UserData/industrialcool-pcp-wifi-plus/pcp-scripts; nohup ./wp-switcher.sh towifi").Output()
+		rc, err = exec.Command("sh", "-c", "cd /mnt/UserData/ic-pcp-wifi-plus-server/pcp-scripts; nohup ./wp-switcher.sh towifi").Output()
 		if err != nil {
 			pr.ReturnResponse(w, err)
 			return
