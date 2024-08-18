@@ -48,8 +48,10 @@ if [ -f /usr/local/etc/pcp/hostapd.conf ]; then
   sudo chmod 644 /usr/local/etc/pcp/pcp_hosts
   if [ $(pidof dnsmasq) ]; then
     sudo kill -9 $(pidof dnsmasq)
-    sudo dnsmasq -C /usr/local/etc/pcp/dnsmasq.conf
+    sleep 5
   fi
+
+  sudo dnsmasq -C /usr/local/etc/pcp/dnsmasq.conf -H /usr/local/etc/pcp/pcp_hosts
 
   sudo chown tc:staff /usr/local/etc/pcp/hostapd.conf
   sudo chmod 644 /usr/local/etc/pcp/hostapd.conf
