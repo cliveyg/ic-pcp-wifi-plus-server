@@ -24,6 +24,7 @@
 !pcp-scripts/wp-wifi-refresh.sh
 !pcp-scripts/wp-switcher.sh
 !pcp-scripts/wp-wifi-switch.sh
+!pcp-scripts/wp-test.sh
 !confs
 !confs/hostapd.conf
 !confs/known-wifi-networks.conf

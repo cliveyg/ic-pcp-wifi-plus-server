@@ -38,34 +38,42 @@ if [ $DBUG -eq 1 ]; then
     echo "[wp-switcher.sh] TO WAP MODE" >> $LOG
     echo '{ "status": 202, "message": "Attempting to switch to wap" }'
     # turn wifi off
+    echo "[wp-switcher.sh] TO WRITING WIFI off TO CONFIG" >> $LOG
     pcp_write_var_to_config WIFI "off"
+    echo "[wp-switcher.sh] STOPPING WIFI" >> $LOG
     /usr/local/etc/init.d/wifi wlan0 stop
     # get all wap stuff set up
+    echo "[wp-switcher.sh] TO WRITING APMODE yes TO CONFIG" >> $LOG
     pcp_write_var_to_config APMODE "yes"
 
+    echo "[wp-switcher.sh] LOADING pcp-apmode.tcz" >> $LOG
     sudo -u tc pcp-load -i pcp-apmode.tcz
+    echo "[wp-switcher.sh] starting /usr/local/etc/init.d/pcp-apmode" >> $LOG
     sudo /usr/local/etc/init.d/pcp-apmode start
     sleep 2
 
+    echo "[wp-switcher.sh] copying and permissions for pcp_hosts" >> $LOG
     cp /mnt/UserData/industrialcool-pcp-wifi-plus/confs/pcp_hosts /usr/local/etc/pcp/pcp_hosts
     sudo chown root:root /usr/local/etc/pcp/pcp_hosts
     sudo chmod 644 /usr/local/etc/pcp/pcp_hosts
+    echo "[wp-switcher.sh] checking pid: [$(pidof dnsmasq)]" >> $LOG
     if [ $(pidof dnsmasq) ]; then
       pid=$(pidof dnsmasq)
-      echo "[1] DNSMASQ PID: $(pidof dnsmasq)" >> $LOG
-      if [ $(sudo kill -9 $pid) ]; then
-        echo "Killed dnsmasq process" >> $LOG
-        sleep 2
-        sudo dnsmasq -C /usr/local/etc/pcp/dnsmasq.conf
-        echo "Create new process using new pcp_hosts file" >> $LOG
-        sleep 2
-        echo "[2] DNSMASQ PID: $(pidof dnsmasq)" >> $LOG
-      fi
+      echo "[wp-switcher.sh] PID FOUND" >> $LOG
+      #if [ $(sudo kill -9 $pid) ]; then
+      #  echo "Killed dnsmasq process" >> $LOG
+      #  sleep 2
+      #  sudo dnsmasq -C /usr/local/etc/pcp/dnsmasq.conf
+      #  echo "Create new process using new pcp_hosts file" >> $LOG
+      #  sleep 2
+      #  echo "[2] DNSMASQ PID: $(pidof dnsmasq)" >> $LOG
+      #fi
     fi
 
     pcp_backup "text"
     cd /mnt/UserData/industrialcool-pcp-wifi-plus/pcp-scripts
     ./wifi-plus-startup.sh
+    ./wp-test.sh
 
     #if [ $(whoami) = "root" ]; then
     #  sudo -u tc echo "root sudoing echo as user tc"
@@ -81,8 +89,10 @@ if [ $DBUG -eq 1 ]; then
     echo '{ "status": 202, "message": "Attempting to switch to wifi" }'
     # turn wifi on in config
     pcp_write_var_to_config WIFI "on"
+    pcp_backup "text"
     # stop wap stuff
     pcp_write_var_to_config APMODE "no"
+    pcp_backup "text"
     sudo /usr/local/etc/init.d/pcp-apmode stop
     sleep 2
     # start wifi
