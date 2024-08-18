@@ -45,6 +45,8 @@ func (a *App) wapAction(w http.ResponseWriter, r *http.Request) {
 		} else {
 			err = a.wapConfig(&pr, r.Method, r.Body)
 		}
+	case "dns":
+		a.wapRestartDNS(&pr, &err)
 	default:
 		// do nowt
 		pr.StatusCode = 400
@@ -53,6 +55,21 @@ func (a *App) wapAction(w http.ResponseWriter, r *http.Request) {
 
 	log.WithFields(log.Fields{"Full response is ": pr}).Debug()
 	pr.ReturnResponse(w, err)
+
+}
+
+func (a *App) wapRestartDNS(pr *WifiPlusResponse, err *error) {
+	pr.Function = "wapRestartDNS"
+
+	var rc []byte
+	rc, *err = exec.Command("sh", "-c", "cd /mnt/UserData/industrialcool-pcp-wifi-plus/pcp-scripts && sudo ./wp-dns-restart.sh").Output()
+	if *err != nil {
+		return
+	}
+	pr.StatusCode = 200
+	pr.Message = "Restarting dnsmasq"
+	var b map[string]interface{}
+	*err = json.Unmarshal(rc, &b)
 
 }
 
