@@ -59,12 +59,14 @@ if [ $DBUG -eq 1 ]; then
     cp /mnt/UserData/industrialcool-pcp-wifi-plus/confs/pcp_hosts /usr/local/etc/pcp/pcp_hosts
     sudo chown root:root /usr/local/etc/pcp/pcp_hosts
     sudo chmod 644 /usr/local/etc/pcp/pcp_hosts
+    echo "[wp-switcher.sh]  cat of my pcp_hosts $(/usr/local/etc/pcp/pcp_hosts)" >> LOG
     if [ ! $(sudo dnsmasq -C /usr/local/etc/pcp/dnsmasq.conf) ]; then
       pid=$(pidof dnsmasq)
-      echo "[wp-test.sh] DNSMASQ PID: $(pidof dnsmasq)" >> $LOG
+      echo "[wp-switcher.sh] DNSMASQ PID: $(pidof dnsmasq)" >> $LOG
       sudo /usr/local/etc/init.d/pcp-apmode restart
       sleep 4
-      echo "[wp-test.sh] DNSMASQ PID: $(pidof dnsmasq)" >> $LOG
+      echo "[wp-switcher.sh] DNSMASQ PID: $(pidof dnsmasq)" >> $LOG
+      echo "[wp-switcher.sh]  cat after of pcp_hosts $(/usr/local/etc/pcp/pcp_hosts)" >> LOG
     fi
 
     pcp_backup "text"
