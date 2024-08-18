@@ -59,23 +59,24 @@ if [ $DBUG -eq 1 ]; then
     cp /mnt/UserData/industrialcool-pcp-wifi-plus/confs/pcp_hosts /usr/local/etc/pcp/pcp_hosts
     sudo chown root:root /usr/local/etc/pcp/pcp_hosts
     sudo chmod 644 /usr/local/etc/pcp/pcp_hosts
-    echo "[wp-switcher.sh]  cat of my pcp_hosts\n $(cat /usr/local/etc/pcp/pcp_hosts)" >> LOG
+  echo "[wp-switcher.sh]  cat of my pcp_hosts:" >> $LOG
+  echo "$(cat /usr/local/etc/pcp/pcp_hosts)" >> LOG
     if [ ! $(sudo dnsmasq -C /usr/local/etc/pcp/dnsmasq.conf) ]; then
       pid=$(pidof dnsmasq)
       echo "[wp-switcher.sh] DNSMASQ PID: $(pidof dnsmasq)" >> $LOG
       sudo /usr/local/etc/init.d/pcp-apmode restart
       sleep 4
       echo "[wp-switcher.sh] DNSMASQ PID: $(pidof dnsmasq)" >> $LOG
-      echo "[wp-switcher.sh]  cat after of pcp_hosts\n $(cat /usr/local/etc/pcp/pcp_hosts)" >> LOG
+      echo "[wp-switcher.sh]  cat after of pcp_hosts:" >> LOG
+      echo "$(cat /usr/local/etc/pcp/pcp_hosts)" >> LOG
     fi
 
     pcp_backup "text"
     cd /mnt/UserData/industrialcool-pcp-wifi-plus/pcp-scripts
     echo "[wp-switcher.sh] Run  wifi-plus-startup.sh" >> $LOG
-    cd /mnt/UserData/industrialcool-pcp-wifi-plus/pcp-scripts
-    sudo ./wifi-plus-startup.sh
+    #cd /mnt/UserData/industrialcool-pcp-wifi-plus/pcp-scripts
+    echo  "$(cd /mnt/UserData/industrialcool-pcp-wifi-plus/pcp-scripts; ./wifi-plus-startup.sh)" >> LOG
     echo "[wp-switcher.sh] wifiplus PID: $(pidof wifiplus)" >> $LOG
-    #./wp-test.sh
 
     #if [ $(whoami) = "root" ]; then
     #  sudo -u tc echo "root sudoing echo as user tc"
