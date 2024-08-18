@@ -54,7 +54,18 @@ if [ $DBUG -eq 1 ]; then
 
     echo "[wp-switcher.sh] copying and permissions for pcp_hosts" >> $LOG
 
-    [ ! $(sudo ./wp-test.sh) ] && $(echo "[wp-switcher.sh] Bad JuJu" >> $LOG) && exit 1
+    #[ ! $(sudo ./wp-test.sh) ] && $(echo "[wp-switcher.sh] Bad JuJu" >> $LOG) && exit 1
+
+    cp /mnt/UserData/industrialcool-pcp-wifi-plus/confs/pcp_hosts /usr/local/etc/pcp/pcp_hosts
+    sudo chown root:root /usr/local/etc/pcp/pcp_hosts
+    sudo chmod 644 /usr/local/etc/pcp/pcp_hosts
+    if [ ! $(sudo dnsmasq -C /usr/local/etc/pcp/dnsmasq.conf) ]; then
+      pid=$(pidof dnsmasq)
+      echo "[wp-test.sh] DNSMASQ PID: $(pidof dnsmasq)" >> $LOG
+      sudo /usr/local/etc/init.d/pcp-apmode restart
+      sleep 4
+      echo "[wp-test.sh] DNSMASQ PID: $(pidof dnsmasq)" >> $LOG
+    fi
 
     pcp_backup "text"
     cd /mnt/UserData/industrialcool-pcp-wifi-plus/pcp-scripts
