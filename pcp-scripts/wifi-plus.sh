@@ -58,16 +58,22 @@ wp_status() {
     ;;
   esac
 
-  case $(/usr/local/etc/init.d/pcp-apmode status | grep -v "Not all processes running") in
-    "wpa_supplicant running for wlan0")
+  if [ $(ps -ef | grep /usr/local/bin/pcp-apmode | grep -v grep | awk '{ print $0 }') ]; then
       if [ $(echo $APMODE) = "yes" ]; then
         wpm="Running in wap mode"
       fi
-    ;;
-    *)
-        wpm=""
-    ;;
-  esac
+  fi
+
+  #case $(/usr/local/etc/init.d/pcp-apmode status | grep -v "Not all processes running") in
+  #  "wpa_supplicant running for wlan0")
+  #    if [ $(echo $APMODE) = "yes" ]; then
+  #      wpm="Running in wap mode"
+  #    fi
+  #  ;;
+  #  *)
+  #      wpm=""
+  #  ;;
+  #esac
 
   echo "{ \"wifi\": \"$wm\", \"wap\": \"$wpm\", \"ping\": $arg1 }"
 }
