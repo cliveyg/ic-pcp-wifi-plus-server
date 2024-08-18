@@ -62,9 +62,21 @@ if [ $DBUG -eq 1 ]; then
   echo "[wp-switcher.sh]  cat of my pcp_hosts:" >> $LOG
   echo "$(cat /usr/local/etc/pcp/pcp_hosts)" >> LOG
     if [ ! $(sudo dnsmasq -C /usr/local/etc/pcp/dnsmasq.conf) ]; then
-      pid=$(pidof dnsmasq)
       echo "[wp-switcher.sh] DNSMASQ PID: $(pidof dnsmasq)" >> $LOG
-      sudo /usr/local/etc/init.d/pcp-apmode restart
+      #sudo /usr/local/etc/init.d/pcp-apmode restart
+      if [ $(pidof dnsmasq) ]; then
+        pid=$(pidof dnsmasq)
+        echo "[wp-switcher.sh] DNSMASQ PID: $(pidof dnsmasq)" >> $LOG
+        sudo kill -9 $pid
+        if [ $? ]; then
+          echo "[wp-switcher.sh] Killed dnsmasq process" >> $LOG
+          sleep 3
+          sudo dnsmasq -C /usr/local/etc/pcp/dnsmasq.conf
+          echo "[wp-switcher.sh] Create new process using new pcp_hosts file" >> $LOG
+          sleep 2
+          echo "[wp-switcher.sh] DNSMASQ PID: $(pidof dnsmasq)" >> $LOG
+        fi
+      fi
       sleep 4
       echo "[wp-switcher.sh] DNSMASQ PID: $(pidof dnsmasq)" >> $LOG
       echo "[wp-switcher.sh]  cat after of pcp_hosts:" >> LOG
