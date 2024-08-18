@@ -54,7 +54,7 @@ if [ $DBUG -eq 1 ]; then
 
     echo "[wp-switcher.sh] copying and permissions for pcp_hosts" >> $LOG
 
-    #[ ! $(sudo ./wp-test.sh) ] && $(echo "[wp-switcher.sh] Bad JuJu" >> $LOG) && exit 1
+    #[ ! $(sudo ./wp-dns-restart.sh) ] && $(echo "[wp-switcher.sh] Bad JuJu" >> $LOG) && exit 1
 
     cp /mnt/UserData/industrialcool-pcp-wifi-plus/confs/pcp_hosts /usr/local/etc/pcp/pcp_hosts
     sudo chown root:root /usr/local/etc/pcp/pcp_hosts
