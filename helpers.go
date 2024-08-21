@@ -13,6 +13,7 @@ import (
 
 func (a *App) enableCors(w *http.ResponseWriter) {
 	(*w).Header().Set("Access-Control-Allow-Origin", "*")
+	(*w).Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE")
 }
 
 func (a *App) ExecCmd(command string, args []string) (string, error) {
