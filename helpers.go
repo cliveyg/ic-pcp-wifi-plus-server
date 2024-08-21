@@ -5,10 +5,15 @@ import (
 	log "github.com/sirupsen/logrus"
 	"golang.org/x/crypto/bcrypt"
 	"io"
+	"net/http"
 	"os"
 	"os/exec"
 	"strings"
 )
+
+func (a *App) enableCors(w *http.ResponseWriter) {
+	(*w).Header().Set("Access-Control-Allow-Origin", "*")
+}
 
 func (a *App) ExecCmd(command string, args []string) (string, error) {
 

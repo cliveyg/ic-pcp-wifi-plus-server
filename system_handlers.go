@@ -11,6 +11,7 @@ import (
 
 func (a *App) systemAction(w http.ResponseWriter, r *http.Request) {
 
+	a.enableCors(&w)
 	vars := mux.Vars(r)
 	sa := vars["action"]
 
@@ -59,6 +60,7 @@ func (a *App) systemAction(w http.ResponseWriter, r *http.Request) {
 }
 
 func (a *App) sysShutdown(w http.ResponseWriter, pr *WifiPlusResponse) {
+	a.enableCors(&w)
 	pr.StatusCode = 202
 	pr.Message = "System shutting down"
 	pr.Cmd = "sudo pcp sd"
@@ -72,6 +74,7 @@ func (a *App) sysShutdown(w http.ResponseWriter, pr *WifiPlusResponse) {
 }
 
 func (a *App) sysReboot(w http.ResponseWriter, pr *WifiPlusResponse) {
+	a.enableCors(&w)
 	pr.StatusCode = 202
 	pr.Message = "System rebooting"
 	pr.Cmd = "sudo pcp rb"
