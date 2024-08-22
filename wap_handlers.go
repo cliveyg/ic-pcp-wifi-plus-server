@@ -75,6 +75,7 @@ func (a *App) wapRestartDNS(pr *WifiPlusResponse, err *error) {
 }
 
 func (a *App) wapConfig(pr *WifiPlusResponse, hm string, bd io.ReadCloser) error {
+
 	log.Debugf("In wapConfig and our action is [%s]", hm)
 
 	pr.Function = "wapConfig"
@@ -108,7 +109,7 @@ func (a *App) wapConfig(pr *WifiPlusResponse, hm string, bd io.ReadCloser) error
 		}
 		pr.Message = "Successfully updated WAP config"
 	} else {
-		// only GET
+		// only GET and options
 		pr.Cmd = "wifi-plus.sh wp_fetch_wap_config"
 		rc, err := exec.Command("sh", "-c", "cd cgi-bin && ./wifi-plus.sh wp_fetch_wap_config").Output()
 		if err != nil {
