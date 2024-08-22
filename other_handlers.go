@@ -62,6 +62,7 @@ func (a *App) wpSwitcher(w http.ResponseWriter, r *http.Request) {
 	var rc []byte
 	ssi := ShellSwitchInfo{}
 
+	log.Debug("[[[[[[[ z ]]]]]]]")
 	a.sysPCPConfig(&pr, r.Method, &err, &pc)
 	md := textToMap(pc)
 
@@ -72,6 +73,7 @@ func (a *App) wpSwitcher(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	log.Debug("[[[[[[[ y ]]]]]]]")
 	err = a.wapConfig(&pr, r.Method, nil)
 	if err != nil {
 		log.Debug("[[[[[[[ b ]]]]]]]")

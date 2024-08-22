@@ -112,7 +112,7 @@ func (a *App) sysStatus(pr *WifiPlusResponse, err *error) {
 func (a *App) sysPCPConfig(pr *WifiPlusResponse, hm string, err *error, sr *string) {
 
 	var r []byte
-	if hm == http.MethodGet {
+	if hm == http.MethodGet || hm == http.MethodOptions {
 		pr.Message = "Fetch pcp config settings"
 		pr.Cmd = "./wifi-plus.sh wp_pcp_config"
 		r, *err = exec.Command("sh", "-c", "cd cgi-bin; ./wifi-plus.sh wp_pcp_config read").Output()
