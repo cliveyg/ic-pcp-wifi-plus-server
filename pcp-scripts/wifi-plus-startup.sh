@@ -82,6 +82,9 @@ if sudo cp /mnt/UserData/ic-pcp-wifi-plus-server/wifiplus /var/www/wifiplus &&
     sleep 1
     rc=$(curl -s -o /dev/null -w "%{http_code}" http://"$ICHOST""$PORT"/system/status)
 
+    if [ ! "$rc" = "200" ]; then
+      rc=$(curl -s -o /dev/null -w "%{http_code}" http://10.10.10.1/system/status)
+    fi
 
     if [ "$rc" = "200" ]; then
       echo "[$rc OK] API up and running :)"

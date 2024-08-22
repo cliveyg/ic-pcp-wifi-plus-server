@@ -92,9 +92,10 @@ type ShellSwitchInfo struct {
 }
 
 type SysStatus struct {
-	Wifi string `json:"wifi,omitempty"`
-	WAP  string `json:"wap,omitempty"`
-	Ping int    `json:"ping"`
+	Wifi     string `json:"wifi,omitempty"`
+	WAP      string `json:"wap,omitempty"`
+	Ping     int    `json:"ping"`
+	Hostname string `json:"hostname"`
 }
 
 type ShellResponse struct {
