@@ -25,14 +25,14 @@ func (a *App) systemAction(w http.ResponseWriter, r *http.Request) {
 
 	switch sa {
 	case "config":
-		if r.Method == http.MethodGet || r.Method == http.MethodPut {
+		if r.Method == http.MethodGet || r.Method == http.MethodPut || r.Method == http.MethodOptions {
 			a.sysPCPConfig(&pr, r.Method, &err, nil)
 		} else {
 			pr.StatusCode = 400
 			pr.Message = "Incorrect HTTP method for action"
 		}
 	case "picore":
-		if r.Method == http.MethodGet {
+		if r.Method == http.MethodGet || r.Method == http.MethodOptions {
 			a.sysPiCoreDetails(&pr, &err)
 		} else {
 			pr.StatusCode = 400

@@ -42,6 +42,9 @@ func (a *App) testTings(w http.ResponseWriter, r *http.Request) {
 func (a *App) wpSwitcher(w http.ResponseWriter, r *http.Request) {
 
 	a.enableCors(&w)
+
+	log.Debug("After enabling CORS in wpSwitcher")
+
 	pr := WifiPlusResponse{
 		Function:   "wpSwitcher",
 		Action:     "switcheroo",
@@ -67,7 +70,7 @@ func (a *App) wpSwitcher(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = a.wapConfig(&pr, http.MethodGet, nil)
+	err = a.wapConfig(&pr, r.Method, nil)
 	if err != nil {
 		pr.ReturnResponse(w, err)
 		return
