@@ -5,6 +5,7 @@ import (
 	"github.com/gorilla/mux"
 	log "github.com/sirupsen/logrus"
 	"net/http"
+	"os"
 	"os/exec"
 	"time"
 )
@@ -97,7 +98,14 @@ func (a *App) sysStatus(pr *WifiPlusResponse, err *error) {
 		return
 	}
 
+	var hostname string
 	ss := SysStatus{}
+	hostname, *err = os.Hostname()
+	if *err != nil {
+		log.Error(*err)
+		return
+	}
+	ss.Hostname = hostname
 	*err = json.Unmarshal(rc, &ss)
 	if *err != nil {
 		log.Error(*err)
