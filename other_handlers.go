@@ -41,6 +41,7 @@ func (a *App) testTings(w http.ResponseWriter, r *http.Request) {
 
 func (a *App) wpSwitcher(w http.ResponseWriter, r *http.Request) {
 
+	log.Debug("Before enabling CORS in wpSwitcher")
 	a.enableCors(&w)
 
 	log.Debug("After enabling CORS in wpSwitcher")
@@ -65,6 +66,7 @@ func (a *App) wpSwitcher(w http.ResponseWriter, r *http.Request) {
 	md := textToMap(pc)
 
 	if _, err := os.Stat(os.Getenv("TCEPCPLOC")); errors.Is(err, os.ErrNotExist) {
+		log.Debug("[[[[[[[ a ]]]]]]]")
 		err = errors.New("Unable to switch. apmode is not installed")
 		pr.ReturnResponse(w, err)
 		return
@@ -72,6 +74,7 @@ func (a *App) wpSwitcher(w http.ResponseWriter, r *http.Request) {
 
 	err = a.wapConfig(&pr, r.Method, nil)
 	if err != nil {
+		log.Debug("[[[[[[[ b ]]]]]]]")
 		pr.ReturnResponse(w, err)
 		return
 	}
@@ -92,6 +95,7 @@ func (a *App) wpSwitcher(w http.ResponseWriter, r *http.Request) {
 		wifiRunning = true
 	}
 	if _, err := os.Stat(os.Getenv("PCPSH")); err == nil {
+		log.Debug("[[[[[[[ c ]]]]]]]")
 		pcpInitdFileExists = true
 	}
 	if si.APMode == "yes" && pcpInitdFileExists {
@@ -100,27 +104,32 @@ func (a *App) wpSwitcher(w http.ResponseWriter, r *http.Request) {
 
 	if wifiRunning && wapRunning {
 		err = errors.New("Both wifi and wap are running")
+		log.Debug("[[[[[[[ d ]]]]]]]")
 		pr.ReturnResponse(w, err)
 		return
 	} else if !wifiRunning && !wapRunning {
 		err = errors.New("Both wifi and wap are not running")
+		log.Debug("[[[[[[[ e ]]]]]]]")
 		pr.ReturnResponse(w, err)
 		return
 	}
 
 	if wifiRunning {
 		// switch to wap
+		log.Debug("[[[[[[[ SWITCHING TO WAP ]]]]]]]")
 		pr.Message = "Switching to wap"
 		pr.Cmd = "nohup ./wp-switcher.sh towap"
 		//rc, err = exec.Command("sh", "-c", "cd /mnt/UserData/ic-pcp-wifi-plus-server/pcp-scripts; nohup ./wp-switcher.sh towap").Output()
 		rc, err = exec.Command("sh", "-c", "cd /mnt/UserData/ic-pcp-wifi-plus-server/pcp-scripts; ./wp-switcher.sh towap").Output()
 		if err != nil {
+			log.Debug("[[[[[[[ f ]]]]]]]")
 			pr.ReturnResponse(w, err)
 			return
 		}
 
 	} else if wapRunning {
 		// switch to wifi
+		log.Debug("[[[[[[[ SWITCHING TO WIFI ]]]]]]]")
 		pr.Message = "Switching to wifi"
 		pr.Cmd = "nohup ./wp-switcher.sh towifi"
 		//rc, err = exec.Command("sh", "-c", "cd /mnt/UserData/ic-pcp-wifi-plus-server/pcp-scripts; nohup ./wp-switcher.sh towifi").Output()
