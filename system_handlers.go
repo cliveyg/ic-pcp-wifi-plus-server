@@ -45,7 +45,7 @@ func (a *App) systemAction(w http.ResponseWriter, r *http.Request) {
 		a.sysShutdown(w, &pr)
 		return
 	case "status":
-		if r.Method == http.MethodGet {
+		if r.Method == http.MethodGet || r.Method == http.MethodOptions {
 			a.sysStatus(&pr, &err)
 		} else {
 			pr.StatusCode = 400
