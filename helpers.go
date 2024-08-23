@@ -57,11 +57,9 @@ func loadKnownWifi() []string {
 	for scanner.Scan() {
 		line := scanner.Text()
 		knownWifi := strings.Split(line, "+")
-		log.Debugf("BSSID From File [%s]", knownWifi[0])
 		sa = append(sa, knownWifi[0])
 		log.Debug(sa)
 	}
-	log.Debugf("Length of sa array is [%d]", len(sa))
 	return sa
 }
 
