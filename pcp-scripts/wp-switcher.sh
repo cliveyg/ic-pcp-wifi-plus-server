@@ -37,7 +37,7 @@ if [ $DBUG -eq 1 ]; then
   if [ $arg1 = "towap" ]; then
 
     #-------------------------------------------------------------#
-    # wap mode
+    # switch to wap mode
     #-------------------------------------------------------------#
 
     echo "[wp-switcher.sh] TO WAP MODE" >> $LOG
@@ -107,7 +107,7 @@ if [ $DBUG -eq 1 ]; then
   elif [ $arg1 = "towifi" ]; then
 
     #-------------------------------------------------------------#
-    # wifi mode
+    # switch to wifi mode
     #-------------------------------------------------------------#
 
     echo "[wp-switcher.sh] TO WIFI MODE" >> $LOG

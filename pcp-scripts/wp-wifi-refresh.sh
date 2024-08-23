@@ -71,6 +71,9 @@ else
   sleep 3
   sudo /usr/local/etc/init.d/wifi wlan0 stop
   sudo /usr/local/etc/init.d/wifi wlan0 start
+  sleep 2
+  sudo /usr/local/etc/init.d/wifi wlan0 restart
+  sleep 3
   cd /mnt/UserData/ic-pcp-wifi-plus-server/pcp-scripts
   ./wifi-plus-startup.sh
 
