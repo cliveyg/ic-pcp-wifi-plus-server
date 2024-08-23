@@ -13,7 +13,6 @@ import (
 
 func (a *App) wifiAction(w http.ResponseWriter, r *http.Request) {
 
-	//a.enableCors(&w)
 	vars := mux.Vars(r)
 	wa := vars["action"]
 
@@ -50,7 +49,6 @@ func (a *App) wifiAction(w http.ResponseWriter, r *http.Request) {
 
 func (a *App) wifiSwitchNetwork(w http.ResponseWriter, r *http.Request) {
 
-	//a.enableCors(&w)
 	pr := WifiPlusResponse{
 		Function: "wifiSwitch",
 		Message:  "Switch wifi networks",
@@ -192,9 +190,17 @@ func (a *App) wifiScan(pr *WifiPlusResponse, err *error) {
 	var netArr []WifiNetwork
 	for i := 0; i < len(lines); i++ {
 		wifiDetails := strings.Split(lines[i], "\t")
-		wn := WifiNetwork{SSID: wifiDetails[4],
+		wn := WifiNetwork{
+			SSID:  wifiDetails[4],
 			BSSID: wifiDetails[0],
-			Flags: wifiDetails[3]}
+			Flags: wifiDetails[3],
+			Known: false}
+		for j := 0; j < len(kwa); j++ {
+			if wn.BSSID == kwa[j] {
+				wn.Known = true
+				break
+			}
+		}
 		netArr = append(netArr, wn)
 	}
 	pr.Data = netArr
@@ -202,7 +208,6 @@ func (a *App) wifiScan(pr *WifiPlusResponse, err *error) {
 
 func (a *App) wifiRestart(w http.ResponseWriter, pr *WifiPlusResponse) {
 
-	//a.enableCors(&w)
 	pr.StatusCode = 202
 	pr.Message = "Now we wait..."
 	pr.Cmd = "nohup ./wp-wifi-refresh.sh"

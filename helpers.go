@@ -5,18 +5,10 @@ import (
 	log "github.com/sirupsen/logrus"
 	"golang.org/x/crypto/bcrypt"
 	"io"
-	"net/http"
 	"os"
 	"os/exec"
 	"strings"
 )
-
-func (a *App) enableCors(w *http.ResponseWriter) {
-	(*w).Header().Set("Access-Control-Allow-Origin", "*")
-	(*w).Header().Set("Access-Control-Allow-Methods", "GET, OPTIONS, POST, PUT, DELETE")
-	(*w).Header().Add("Access-Control-Allow-Credentials", "true")
-	(*w).Header().Add("Access-Control-Allow-Headers", "Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization, accept, origin, Cache-Control, X-Requested-With")
-}
 
 func (a *App) ExecCmd(command string, args []string) (string, error) {
 
@@ -45,6 +37,29 @@ func encryptPass(wd *WifiDetails, err *error) string {
 	hashed, *err = bcrypt.GenerateFromPassword([]byte(wd.Password), 8)
 	//log.Debugf("Hashed is %s", hashed)
 	return string(hashed)
+}
+
+func loadKnownWifi() []string {
+	var sa []string
+
+	file, ferr := os.Open(os.Getenv("KNOWNWIFIFILE"))
+	if ferr != nil {
+		log.Fatal(ferr)
+	}
+	defer func(file *os.File) {
+		ferr = file.Close()
+		if ferr != nil {
+			log.Fatal(ferr)
+		}
+	}(file)
+
+	scanner := bufio.NewScanner(file)
+	for scanner.Scan() {
+		line := scanner.Text()
+		knownWifi := strings.Split(line, "+")
+		sa = append(sa, knownWifi[0])
+	}
+	return sa
 }
 
 func passMatch(wd *WifiDetails, err *error, sa *[]string) (bool, bool) {

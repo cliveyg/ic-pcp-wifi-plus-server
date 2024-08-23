@@ -14,7 +14,6 @@ import (
 
 func (a *App) wapAction(w http.ResponseWriter, r *http.Request) {
 
-	//a.enableCors(&w)
 	vars := mux.Vars(r)
 	wa := vars["action"]
 
@@ -130,7 +129,6 @@ func (a *App) wapConfig(pr *WifiPlusResponse, hm string, bd io.ReadCloser) error
 
 func (a *App) wapStopStart(w http.ResponseWriter, pr *WifiPlusResponse, ac string) {
 
-	//a.enableCors(&w)
 	pr.Cmd = "nowt yet"
 	pr.StatusCode = 200
 	pr.Function = "wapStopStart"
@@ -140,7 +138,6 @@ func (a *App) wapStopStart(w http.ResponseWriter, pr *WifiPlusResponse, ac strin
 
 func (a *App) wapInfo(w http.ResponseWriter, r *http.Request) {
 
-	//a.enableCors(&w)
 	pr := WifiPlusResponse{
 		Function: "wapInfo",
 		Action:   r.Method,
@@ -163,7 +160,6 @@ func (a *App) wapInfo(w http.ResponseWriter, r *http.Request) {
 
 func (a *App) wapAddRemove(w http.ResponseWriter, r *http.Request) {
 
-	//a.enableCors(&w)
 	// http 'post' is to add the tcz files, 'delete' is to remove and
 	//'get' is fetch the current details if installed
 	log.Debug(r.Method)
