@@ -186,7 +186,7 @@ func (a *App) wifiScan(pr *WifiPlusResponse, err *error) {
 	// remove first 4 lines of returned data
 	lines = append(lines[:0], lines[4:]...)
 	log.WithFields(log.Fields{"no of wifi networks": len(lines)}).Debug()
-	log.Info(kwa)
+	log.Info(kwb)
 
 	var netArr []WifiNetwork
 	for i := 0; i < len(lines); i++ {
@@ -196,10 +196,20 @@ func (a *App) wifiScan(pr *WifiPlusResponse, err *error) {
 			BSSID: wifiDetails[0],
 			Flags: wifiDetails[3],
 			Known: false}
-		for j := 0; j < len(kwa); j++ {
-			if wn.BSSID == kwa[j] {
+		// check against global var kwb (known wifi bssid's)
+		for j := 0; j < len(kwb); j++ {
+			if wn.BSSID == kwb[j] {
 				wn.Known = true
 				break
+			}
+		}
+		// check against global var kws (known wifi ssid's)
+		if !wn.Known {
+			for k := 0; k < len(kws); k++ {
+				if wn.BSSID == kws[k] {
+					wn.Known = true
+					break
+				}
 			}
 		}
 		netArr = append(netArr, wn)

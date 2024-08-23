@@ -6,7 +6,8 @@ import (
 	"os"
 )
 
-var kwa []string
+var kwb []string
+var kws []string
 
 func main() {
 
@@ -27,7 +28,7 @@ func main() {
 	}
 	log.SetLevel(level)
 	log.Info("======================= Starting wifiplus =======================")
-	kwa = loadKnownWifi()
+	kwb, kws = loadKnownWifiDetails()
 
 	a := App{}
 	a.Initialize()
