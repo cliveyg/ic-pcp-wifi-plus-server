@@ -186,6 +186,7 @@ func (a *App) wifiScan(pr *WifiPlusResponse, err *error) {
 	// remove first 4 lines of returned data
 	lines = append(lines[:0], lines[4:]...)
 	log.WithFields(log.Fields{"no of wifi networks": len(lines)}).Debug()
+	log.Info(kwa)
 
 	var netArr []WifiNetwork
 	for i := 0; i < len(lines); i++ {
