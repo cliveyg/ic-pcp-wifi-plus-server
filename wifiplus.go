@@ -29,6 +29,8 @@ func main() {
 	log.SetLevel(level)
 	log.Info("======================= Starting wifiplus =======================")
 	kwb, kws = loadKnownWifiDetails()
+	log.Debugf("kwb is [%s]", kwb)
+	log.Debugf("kws is [%s]", kws)
 
 	a := App{}
 	a.Initialize()
