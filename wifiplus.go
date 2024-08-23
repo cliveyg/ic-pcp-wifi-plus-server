@@ -27,6 +27,7 @@ func main() {
 	}
 	log.SetLevel(level)
 	log.Info("======================= Starting wifiplus =======================")
+	log.Info(kwa)
 
 	a := App{}
 	a.Initialize()
