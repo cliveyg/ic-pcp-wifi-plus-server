@@ -29,6 +29,7 @@ type WifiNetwork struct {
 	BSSID string `json:"bssid"`
 	SSID  string `json:"ssid"`
 	Flags string `json:"flags"`
+	Known bool   `json:"known"`
 }
 
 type WPACliResponse struct {

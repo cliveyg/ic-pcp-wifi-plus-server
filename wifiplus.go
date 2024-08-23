@@ -6,7 +6,10 @@ import (
 	"os"
 )
 
+var kwa []string
+
 func main() {
+	kwa = loadKnownWifi()
 	err := godotenv.Load()
 	if err != nil {
 		log.Fatal("Error loading .env file")

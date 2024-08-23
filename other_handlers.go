@@ -14,7 +14,6 @@ import (
 
 func (a *App) testTings(w http.ResponseWriter, r *http.Request) {
 
-	//a.enableCors(&w)
 	pr := WifiPlusResponse{
 		Function:   "testTings",
 		Cmd:        "whatevs",
@@ -42,7 +41,6 @@ func (a *App) testTings(w http.ResponseWriter, r *http.Request) {
 func (a *App) wpSwitcher(w http.ResponseWriter, r *http.Request) {
 
 	log.Debug("Before enabling CORS in wpSwitcher")
-	//a.enableCors(&w)
 
 	log.Debug("After enabling CORS in wpSwitcher")
 
@@ -156,8 +154,6 @@ func (a *App) wpSwitcher(w http.ResponseWriter, r *http.Request) {
 
 func (a *App) getWPACliStatus(w http.ResponseWriter, _ *http.Request) {
 
-	//a.enableCors(&w)
-
 	pr := WifiPlusResponse{
 		Function: "getWPACliStatus",
 		Action:   "wpa_cli",
@@ -184,7 +180,6 @@ func (a *App) getWPACliStatus(w http.ResponseWriter, _ *http.Request) {
 }
 
 func (a *App) return404(w http.ResponseWriter, _ *http.Request) {
-	a.enableCors(&w)
 	pr := WifiPlusResponse{
 		Function:   "return404",
 		Action:     "rest",
