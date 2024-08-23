@@ -121,13 +121,16 @@ func (a *App) wpSwitcher(w http.ResponseWriter, r *http.Request) {
 		log.Debug("[[[[[[[ SWITCHING TO WAP ]]]]]]]")
 		pr.Message = "Switching to wap"
 		pr.Cmd = "nohup ./wp-switcher.sh towap"
-		//rc, err = exec.Command("sh", "-c", "cd /mnt/UserData/ic-pcp-wifi-plus-server/pcp-scripts; nohup ./wp-switcher.sh towap").Output()
-		rc, err = exec.Command("sh", "-c", "cd /mnt/UserData/ic-pcp-wifi-plus-server/pcp-scripts; ./wp-switcher.sh towap").Output()
+		rc, err = exec.Command("sh", "-c", "cd /mnt/UserData/ic-pcp-wifi-plus-server/pcp-scripts; nohup ./wp-switcher.sh towap").Output()
+		//rc, err = exec.Command("sh", "-c", "cd /mnt/UserData/ic-pcp-wifi-plus-server/pcp-scripts; ./wp-switcher.sh towap").Output()
 		if err != nil {
 			log.Debug("[[[[[[[ f ]]]]]]]")
+			log.Debug(err)
 			pr.ReturnResponse(w, err)
 			return
 		}
+
+		log.Debugf("RC is %s", string(rc))
 
 	} else if wapRunning {
 		// switch to wifi
