@@ -58,6 +58,7 @@ if [ $? -eq 0 ]; then
   else
     echo "[wp-wifi-refresh.sh] Failed to kill udhcpc process. Exiting..."
     return 2
+  fi
 else
   echo "[wp-wifi-refresh.sh] Failed to kill udhcpc process. Exiting..."
   return 2
