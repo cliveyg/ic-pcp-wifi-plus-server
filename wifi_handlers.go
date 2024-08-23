@@ -206,7 +206,7 @@ func (a *App) wifiScan(pr *WifiPlusResponse, err *error) {
 		// check against global var kws (known wifi ssid's)
 		if !wn.Known {
 			for k := 0; k < len(kws); k++ {
-				if wn.BSSID == kws[k] {
+				if wn.SSID == kws[k] {
 					wn.Known = true
 					break
 				}
