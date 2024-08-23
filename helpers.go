@@ -39,8 +39,9 @@ func encryptPass(wd *WifiDetails, err *error) string {
 	return string(hashed)
 }
 
-func loadKnownWifi() []string {
-	var sa []string
+func loadKnownWifiDetails() ([]string, []string) {
+	var sab []string
+	var sas []string
 
 	file, ferr := os.Open(os.Getenv("KNOWNWIFIFILE"))
 	if ferr != nil {
@@ -57,10 +58,10 @@ func loadKnownWifi() []string {
 	for scanner.Scan() {
 		line := scanner.Text()
 		knownWifi := strings.Split(line, "+")
-		sa = append(sa, knownWifi[0])
-		log.Debug(sa)
+		sab = append(sab, knownWifi[0])
+		sas = append(sas, knownWifi[1])
 	}
-	return sa
+	return sab, sas
 }
 
 func passMatch(wd *WifiDetails, err *error, sa *[]string) (bool, bool) {
