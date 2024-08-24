@@ -2,8 +2,8 @@ package main
 
 import (
 	"fmt"
-	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
+	"github.com/rs/cors"
 	log "github.com/sirupsen/logrus"
 	"net/http"
 )
@@ -20,5 +20,13 @@ func (a *App) Initialize() {
 func (a *App) Run(addr string) {
 	log.Print(fmt.Sprintf("Server running on port [%s]", addr))
 
-	log.Fatal(http.ListenAndServe(addr, handlers.CORS()(a.Router)))
+	c := cors.New(cors.Options{
+		AllowedOrigins:   []string{"*"},
+		AllowCredentials: true,
+		AllowedHeaders:   []string{"Content-Type", "Content-Length", "Accept-Encoding", "X-CSRF-Token", "Authorization", "accept", "origin", "Cache-Control", "X-Requested-With"},
+		AllowedMethods:   []string{"GET", "OPTIONS", "POST", "PUT", "DELETE"},
+	})
+	hnd := c.Handler(a.Router)
+
+	log.Fatal(http.ListenAndServe(addr, hnd))
 }
