@@ -21,12 +21,12 @@ func (a *App) Run(addr string) {
 	log.Print(fmt.Sprintf("Server running on port [%s]", addr))
 
 	c := cors.New(cors.Options{
-		AllowedOrigins: []string{"*"},
-		//AllowCredentials: true,
-		AllowedHeaders: []string{"Content-Type", "Content-Length", "Accept-Encoding", "X-CSRF-Token", "Authorization", "accept", "origin", "Cache-Control", "X-Requested-With"},
-		AllowedMethods: []string{"GET", "OPTIONS", "POST", "PUT", "DELETE"},
+		AllowedOrigins:   []string{"*"},
+		AllowCredentials: true,
+		AllowedHeaders:   []string{"Connection", "Priority", "Sec-GPC", "DNT", "Referer", "User-Agent", "Host", "Accept", "Accept-Language", "Content-Type", "Content-Length", "Accept-Encoding", "X-CSRF-Token", "Authorization", "accept", "Origin", "Cache-Control", "X-Requested-With"},
+		AllowedMethods:   []string{"GET", "OPTIONS", "POST", "PUT", "DELETE"},
 	})
-	hnd := c.Handler(a.Router)
 
+	hnd := c.Handler(a.Router)
 	log.Fatal(http.ListenAndServe(addr, hnd))
 }
