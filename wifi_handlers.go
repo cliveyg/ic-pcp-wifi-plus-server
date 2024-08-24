@@ -191,28 +191,30 @@ func (a *App) wifiScan(pr *WifiPlusResponse, err *error) {
 	var netArr []WifiNetwork
 	for i := 0; i < len(lines); i++ {
 		wifiDetails := strings.Split(lines[i], "\t")
-		wn := WifiNetwork{
-			SSID:  wifiDetails[4],
-			BSSID: wifiDetails[0],
-			Flags: wifiDetails[3],
-			Known: false}
-		// check against global var kwb (known wifi bssid's)
-		for j := 0; j < len(kwb); j++ {
-			if wn.BSSID == kwb[j] {
-				wn.Known = true
-				break
-			}
-		}
-		// check against global var kws (known wifi ssid's)
-		if !wn.Known {
-			for k := 0; k < len(kws); k++ {
-				if wn.SSID == kws[k] {
+		if wifiDetails[4] != "\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00" {
+			wn := WifiNetwork{
+				SSID:  wifiDetails[4],
+				BSSID: wifiDetails[0],
+				Flags: wifiDetails[3],
+				Known: false}
+			// check against global var kwb (known wifi bssid's)
+			for j := 0; j < len(kwb); j++ {
+				if wn.BSSID == kwb[j] {
 					wn.Known = true
 					break
 				}
 			}
+			// check against global var kws (known wifi ssid's)
+			if !wn.Known {
+				for k := 0; k < len(kws); k++ {
+					if wn.SSID == kws[k] {
+						wn.Known = true
+						break
+					}
+				}
+			}
+			netArr = append(netArr, wn)
 		}
-		netArr = append(netArr, wn)
 	}
 	pr.Data = netArr
 }
