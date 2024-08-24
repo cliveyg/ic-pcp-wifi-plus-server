@@ -69,14 +69,18 @@ if [ $? -eq 0 ]; then
   sleep 1
   wpa_cli -i wlan0 reconfigure
   sleep 3
+  echo "[wp-wifi-switch.sh] wpa_supplicant.conf: " >> LOG
+  echo "$(sudo cat /usr/local/etc/pcp/wpa_supplicant.conf)" >> LOG
   iwconfig wlan0 | grep "Frequency"
   if [ $? -ne 0 ]; then
     echo "[wp-wifi-switch.sh] Failed to switch wifi networks " >> $LOG
     echo "[wp-wifi-switch.sh] Switching back... " >> $LOG
-    sudo cp /usr/local/etc/pcp/wpa_supplicant.conf~ /usr/local/etc/pcp/wpa_supplicant.conf
-    sudo chown root:root /usr/local/etc/pcp/wpa_supplicant.conf
+    echo "$(sudo cp /usr/local/etc/pcp/wpa_supplicant.conf~ /usr/local/etc/pcp/wpa_supplicant.conf)" >> LOG
+    echo "$(sudo chown root:root /usr/local/etc/pcp/wpa_supplicant.conf)" >> LOG
 
-    wpa_cli -i wlan0 reconfigure
+    echo "$(wpa_cli -i wlan0 reconfigure)" >> LOG
+    sleep 3
+    echo "$(sudo /usr/local/etc/init.d/wifi wlan0 restart)" >> LOG
     sleep 3
     iwconfig wlan0 | grep "Frequency"
     if [ $? -ne 0 ]; then
