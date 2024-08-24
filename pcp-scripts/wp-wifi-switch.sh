@@ -101,14 +101,14 @@ if [ $? -eq 0 ]; then
       if [ $? -eq 0 ]; then
         rm -f /var/run/udhcpc.wlan0.pid
         if [ $? -eq 0 ]; then
-          echo "[wp-wifi-switch.sh] Killed udhcpc process"
+          echo "[wp-wifi-switch.sh] Killed udhcpc process" >> $LOG
         else
-          echo "[wp-wifi-switch.sh] Failed to kill udhcpc process."
+          echo "[wp-wifi-switch.sh] Failed to kill udhcpc process." >> $LOG
           echo '{ "status": 500, "message": "Failed to kill udhcpc process" }'
           return 0
         fi
       else
-        echo "[wp-wifi-switch.sh] Failed to kill udhcpc process."
+        echo "[wp-wifi-switch.sh] Failed to kill udhcpc process." >> $LOG
         echo '{ "status": 500, "message": "Failed to kill udhcpc process" }'
         return 0
       fi
@@ -141,7 +141,3 @@ else
        echo '{ "status": 500, "message": "Unable to stop running wifi" }'
        return 0
 fi
-
-
-
-#echo "{ \"beep\": \"boop\" }"
