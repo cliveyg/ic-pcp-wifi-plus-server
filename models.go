@@ -121,13 +121,12 @@ type PiCoreSystemData struct {
 
 func (p *WifiPlusResponse) ReturnResponse(w http.ResponseWriter, err error) {
 
-	/*
-		w.Header().Set("Content-Type", "application/json; charset=UTF-8")
-		w.Header().Set("Access-Control-Allow-Origin", "*")
-		w.Header().Set("Access-Control-Allow-Methods", "GET, OPTIONS, POST, PUT, DELETE")
-		w.Header().Add("Access-Control-Allow-Credentials", "true")
-		w.Header().Add("Access-Control-Allow-Headers", "Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization, accept, origin, Cache-Control, X-Requested-With")
-	*/
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.Header().Set("Access-Control-Allow-Methods", "GET, OPTIONS, POST, PUT, DELETE")
+	w.Header().Set("Access-Control-Allow-Credentials", "true")
+	w.Header().Set("Access-Control-Allow-Headers", "Connection, Priority, Sec-GPC, DNT, Referer, User-Agent, Host, Accept, Accept-Language, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization, Accept, Origin, Cache-Control, X-Requested-With")
+	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+
 	if err != nil {
 		log.WithFields(log.Fields{"err": err}).Error("Something went bang!")
 		p.StatusCode = 500
@@ -142,6 +141,10 @@ func (p *WifiPlusResponse) ReturnResponse(w http.ResponseWriter, err error) {
 		log.Fatal(err)
 	}
 	w.WriteHeader(p.StatusCode)
+	vs := w.Header().Get("Access-Control-Allow-Origin")
+	if vs == "" {
+		log.Fatal("Access-Control-Allow-Origin not set")
+	}
 	if _, err = io.WriteString(w, string(jba)); err != nil {
 		log.Fatal(err)
 	}
