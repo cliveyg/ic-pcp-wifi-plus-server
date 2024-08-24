@@ -72,9 +72,11 @@ if [ $? -eq 0 ]; then
   echo "[wp-wifi-switch.sh] wpa_supplicant.conf: " >> LOG
   echo "$(sudo cat /usr/local/etc/pcp/wpa_supplicant.conf)" >> LOG
 
-  iwconfig wlan0 | grep "Frequency"
-  if [ $? -eq 0 ]; then
+  iwconfig wlan0 | grep Frequency
+  res=echo "$(iwconfig wlan0 | grep Frequency)"
 
+  case "$(iwconfig wlan0)" in
+    *Frequency*)
       echo "[wp-wifi-switch.sh] New wifi running" >> LOG
       # backup stuff
       echo -n "[wp-wifi-switch.sh] backup status: " >> $LOG
@@ -87,9 +89,8 @@ if [ $? -eq 0 ]; then
         echo '{ "status": 500, "message": "Unable to back up pcp" }'
         return 0
       fi
-
-  else
-
+    ;;
+    *)
     echo "[wp-wifi-switch.sh] Failed to switch wifi networks " >> $LOG
     echo "[wp-wifi-switch.sh] Switching back... " >> $LOG
     echo "$(sudo cp /usr/local/etc/pcp/wpa_supplicant.conf~ /usr/local/etc/pcp/wpa_supplicant.conf)" >> LOG
@@ -136,7 +137,9 @@ if [ $? -eq 0 ]; then
       echo '{ "status": 400, "message": "Switched back to old wifi settings" }'
       return 0
     fi
-  fi
+    ;;
+  esac
+
 else
        echo "[wp-wifi-switch.sh] Unable to stop running wifi :(" >> $LOG
        echo '{ "status": 500, "message": "Unable to stop running wifi" }'
