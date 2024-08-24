@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
 	log "github.com/sirupsen/logrus"
 	"net/http"
@@ -18,5 +19,6 @@ func (a *App) Initialize() {
 
 func (a *App) Run(addr string) {
 	log.Print(fmt.Sprintf("Server running on port [%s]", addr))
-	log.Fatal(http.ListenAndServe(addr, a.Router))
+
+	log.Fatal(http.ListenAndServe(addr, handlers.CORS()(a.Router)))
 }
