@@ -89,10 +89,11 @@ func (a *App) wifiSwitchNetwork(w http.ResponseWriter, r *http.Request) {
 		pr.ReturnResponse(w, err)
 		return
 	}
+	log.Debugf("Return data is [%s]", string(rc))
 	sr := ShellResponse{}
 	err = json.Unmarshal(rc, &sr)
 	if err != nil {
-		log.Fatal(err)
+		log.Error(err)
 	}
 	if sr.Status == 200 {
 		connOk = true
