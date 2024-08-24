@@ -93,6 +93,7 @@ func (a *App) wifiSwitchNetwork(w http.ResponseWriter, r *http.Request) {
 	sr := ShellResponse{}
 	err = json.Unmarshal(rc, &sr)
 	if err != nil {
+		log.Debug("-=-=-=-=-=-=-= 0 =-=-=-=-=-=-=-=-")
 		log.Error(err)
 	}
 	if sr.Status == 200 {
@@ -101,6 +102,7 @@ func (a *App) wifiSwitchNetwork(w http.ResponseWriter, r *http.Request) {
 
 	// if a new network or existing network but with new pass and connected ok then save to file
 	if (newNet || (nf && !pm)) && connOk && savedToTempNetConf(&wd, &err) {
+		log.Debug("-=-=-=-=-=-=-= 1 =-=-=-=-=-=-=-=-")
 		// saved to temp file so overwrite old file with new version
 		if !fileSwitch(&err) {
 			if restoreFromBackup() {
@@ -113,10 +115,12 @@ func (a *App) wifiSwitchNetwork(w http.ResponseWriter, r *http.Request) {
 		}
 
 	} else if (newNet || (nf && !pm)) && connOk {
+		log.Debug("-=-=-=-=-=-=-= 2 =-=-=-=-=-=-=-=-")
 		pr.Message = "Connected but unable to save network details to temp file"
 		err = errors.New(pr.Message)
 		pr.ReturnResponse(w, err)
 	} else if !connOk {
+		log.Debug("-=-=-=-=-=-=-= 3 =-=-=-=-=-=-=-=-")
 		pr.Message = fmt.Sprintf("Unable to switch to [%s] wifi network", wd.SSID)
 		pr.ReturnResponse(w, err)
 		return
