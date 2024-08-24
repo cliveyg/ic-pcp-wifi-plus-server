@@ -72,8 +72,7 @@ if [ $? -eq 0 ]; then
   echo "[wp-wifi-switch.sh] wpa_supplicant.conf: " >> LOG
   echo "$(sudo cat /usr/local/etc/pcp/wpa_supplicant.conf)" >> LOG
 
-  iwconfig wlan0 | grep Frequency
-  res=echo "$(iwconfig wlan0 | grep Frequency)"
+  # iwconfig wlan0 | grep Frequency
 
   case "$(iwconfig wlan0)" in
     *Frequency*)
@@ -119,11 +118,11 @@ if [ $? -eq 0 ]; then
 
     sudo /sbin/udhcpc -b -i wlan0 -A 5 -x hostname:$(/bin/hostname) -p /var/run/udhcpc.wlan0.pid
     if [ $? -ne 0 ]; then
-      echo "[wp-wifi-refresh.sh] Unable to restart udhcpc." >> $LOG
+      echo "[wp-wifi-switch.sh] Unable to restart udhcpc." >> $LOG
       echo '{ "status": 500, "message": "Unable to restart udhcpc" }'
       return 0
     else
-      echo "[wp-wifi-refresh.sh] Restart udhcpc [OK]" >> $LOG
+      echo "[wp-wifi-switch.sh] Restart udhcpc [OK]" >> $LOG
     fi
 
     sleep 3
