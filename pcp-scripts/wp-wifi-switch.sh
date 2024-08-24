@@ -71,8 +71,25 @@ if [ $? -eq 0 ]; then
   sleep 3
   echo "[wp-wifi-switch.sh] wpa_supplicant.conf: " >> LOG
   echo "$(sudo cat /usr/local/etc/pcp/wpa_supplicant.conf)" >> LOG
+
   iwconfig wlan0 | grep "Frequency"
-  if [ $? -ne 0 ]; then
+  if [ $? -eq 0 ]; then
+
+      echo "[wp-wifi-switch.sh] New wifi running" >> LOG
+      # backup stuff
+      echo -n "[wp-wifi-switch.sh] backup status: " >> $LOG
+      if wp_backup; then
+        echo "success!" >> $LOG
+        echo '{ "status": 202, "message": "the good ting" }'
+        return 0
+      else
+        echo "fail :(" >> $LOG
+        echo '{ "status": 500, "message": "Unable to back up pcp" }'
+        return 0
+      fi
+
+  else
+
     echo "[wp-wifi-switch.sh] Failed to switch wifi networks " >> $LOG
     echo "[wp-wifi-switch.sh] Switching back... " >> $LOG
     echo "$(sudo cp /usr/local/etc/pcp/wpa_supplicant.conf~ /usr/local/etc/pcp/wpa_supplicant.conf)" >> LOG
@@ -82,7 +99,7 @@ if [ $? -eq 0 ]; then
     sleep 3
     echo "$(sudo /usr/local/etc/init.d/wifi wlan0 restart)" >> LOG
 
-    echo -n "[wp-wifi-switch.sh] Attempting to kill and restart udhcpc" >> $LOG
+    echo "[wp-wifi-switch.sh] Attempting to kill and restart udhcpc" >> $LOG
     sudo kill `ps | grep udhcpc | grep wlan0 | awk '{print $1}'` > /dev/null 2>&1
     if [ $? -eq 0 ]; then
       rm -f /var/run/udhcpc.wlan0.pid
@@ -117,18 +134,6 @@ if [ $? -eq 0 ]; then
     else
       echo "[wp-wifi-switch.sh] Switched back to old wifi settings" >> $LOG
       echo '{ "status": 400, "message": "Switched back to old wifi settings" }'
-      return 0
-    fi
-  else
-    # backup stuff
-    echo -n "[wp-wifi-switch.sh] backup status: " >> $LOG
-    if wp_backup; then
-      echo "success!" >> $LOG
-      echo '{ "status": 202, "message": "the good ting" }'
-      return 0
-    else
-      echo "fail :(" >> $LOG
-      echo '{ "status": 500, "message": "Unable to back up pcp" }'
       return 0
     fi
   fi
