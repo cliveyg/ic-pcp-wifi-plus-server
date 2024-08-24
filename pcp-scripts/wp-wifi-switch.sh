@@ -66,14 +66,14 @@ echo "[wp-wifi-switch.sh] Stopping current wifi" >> $LOG
 sudo /usr/local/etc/init.d/wifi wlan0 stop
 if [ $? -eq 0 ]; then
   echo "[wp-wifi-switch.sh] Current wifi stopped" >> $LOG
-  echo "[wp-wifi-switch.sh] wpa_cli -i wlan0 reconfigure: " >> LOG
-  echo "$(wpa_cli -i wlan0 reconfigure)" >> LOG
-  sleep 3
-  echo "[wp-wifi-switch.sh] after reconfiguring" >> LOG
+  echo "[wp-wifi-switch.sh] wpa_cli -i wlan0 reconfigure: " >> $LOG
+  echo "$(wpa_cli -i wlan0 reconfigure)" >> $LOG
+  sleep 5
+  echo "[wp-wifi-switch.sh] after reconfiguring" >> $LOG
 
   case "$(iwconfig wlan0)" in
     *Frequency*)
-      echo "[wp-wifi-switch.sh] New wifi running" >> LOG
+      echo "[wp-wifi-switch.sh] New wifi running" >> $LOG
       # backup stuff
       echo -n "[wp-wifi-switch.sh] backup status: " >> $LOG
       if wp_backup; then
@@ -89,12 +89,12 @@ if [ $? -eq 0 ]; then
     *)
       echo "[wp-wifi-switch.sh] Failed to switch wifi networks " >> $LOG
       echo "[wp-wifi-switch.sh] Switching back... " >> $LOG
-      echo "$(sudo cp /usr/local/etc/pcp/wpa_supplicant.conf~ /usr/local/etc/pcp/wpa_supplicant.conf)" >> LOG
-      echo "$(sudo chown root:root /usr/local/etc/pcp/wpa_supplicant.conf)" >> LOG
+      echo "$(sudo cp /usr/local/etc/pcp/wpa_supplicant.conf~ /usr/local/etc/pcp/wpa_supplicant.conf)" >> $LOG
+      echo "$(sudo chown root:root /usr/local/etc/pcp/wpa_supplicant.conf)" >> $LOG
 
-      echo "$(wpa_cli -i wlan0 reconfigure)" >> LOG
+      echo "$(wpa_cli -i wlan0 reconfigure)" >> $LOG
       sleep 3
-      echo "$(sudo /usr/local/etc/init.d/wifi wlan0 restart)" >> LOG
+      echo "$(sudo /usr/local/etc/init.d/wifi wlan0 restart)" >> $LOG
 
       echo "[wp-wifi-switch.sh] Attempting to kill and restart udhcpc" >> $LOG
       sudo kill `ps | grep udhcpc | grep wlan0 | awk '{print $1}'` > /dev/null 2>&1
