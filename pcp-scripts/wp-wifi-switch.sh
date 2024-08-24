@@ -67,12 +67,17 @@ sudo /usr/local/etc/init.d/wifi wlan0 stop
 if [ $? -eq 0 ]; then
   echo "[wp-wifi-switch.sh] Current wifi stopped" >> $LOG
   sleep 1
-  wpa_cli -i wlan0 reconfigure
+  echo "[wp-wifi-switch.sh] wpa_cli -i wlan0 reconfigure: " >> LOG
+  echo "$(wpa_cli -i wlan0 reconfigure)" >> LOG
   sleep 3
   echo "[wp-wifi-switch.sh] wpa_supplicant.conf: " >> LOG
   echo "$(sudo cat /usr/local/etc/pcp/wpa_supplicant.conf)" >> LOG
 
+  #sudo /usr/local/etc/init.d/wifi wlan0 restart
   # iwconfig wlan0 | grep Frequency
+  echo "[wp-wifi-switch.sh] after reconfiguring" >> LOG
+
+  sleep 3
 
   case "$(iwconfig wlan0)" in
     *Frequency*)
