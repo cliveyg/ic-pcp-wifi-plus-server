@@ -141,9 +141,18 @@ func (p *WifiPlusResponse) ReturnResponse(w http.ResponseWriter, err error) {
 		log.Fatal(err)
 	}
 	w.WriteHeader(p.StatusCode)
-	vs := w.Header().Get("Access-Control-Allow-Origin")
-	if vs == "" {
-		log.Fatal("Access-Control-Allow-Origin not set")
+
+	// this check is here as sometimes the go httpd server seems to forget to send
+	// cors headers. i tried using the gorilla cors and other cors library but it
+	// seemed to work better for me explicitly adding these headers
+	if w.Header().Get("Access-Control-Allow-Origin") == "" {
+		log.Error("Access-Control-Allow-Origin not set")
+		// try setting them again
+		w.Header().Set("Access-Control-Allow-Origin", "*")
+		w.Header().Set("Access-Control-Allow-Methods", "GET, OPTIONS, POST, PUT, DELETE")
+		w.Header().Set("Access-Control-Allow-Credentials", "true")
+		w.Header().Set("Access-Control-Allow-Headers", "Connection, Priority, Sec-GPC, DNT, Referer, User-Agent, Host, Accept, Accept-Language, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization, Accept, Origin, Cache-Control, X-Requested-With")
+		w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 	}
 	if _, err = io.WriteString(w, string(jba)); err != nil {
 		log.Fatal(err)
