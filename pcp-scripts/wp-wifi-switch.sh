@@ -4,15 +4,11 @@
 # wp-wifi-switch.sh                                                           #
 #                                                                             #
 #                                                                             #
-#                                                                             #
-#                                                                             #
 #-----------------------------------------------------------------------------#
 
 set -a
 . /var/www/.env
 set +a
-
-LOG=$LOGFILE
 
 ssid=$1
 pass=$2
@@ -44,38 +40,56 @@ wp_backup() {
 
 #------------------------------- main program --------------------------------#
 
-
 if [ $DBUG -eq 1 ]; then
-
+  LOG=/var/log/wifiplus.log
   if [ ! -f $LOG ]; then
     sudo touch $LOG
   fi
-  echo "[wp-wifi-switch.sh] ------------------------------" >> $LOG
-  echo -n "[wp-wifi-switch.sh] whoami: " >> $LOG
-  echo $(whoami) >> $LOG
-  echo "[wp-wifi-switch.sh] SSID is [$ssid]" >> $LOG
-  echo "[wp-wifi-switch.sh] Pass is [$pass]" >> $LOG
-  #sudo cp /usr/local/etc/pcp/wpa_supplicant.conf /usr/local/etc/pcp/wpa_supplicant.conf~
-  #sudo cp /mnt/UserData/ic-pcp-wifi-plus-server/confs/wpa_supplicant.conf /usr/local/etc/pcp/wpa_supplicant.conf
-  #sudo sed -i "s/90909090909090909090909090909/$ssid/g" /usr/local/etc/pcp/wpa_supplicant.conf
-  #sudo sed -i "s/\+\+/$pass/g" /usr/local/etc/pcp/wpa_supplicant.conf
-  #sudo chown root:root /usr/local/etc/pcp/wpa_supplicant.conf
+else
+  LOG=/dev/null
+fi
 
-  sleep 2
+echo "[wp-wifi-switch.sh] ------------------------------" >> $LOG
+echo -n "[wp-wifi-switch.sh] whoami: " >> $LOG
+echo $(whoami) >> $LOG
+echo "[wp-wifi-switch.sh] SSID is [$ssid]" >> $LOG
+echo "[wp-wifi-switch.sh] Pass is [$pass]" >> $LOG
+sudo cp /usr/local/etc/pcp/wpa_supplicant.conf /usr/local/etc/pcp/wpa_supplicant.conf~
+sudo cp /mnt/UserData/ic-pcp-wifi-plus-server/confs/wpa_supplicant.conf /usr/local/etc/pcp/wpa_supplicant.conf
+sudo sed -i "s/90909090909090909090c909090909/$ssid/g" /usr/local/etc/pcp/wpa_supplicant.conf
+sudo sed -i "s/\+\+/$pass/g" /usr/local/etc/pcp/wpa_supplicant.conf
+sudo chown root:root /usr/local/etc/pcp/wpa_supplicant.conf
+
+wpa_cli -i wlan0 reconfigure
+sleep 3
+iwconfig wlan0 | grep "Frequency"
+if [ $? -ne 0 ]; then
+  echo "[wp-wifi-switch.sh] Failed to switch wifi networks " >> $LOG
+  echo "[wp-wifi-switch.sh] Switching back... " >> $LOG
+  sudo cp /usr/local/etc/pcp/wpa_supplicant.conf~ /usr/local/etc/pcp/wpa_supplicant.conf
+  sudo chown root:root /usr/local/etc/pcp/wpa_supplicant.conf
+  wpa_cli -i wlan0 reconfigure
+  sleep 3
+  iwconfig wlan0 | grep "Frequency"
+  if [ $? -ne 0 ]; then
+    echo "[wp-wifi-switch.sh] Failed to switch back!" >> $LOG
+    echo '{ "status": 500, "message": "Failed to switch back" }'
+  else
+    echo "[wp-wifi-switch.sh] Switched back to old wifi settings" >> $LOG
+    echo '{ "status": 400, "message": "Switched back to old wifi settings" }'
+  fi
+else
   # backup stuff
   echo -n "[wp-wifi-switch.sh] backup status: " >> $LOG
   if wp_backup; then
     echo "success!" >> $LOG
-    echo '{ "status": 200, "message": "the good ting" }'
+    echo '{ "status": 202, "message": "the good ting" }'
   else
     echo "fail :(" >> $LOG
     echo '{ "status": 500, "message": "bad stuff" }'
   fi
-
-else
-  echo '{ "status": 404, "message": "no loggy" }'
-
 fi
+
 
 
 
