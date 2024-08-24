@@ -66,18 +66,10 @@ echo "[wp-wifi-switch.sh] Stopping current wifi" >> $LOG
 sudo /usr/local/etc/init.d/wifi wlan0 stop
 if [ $? -eq 0 ]; then
   echo "[wp-wifi-switch.sh] Current wifi stopped" >> $LOG
-  sleep 1
   echo "[wp-wifi-switch.sh] wpa_cli -i wlan0 reconfigure: " >> LOG
   echo "$(wpa_cli -i wlan0 reconfigure)" >> LOG
   sleep 3
-  echo "[wp-wifi-switch.sh] wpa_supplicant.conf: " >> LOG
-  echo "$(sudo cat /usr/local/etc/pcp/wpa_supplicant.conf)" >> LOG
-
-  #sudo /usr/local/etc/init.d/wifi wlan0 restart
-  # iwconfig wlan0 | grep Frequency
   echo "[wp-wifi-switch.sh] after reconfiguring" >> LOG
-
-  sleep 3
 
   case "$(iwconfig wlan0)" in
     *Frequency*)
@@ -95,52 +87,52 @@ if [ $? -eq 0 ]; then
       fi
     ;;
     *)
-    echo "[wp-wifi-switch.sh] Failed to switch wifi networks " >> $LOG
-    echo "[wp-wifi-switch.sh] Switching back... " >> $LOG
-    echo "$(sudo cp /usr/local/etc/pcp/wpa_supplicant.conf~ /usr/local/etc/pcp/wpa_supplicant.conf)" >> LOG
-    echo "$(sudo chown root:root /usr/local/etc/pcp/wpa_supplicant.conf)" >> LOG
+      echo "[wp-wifi-switch.sh] Failed to switch wifi networks " >> $LOG
+      echo "[wp-wifi-switch.sh] Switching back... " >> $LOG
+      echo "$(sudo cp /usr/local/etc/pcp/wpa_supplicant.conf~ /usr/local/etc/pcp/wpa_supplicant.conf)" >> LOG
+      echo "$(sudo chown root:root /usr/local/etc/pcp/wpa_supplicant.conf)" >> LOG
 
-    echo "$(wpa_cli -i wlan0 reconfigure)" >> LOG
-    sleep 3
-    echo "$(sudo /usr/local/etc/init.d/wifi wlan0 restart)" >> LOG
+      echo "$(wpa_cli -i wlan0 reconfigure)" >> LOG
+      sleep 3
+      echo "$(sudo /usr/local/etc/init.d/wifi wlan0 restart)" >> LOG
 
-    echo "[wp-wifi-switch.sh] Attempting to kill and restart udhcpc" >> $LOG
-    sudo kill `ps | grep udhcpc | grep wlan0 | awk '{print $1}'` > /dev/null 2>&1
-    if [ $? -eq 0 ]; then
-      rm -f /var/run/udhcpc.wlan0.pid
+      echo "[wp-wifi-switch.sh] Attempting to kill and restart udhcpc" >> $LOG
+      sudo kill `ps | grep udhcpc | grep wlan0 | awk '{print $1}'` > /dev/null 2>&1
       if [ $? -eq 0 ]; then
-        echo "[wp-wifi-switch.sh] Killed udhcpc process"
+        rm -f /var/run/udhcpc.wlan0.pid
+        if [ $? -eq 0 ]; then
+          echo "[wp-wifi-switch.sh] Killed udhcpc process"
+        else
+          echo "[wp-wifi-switch.sh] Failed to kill udhcpc process."
+          echo '{ "status": 500, "message": "Failed to kill udhcpc process" }'
+          return 0
+        fi
       else
         echo "[wp-wifi-switch.sh] Failed to kill udhcpc process."
         echo '{ "status": 500, "message": "Failed to kill udhcpc process" }'
         return 0
       fi
-    else
-      echo "[wp-wifi-switch.sh] Failed to kill udhcpc process."
-      echo '{ "status": 500, "message": "Failed to kill udhcpc process" }'
-      return 0
-    fi
 
-    sudo /sbin/udhcpc -b -i wlan0 -A 5 -x hostname:$(/bin/hostname) -p /var/run/udhcpc.wlan0.pid
-    if [ $? -ne 0 ]; then
-      echo "[wp-wifi-switch.sh] Unable to restart udhcpc." >> $LOG
-      echo '{ "status": 500, "message": "Unable to restart udhcpc" }'
-      return 0
-    else
-      echo "[wp-wifi-switch.sh] Restart udhcpc [OK]" >> $LOG
-    fi
+      sudo /sbin/udhcpc -b -i wlan0 -A 5 -x hostname:$(/bin/hostname) -p /var/run/udhcpc.wlan0.pid
+      if [ $? -ne 0 ]; then
+        echo "[wp-wifi-switch.sh] Unable to restart udhcpc." >> $LOG
+        echo '{ "status": 500, "message": "Unable to restart udhcpc" }'
+        return 0
+      else
+        echo "[wp-wifi-switch.sh] Restart udhcpc [OK]" >> $LOG
+      fi
 
-    sleep 3
-    iwconfig wlan0 | grep "Frequency"
-    if [ $? -ne 0 ]; then
-      echo "[wp-wifi-switch.sh] Failed to switch back!" >> $LOG
-      echo '{ "status": 500, "message": "Failed to switch back" }'
-      return 0
-    else
-      echo "[wp-wifi-switch.sh] Switched back to old wifi settings" >> $LOG
-      echo '{ "status": 400, "message": "Switched back to old wifi settings" }'
-      return 0
-    fi
+      sleep 3
+      iwconfig wlan0 | grep "Frequency"
+      if [ $? -ne 0 ]; then
+        echo "[wp-wifi-switch.sh] Failed to switch back!" >> $LOG
+        echo '{ "status": 500, "message": "Failed to switch back" }'
+        return 0
+      else
+        echo "[wp-wifi-switch.sh] Switched back to old wifi settings" >> $LOG
+        echo '{ "status": 400, "message": "Switched back to old wifi settings" }'
+        return 0
+      fi
     ;;
   esac
 
