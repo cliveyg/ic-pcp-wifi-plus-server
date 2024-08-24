@@ -60,36 +60,47 @@ sudo sed -i "s/90909090909090909090c909090909/$ssid/g" /usr/local/etc/pcp/wpa_su
 sudo sed -i "s/\+\+/$pass/g" /usr/local/etc/pcp/wpa_supplicant.conf
 sudo chown root:root /usr/local/etc/pcp/wpa_supplicant.conf
 
-wpa_cli -i wlan0 reconfigure
-sleep 3
-iwconfig wlan0 | grep "Frequency"
-if [ $? -ne 0 ]; then
-  echo "[wp-wifi-switch.sh] Failed to switch wifi networks " >> $LOG
-  echo "[wp-wifi-switch.sh] Switching back... " >> $LOG
-  sudo cp /usr/local/etc/pcp/wpa_supplicant.conf~ /usr/local/etc/pcp/wpa_supplicant.conf
-  sudo chown root:root /usr/local/etc/pcp/wpa_supplicant.conf
+echo "[wp-wifi-switch.sh] Attempting to switch wifi" >> $LOG
+echo "[wp-wifi-switch.sh] Stopping current wifi" >> $LOG
+
+sudo /usr/local/etc/init.d/wifi stop
+if [ $? -eq 0 ]; then
+  echo "[wp-wifi-switch.sh] Current wifi stopped" >> $LOG
+  sleep 1
   wpa_cli -i wlan0 reconfigure
   sleep 3
   iwconfig wlan0 | grep "Frequency"
   if [ $? -ne 0 ]; then
-    echo "[wp-wifi-switch.sh] Failed to switch back!" >> $LOG
-    echo '{ "status": 500, "message": "Failed to switch back" }'
+    echo "[wp-wifi-switch.sh] Failed to switch wifi networks " >> $LOG
+    echo "[wp-wifi-switch.sh] Switching back... " >> $LOG
+    sudo cp /usr/local/etc/pcp/wpa_supplicant.conf~ /usr/local/etc/pcp/wpa_supplicant.conf
+    sudo chown root:root /usr/local/etc/pcp/wpa_supplicant.conf
+
+    wpa_cli -i wlan0 reconfigure
+    sleep 3
+    iwconfig wlan0 | grep "Frequency"
+    if [ $? -ne 0 ]; then
+      echo "[wp-wifi-switch.sh] Failed to switch back!" >> $LOG
+      echo '{ "status": 500, "message": "Failed to switch back" }'
+    else
+      echo "[wp-wifi-switch.sh] Switched back to old wifi settings" >> $LOG
+      echo '{ "status": 400, "message": "Switched back to old wifi settings" }'
+    fi
   else
-    echo "[wp-wifi-switch.sh] Switched back to old wifi settings" >> $LOG
-    echo '{ "status": 400, "message": "Switched back to old wifi settings" }'
+    # backup stuff
+    echo -n "[wp-wifi-switch.sh] backup status: " >> $LOG
+    if wp_backup; then
+      echo "success!" >> $LOG
+      echo '{ "status": 202, "message": "the good ting" }'
+    else
+      echo "fail :(" >> $LOG
+      echo '{ "status": 500, "message": "bad stuff" }'
+    fi
   fi
 else
-  # backup stuff
-  echo -n "[wp-wifi-switch.sh] backup status: " >> $LOG
-  if wp_backup; then
-    echo "success!" >> $LOG
-    echo '{ "status": 202, "message": "the good ting" }'
-  else
-    echo "fail :(" >> $LOG
-    echo '{ "status": 500, "message": "bad stuff" }'
-  fi
+       echo "Unable to stop running wifi :(" >> $LOG
+       echo '{ "status": 500, "message": "Unable to stop running wifi" }'
 fi
-
 
 
 
