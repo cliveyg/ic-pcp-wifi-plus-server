@@ -63,7 +63,7 @@ sudo chown root:root /usr/local/etc/pcp/wpa_supplicant.conf
 echo "[wp-wifi-switch.sh] Attempting to switch wifi" >> $LOG
 echo "[wp-wifi-switch.sh] Stopping current wifi" >> $LOG
 
-sudo /usr/local/etc/init.d/wifi wlan0 stop
+echo "$(sudo /usr/local/etc/init.d/wifi wlan0 stop)" >> $LOG
 if [ $? -eq 0 ]; then
   echo "[wp-wifi-switch.sh] Current wifi stopped" >> $LOG
   echo "[wp-wifi-switch.sh] wpa_cli -i wlan0 reconfigure: " >> $LOG
