@@ -69,7 +69,11 @@ if [ $? -eq 0 ]; then
   echo "[wp-wifi-switch.sh] wpa_cli -i wlan0 reconfigure: " >> $LOG
   echo "$(wpa_cli -i wlan0 reconfigure)" >> $LOG
   sleep 5
+  echo "$(sudo /usr/local/etc/init.d/wifi wlan0 restart)" >> $LOG
   echo "[wp-wifi-switch.sh] after reconfiguring" >> $LOG
+  sleep 3
+
+  echo "$(iwconfig wlan0)" >> $LOG
 
   case "$(iwconfig wlan0)" in
     *Frequency*)
