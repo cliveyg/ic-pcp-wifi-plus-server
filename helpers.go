@@ -134,7 +134,7 @@ func savedToTempNetConf(wd *WifiDetails, err *error) bool {
 			return false
 		}
 	}
-	if ferr = f.Close(); err != nil {
+	if ferr = f.Close(); ferr != nil {
 		log.Debug("Unable to close temp file")
 		*err = ferr
 		return false
