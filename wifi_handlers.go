@@ -74,7 +74,7 @@ func (a *App) wifiSwitchNetwork(w http.ResponseWriter, r *http.Request) {
 	} else if !pm && nf {
 		pr.StatusCode = 403
 		pr.Message = "Network found but password doesn't match"
-	} else {
+	} else if !pm && !nf {
 		newNet = true
 	}
 	// try to switch to network
