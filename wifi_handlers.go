@@ -120,6 +120,7 @@ func (a *App) wifiSwitchNetwork(w http.ResponseWriter, r *http.Request) {
 		pr.Message = "Connected but unable to save network details to temp file"
 		err = errors.New(pr.Message)
 		pr.ReturnResponse(w, err)
+		return
 	} else if !connOk {
 		log.Debug("-=-=-=-=-=-=-= 3 =-=-=-=-=-=-=-=-")
 		pr.Message = fmt.Sprintf("Unable to switch to [%s] wifi network", wd.SSID)
