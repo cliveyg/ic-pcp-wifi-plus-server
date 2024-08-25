@@ -122,6 +122,7 @@ func savedToTempNetConf(wd *WifiDetails, err *error) bool {
 	f, ferr := os.OpenFile(os.Getenv("KNOWNWIFIFILE")+".temp", os.O_RDWR|os.O_CREATE|os.O_TRUNC, 0644)
 	if ferr != nil {
 		log.Debug("cannot open file for writing")
+		log.Error(*err)
 		*err = ferr
 		return false
 	}
@@ -136,6 +137,7 @@ func savedToTempNetConf(wd *WifiDetails, err *error) bool {
 	}
 	if ferr = f.Close(); ferr != nil {
 		log.Debug("Unable to close temp file")
+		log.Error(ferr)
 		*err = ferr
 		return false
 	}
@@ -149,12 +151,14 @@ func fileSwitch(err *error) bool {
 	dst, fErr1 := os.Create(os.Getenv("KNOWNWIFIFILE") + ".backup")
 	if fErr1 != nil {
 		*err = fErr1
+		log.Error(*err)
 		return false
 	}
 	defer func(dst *os.File) {
 		err := dst.Close()
 		if err != nil {
-			log.Fatal(err)
+			log.Error(err)
+			return
 		}
 	}(dst)
 
@@ -162,12 +166,14 @@ func fileSwitch(err *error) bool {
 	src, fErr2 := os.Open(os.Getenv("KNOWNWIFIFILE"))
 	if fErr2 != nil {
 		*err = fErr2
+		log.Error(*err)
 		return false
 	}
 	defer func(src *os.File) {
 		err := src.Close()
 		if err != nil {
-			log.Fatal(err)
+			log.Error(err)
+			return
 		}
 	}(src)
 
@@ -175,6 +181,7 @@ func fileSwitch(err *error) bool {
 	bytesCopied, fErr3 := io.Copy(dst, src)
 	if fErr3 != nil {
 		*err = fErr3
+		log.Error(*err)
 		return false
 	}
 
@@ -182,12 +189,14 @@ func fileSwitch(err *error) bool {
 	src, fErr2 = os.Open(os.Getenv("KNOWNWIFIFILE") + ".temp")
 	if fErr2 != nil {
 		*err = fErr2
+		log.Error(*err)
 		return false
 	}
 	defer func(src *os.File) {
 		err := src.Close()
 		if err != nil {
-			log.Fatal(err)
+			log.Error(err)
+			return
 		}
 	}(src)
 
@@ -195,12 +204,14 @@ func fileSwitch(err *error) bool {
 	dst, fErr1 = os.Create(os.Getenv("KNOWNWIFIFILE"))
 	if fErr1 != nil {
 		*err = fErr1
+		log.Error(*err)
 		return false
 	}
 	defer func(dst *os.File) {
 		err := dst.Close()
 		if err != nil {
-			log.Fatal(err)
+			log.Error(err)
+			return
 		}
 	}(dst)
 
@@ -208,6 +219,7 @@ func fileSwitch(err *error) bool {
 	bytesCopied, fErr3 = io.Copy(dst, src)
 	if fErr3 != nil {
 		*err = fErr3
+		log.Error(*err)
 		return false
 	}
 	log.Debugf("Copied %d bytes from .temp version to original file", bytesCopied)
@@ -215,6 +227,7 @@ func fileSwitch(err *error) bool {
 	// delete .temp file
 	*err = os.Remove(os.Getenv("KNOWNWIFIFILE") + ".temp")
 	if *err != nil {
+		log.Error(*err)
 		return false
 	}
 	return true
