@@ -96,6 +96,7 @@ func (a *App) wifiSwitchNetwork(w http.ResponseWriter, r *http.Request) {
 		log.Debug("-=-=-=-=-=-=-= 0 =-=-=-=-=-=-=-=-")
 		log.Error(err)
 	}
+	pr.StatusCode = sr.Status
 	if sr.Status == 200 {
 		connOk = true
 	}
