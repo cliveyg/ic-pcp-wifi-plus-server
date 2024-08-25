@@ -3,6 +3,7 @@
 #-----------------------------------------------------------------------------#
 # wp-wifi-switch.sh                                                           #
 #                                                                             #
+# Script attempts to switch between wifis using the supplied ssid and pass   #
 #                                                                             #
 #-----------------------------------------------------------------------------#
 
@@ -66,19 +67,24 @@ echo "[wp-wifi-switch.sh] Stopping current wifi" >> $LOG
 echo "$(sudo /usr/local/etc/init.d/wifi wlan0 stop)" >> $LOG
 if [ $? -eq 0 ]; then
   echo "[wp-wifi-switch.sh] Current wifi stopped" >> $LOG
-  #echo "[wp-wifi-switch.sh] wpa_cli -i wlan0 reconfigure: " >> $LOG
-  #echo "$(wpa_cli -i wlan0 reconfigure)" >> $LOG
-  #sleep 10
-  echo "[wp-wifi-switch.sh] Restarting to try new deets" >> $LOG
+  echo "[wp-wifi-switch.sh] Restarting init.d/wifi with new deets" >> $LOG
   echo "$(sudo /usr/local/etc/init.d/wifi wlan0 restart)" >> $LOG
-  #echo "[wp-wifi-switch.sh] after reconfiguring" >> $LOG
-  #sleep 8
 
   echo "$(iwconfig wlan0)" >> $LOG
 
   case "$(iwconfig wlan0)" in
     *Frequency*)
-      echo "[wp-wifi-switch.sh] New wifi running" >> $LOG
+      echo "[wp-wifi-switch.sh] New wifi running. Don't wait."
+    ;;
+    *)
+      echo "[wp-wifi-switch.sh] iwconfig didn't detect network change. wait 5 secs and try again" >> $LOG
+      sleep 5
+    ;;
+  esac
+
+  case "$(iwconfig wlan0)" in
+    *Frequency*)
+      echo "[wp-wifi-switch.sh] New wifi running so run backup of pcp" >> $LOG
       # backup stuff
       echo -n "[wp-wifi-switch.sh] backup status: " >> $LOG
       if wp_backup; then
@@ -92,6 +98,7 @@ if [ $? -eq 0 ]; then
       fi
     ;;
     *)
+      # failed so switch back to old wifi
       echo "[wp-wifi-switch.sh] Failed to switch wifi networks " >> $LOG
       echo "[wp-wifi-switch.sh] Switching back... " >> $LOG
       echo "$(sudo cp /usr/local/etc/pcp/wpa_supplicant.conf~ /usr/local/etc/pcp/wpa_supplicant.conf)" >> $LOG
