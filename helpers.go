@@ -113,18 +113,23 @@ func savedToTempNetConf(wd *WifiDetails, err *error) bool {
 	var sa []string
 	passMatch(wd, err, &sa)
 
-	f, ferr := os.OpenFile(os.Getenv("KNOWNWIFIFILE")+".temp", os.O_CREATE|os.O_WRONLY, 0644)
+	log.Debugf("Length of string array is %d", len(sa))
+
+	f, ferr := os.OpenFile(os.Getenv("KNOWNWIFIFILE")+".temp", os.O_RDWR|os.O_CREATE|os.O_TRUNC, 0644)
 	if ferr != nil {
+		log.Debug("cannot open file for writing")
 		*err = ferr
 		return false
 	}
 	for _, line := range sa {
 		if _, ferr = f.Write([]byte(line)); err != nil {
+			log.Debug("Unable to write to temp file")
 			*err = ferr
 			return false
 		}
 	}
 	if ferr = f.Close(); err != nil {
+		log.Debug("Unable to close temp file")
 		*err = ferr
 		return false
 	}
