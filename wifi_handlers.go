@@ -117,6 +117,7 @@ func (a *App) wifiSwitchNetwork(w http.ResponseWriter, r *http.Request) {
 
 	} else if (newNet || (nf && !pm)) && connOk {
 		log.Debug("-=-=-=-=-=-=-= 2 =-=-=-=-=-=-=-=-")
+		log.Debugf("new net [%t] nf [%t] pm [%t]", newNet, nf, pm)
 		pr.Message = "Connected but unable to save network details to temp file"
 		err = errors.New(pr.Message)
 		pr.ReturnResponse(w, err)
