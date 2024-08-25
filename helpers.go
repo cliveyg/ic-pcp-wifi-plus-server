@@ -14,7 +14,7 @@ func (a *App) ExecCmd(command string, args []string) (string, error) {
 
 	stdout, err := exec.Command(command, args...).Output()
 	if err != nil {
-		log.WithFields(log.Fields{"err": err}).Debug("Something went wrong")
+		log.WithFields(log.Fields{"err": err}).Error("Something went wrong")
 		return "", err
 	}
 	return strings.TrimSpace(string(stdout)), nil
@@ -35,7 +35,6 @@ func textToMap(sg string) map[string]string {
 func encryptPass(wd *WifiDetails, err *error) string {
 	var hashed []byte
 	hashed, *err = bcrypt.GenerateFromPassword([]byte(wd.Password), 8)
-	//log.Debugf("Hashed is %s", hashed)
 	return string(hashed)
 }
 
@@ -86,10 +85,7 @@ func passMatch(wd *WifiDetails, err *error, sa *[]string) (bool, bool) {
 	for scanner.Scan() {
 		line := scanner.Text()
 		knownWifi := strings.Split(line, "+")
-		log.Debugf("conf file deets %s", line)
 		if knownWifi[0] == wd.BSSID || knownWifi[1] == wd.SSID {
-			log.Debug("Should be comparing passwords")
-			log.Debugf("Posted deets %s", wd)
 			*err = bcrypt.CompareHashAndPassword([]byte(knownWifi[2]), []byte(wd.Password))
 			if *err == nil {
 				// passwords match
@@ -102,7 +98,7 @@ func passMatch(wd *WifiDetails, err *error, sa *[]string) (bool, bool) {
 			// has changed too
 			networkFound = true
 			hashedp = encryptPass(wd, err)
-			editedLine := knownWifi[0] + "+" + wd.SSID + "+" + hashedp
+			editedLine := wd.BSSID + "+" + wd.SSID + "+" + hashedp
 			*sa = append(*sa, editedLine)
 		} else {
 			*sa = append(*sa, line)
@@ -116,27 +112,20 @@ func savedToTempNetConf(wd *WifiDetails, err *error) bool {
 	var sa []string
 	passMatch(wd, err, &sa)
 
-	log.Debugf("Length of string array is %d", len(sa))
-	log.Debugf("knowwifi file name is [%s]", os.Getenv("KNOWNWIFIFILE"))
-
 	f, ferr := os.OpenFile(os.Getenv("KNOWNWIFIFILE")+".temp", os.O_RDWR|os.O_CREATE|os.O_TRUNC, 0644)
 	if ferr != nil {
-		log.Debug("cannot open file for writing")
 		log.Error(*err)
 		*err = ferr
 		return false
 	}
 	for _, line := range sa {
-		log.Debugf("Line to be written is [%s]", line)
 		if _, ferr = f.Write([]byte(line + "\n")); ferr != nil {
-			log.Debug("Unable to write to temp file")
 			log.Error(ferr)
 			*err = ferr
 			return false
 		}
 	}
 	if ferr = f.Close(); ferr != nil {
-		log.Debug("Unable to close temp file")
 		log.Error(ferr)
 		*err = ferr
 		return false
@@ -238,31 +227,36 @@ func restoreFromBackup() bool {
 	// truncate original file
 	dst, fErr1 := os.Create(os.Getenv("KNOWNWIFIFILE"))
 	if fErr1 != nil {
-		log.Fatal(fErr1)
+		log.Error(fErr1)
+		return false
 	}
 	defer func(dst *os.File) {
 		err := dst.Close()
 		if err != nil {
-			log.Fatal(err)
+			log.Error(err)
+			return
 		}
 	}(dst)
 
 	// open backup file
 	src, fErr2 := os.Open(os.Getenv("KNOWNWIFIFILE") + ".backup")
 	if fErr2 != nil {
-		log.Fatal(fErr2)
+		log.Error(fErr2)
+		return false
 	}
 	defer func(src *os.File) {
 		err := src.Close()
 		if err != nil {
-			log.Fatal(err)
+			log.Error(err)
+			return
 		}
 	}(src)
 
 	// copy source (backup) to destination (original)
 	bytesCopied, fErr3 := io.Copy(dst, src)
 	if fErr3 != nil {
-		log.Fatal(fErr3)
+		log.Error(fErr3)
+		return false
 	}
 	log.Debugf("Restored %d bytes from .backup version to original file", bytesCopied)
 	return true
