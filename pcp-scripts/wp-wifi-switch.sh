@@ -78,7 +78,10 @@ if [ $? -eq 0 ]; then
     ;;
     *)
       echo "[wp-wifi-switch.sh] iwconfig didn't detect network change. wait 5 secs and try again" >> $LOG
+      echo "$(sudo /usr/local/etc/init.d/wifi wlan0 restart)" >> $LOG
       sleep 5
+      echo "$(iwconfig wlan0)" >> $LOG
+      sleep 2
     ;;
   esac
 
