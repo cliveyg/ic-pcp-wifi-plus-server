@@ -74,7 +74,7 @@ if [ $? -eq 0 ]; then
 
   case "$(iwconfig wlan0)" in
     *Frequency*)
-      echo "[wp-wifi-switch.sh] New wifi running. Don't wait."
+      echo "[wp-wifi-switch.sh] New wifi running. Don't wait." >> $LOG
     ;;
     *)
       echo "[wp-wifi-switch.sh] iwconfig didn't detect network change. wait 5 secs and try again" >> $LOG
