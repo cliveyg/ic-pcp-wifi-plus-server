@@ -103,7 +103,7 @@ if [ $? -eq 0 ]; then
       echo "[wp-wifi-switch.sh] Attempting to kill and restart udhcpc" >> $LOG
       sudo kill `ps | grep udhcpc | grep wlan0 | awk '{print $1}'` > /dev/null 2>&1
       if [ $? -eq 0 ]; then
-        rm -f /var/run/udhcpc.wlan0.pid
+        echo "$(rm -f /var/run/udhcpc.wlan0.pid)" >> $LOG
         if [ $? -eq 0 ]; then
           echo "[wp-wifi-switch.sh] Killed udhcpc process" >> $LOG
         else
@@ -117,7 +117,7 @@ if [ $? -eq 0 ]; then
         return 0
       fi
 
-      sudo /sbin/udhcpc -b -i wlan0 -A 5 -x hostname:$(/bin/hostname) -p /var/run/udhcpc.wlan0.pid
+      sudo /sbin/udhcpc -b -i wlan0 -A 5 -x hostname:$(/bin/hostname) -p /var/run/udhcpc.wlan0.pid > /dev/null 2>&1
       if [ $? -ne 0 ]; then
         echo "[wp-wifi-switch.sh] Unable to restart udhcpc." >> $LOG
         echo '{ "status": 500, "message": "Unable to restart udhcpc" }'
@@ -127,7 +127,7 @@ if [ $? -eq 0 ]; then
       fi
 
       sleep 3
-      iwconfig wlan0 | grep "Frequency"
+      iwconfig wlan0 | grep "Frequency" > /dev/null 2>&1
       if [ $? -ne 0 ]; then
         echo "[wp-wifi-switch.sh] Failed to switch back!" >> $LOG
         echo '{ "status": 500, "message": "Failed to switch back" }'
