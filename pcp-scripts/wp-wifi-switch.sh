@@ -82,7 +82,7 @@ if [ $? -eq 0 ]; then
       echo -n "[wp-wifi-switch.sh] backup status: " >> $LOG
       if wp_backup; then
         echo "success!" >> $LOG
-        echo '{ "status": 202, "message": "the good ting" }'
+        echo '{ "status": 200, "message": "the good ting" }'
         return 0
       else
         echo "fail :(" >> $LOG
