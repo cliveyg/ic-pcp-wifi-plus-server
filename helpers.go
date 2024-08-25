@@ -128,7 +128,7 @@ func savedToTempNetConf(wd *WifiDetails, err *error) bool {
 	}
 	for _, line := range sa {
 		log.Debugf("Line to be written is [%s]", line)
-		if _, ferr = f.Write([]byte(line)); ferr != nil {
+		if _, ferr = f.Write([]byte(line + "\n")); ferr != nil {
 			log.Debug("Unable to write to temp file")
 			log.Error(ferr)
 			*err = ferr
