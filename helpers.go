@@ -87,8 +87,7 @@ func passMatch(wd *WifiDetails, err *error, sa *[]string) (bool, bool) {
 		line := scanner.Text()
 		knownWifi := strings.Split(line, "+")
 		if knownWifi[0] == wd.BSSID || knownWifi[1] == wd.SSID {
-			hashedp = knownWifi[2]
-			*err = bcrypt.CompareHashAndPassword([]byte(hashedp), []byte(wd.Password))
+			*err = bcrypt.CompareHashAndPassword([]byte(knownWifi[2]), []byte(wd.Password))
 			if *err == nil {
 				// passwords match
 				*sa = append(*sa, line)
