@@ -86,7 +86,10 @@ func passMatch(wd *WifiDetails, err *error, sa *[]string) (bool, bool) {
 	for scanner.Scan() {
 		line := scanner.Text()
 		knownWifi := strings.Split(line, "+")
+		log.Debugf("conf file deets %s", line)
 		if knownWifi[0] == wd.BSSID || knownWifi[1] == wd.SSID {
+			log.Debug("Should be comparing passwords")
+			log.Debugf("Posted deets %s", wd)
 			*err = bcrypt.CompareHashAndPassword([]byte(knownWifi[2]), []byte(wd.Password))
 			if *err == nil {
 				// passwords match
@@ -124,6 +127,7 @@ func savedToTempNetConf(wd *WifiDetails, err *error) bool {
 	for _, line := range sa {
 		if _, ferr = f.Write([]byte(line)); err != nil {
 			log.Debug("Unable to write to temp file")
+			log.Error(ferr)
 			*err = ferr
 			return false
 		}
